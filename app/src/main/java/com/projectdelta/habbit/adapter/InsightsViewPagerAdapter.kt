@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 
-class ViewPagerAdapter(supportFragmentManager: FragmentManager) :
+class InsightsViewPagerAdapter (supportFragmentManager: FragmentManager) :
 	FragmentPagerAdapter(supportFragmentManager , BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
 	private val mFragmentList = ArrayList<Fragment>()
@@ -16,9 +16,9 @@ class ViewPagerAdapter(supportFragmentManager: FragmentManager) :
 
 	override fun getPageTitle(position: Int) = mFragmentTitleList[position]
 
-	fun addFragment( F :  Fragment , T : String ){
-		mFragmentList.add( F )
-		mFragmentTitleList.add( T )
+	fun addFragment(F: Fragment, T: String) {
+		mFragmentList.add(F)
+		mFragmentTitleList.add(T)
 		notifyDataSetChanged()
 	}
 }

@@ -13,5 +13,6 @@
     <dimen name="default_card_elevation">8dp</dimen>
 
     <dimen name="RV_card_height">160dp</dimen>
+    <dimen name="H5">17dp</dimen>
 
 </resources>

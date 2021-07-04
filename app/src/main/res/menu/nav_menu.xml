@@ -8,11 +8,7 @@
             android:id="@+id/menu_insights"
             android:icon="@drawable/ic_insights_black_24dp"
             android:title="Insights"/>
-
-        <item
-            android:id="@+id/menu_recent"
-            android:icon="@drawable/ic_done_all_black_24dp"
-            android:title="Recent"/>
+        
 
         <item
             android:id="@+id/menu_settings"

@@ -17,7 +17,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import com.google.android.material.snackbar.Snackbar
 import com.projectdelta.habbit.R
 import com.projectdelta.habbit.ui.activity.EditTaskActivity
-import com.projectdelta.habbit.adapter.ViewPagerAdapter
+import com.projectdelta.habbit.adapter.HomeViewPagerAdapter
 import com.projectdelta.habbit.data.TasksDatabase
 import com.projectdelta.habbit.data.entities.Task
 import com.projectdelta.habbit.databinding.ActivityMainBinding
@@ -25,7 +25,7 @@ import com.projectdelta.habbit.ui.fragment.DoneFragment
 import com.projectdelta.habbit.ui.fragment.SkipFragment
 import com.projectdelta.habbit.ui.fragment.TodoFragment
 import com.projectdelta.habbit.util.*
-import com.projectdelta.habbit.util.lang.TimeUtil
+import com.projectdelta.habbit.util.lang.*
 import com.projectdelta.habbit.util.view.NavigationUtil
 import com.projectdelta.habbit.util.notification.Notifications.DEFAULT_UPDATE_INTERVAL
 import com.projectdelta.habbit.util.notification.UpdateNotificationJob
@@ -33,7 +33,6 @@ import com.projectdelta.habbit.viewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -43,7 +42,7 @@ class MainActivity : AppCompatActivity() {
 
 	lateinit var binding : ActivityMainBinding
 	private val viewModel: MainViewModel by viewModels()
-	lateinit var adapter : ViewPagerAdapter
+	lateinit var adapter : HomeViewPagerAdapter
 
 	companion object{
 		fun getInstance() = this
@@ -93,7 +92,6 @@ class MainActivity : AppCompatActivity() {
 		binding.mainNavigation.setNavigationItemSelectedListener {
 			when( it.itemId ){
 				R.id.menu_insights -> NavigationUtil.insights(this)
-				R.id.menu_recent   -> NavigationUtil.recent(this)
 				R.id.menu_settings -> NavigationUtil.settings(this)
 				R.id.menu_about    -> NavigationUtil.about(this)
 				else -> Throwable("404 Not found")
@@ -120,7 +118,7 @@ class MainActivity : AppCompatActivity() {
 		binding.mainToolbar.title = SimpleDateFormat("EEEE").format( Date() )
 		binding.mainToolbar.subtitle = TimeUtil.getDateFromOffset(0)
 
-		adapter = ViewPagerAdapter(supportFragmentManager)
+		adapter = HomeViewPagerAdapter(supportFragmentManager)
 		adapter.addFragment( TodoFragment() , "TODO" )
 		adapter.addFragment( SkipFragment() , "SKIPPED" )
 		adapter.addFragment( DoneFragment() , "DONE" )
@@ -165,6 +163,8 @@ class MainActivity : AppCompatActivity() {
 		binding.mainTabs.getTabAt(0)!!.setIcon( R.drawable.ic_adjust_black_24dp )
 		binding.mainTabs.getTabAt(1)!!.setIcon( R.drawable.ic_skip_next_black_24dp )
 		binding.mainTabs.getTabAt(2)!!.setIcon( R.drawable.ic_done_all_black_24dp )
+
+		binding.mainTabs.getTabAt(0)!!.text = ""
 	}
 
 	/**
@@ -214,22 +214,22 @@ class MainActivity : AppCompatActivity() {
 		GlobalScope.launch(Dispatchers.IO) {
 			val Dao = TasksDatabase.getInstance(this@MainActivity).tasksDao()
 			val X = viewModel.getTodayFromEpoch()
-			for( i in 0..5 ){
-				val cur = Task( viewModel.getMSfromEpoch() + i , "Test : TODO ${i + 1}" , mutableListOf() ,
+			for( i in 0..10 ){
+				val cur = Task( viewModel.getMSfromEpoch() + i , "Test : TODO/DONE MIX ${(i + 1)%10}" , mutableListOf() ,
 					i + 0f , true , getRandomString((i + 1)*15) )
 				for( d in 1 until i )
 					cur.lastDayCompleted.add( X - d )
 				cur.lastDayCompleted.reverse()
 				launch { Dao.insertTask(cur) }
 			}
-			for( i in 0..5 ){
-				val cur = Task( viewModel.getMSfromEpoch() + i , "Test : DONE ${i + 1}" , mutableListOf() ,
-					i + 0f, true , getRandomString((i + 1)*15)  )
-				for( d in 0 .. i )
-					cur.lastDayCompleted.add( X - d )
-				cur.lastDayCompleted.reverse()
-				launch { Dao.insertTask(cur) }
-			}
+//			for( i in 0..5 ){
+//				val cur = Task( viewModel.getMSfromEpoch() + i , "Test : DONE ${i + 1}" , mutableListOf() ,
+//					i + 0f, true , getRandomString((i + 1)*15)  )
+//				for( d in 0 .. i )
+//					cur.lastDayCompleted.add( X - d )
+//				cur.lastDayCompleted.reverse()
+//				launch { Dao.insertTask(cur) }
+//			}
 			for( i in 0..5 ){
 				val cur = Task( viewModel.getMSfromEpoch() + i , "Test : SKIP ${i + 1}" , mutableListOf() , i + 0f  ,
 					true , getRandomString((i + 1)*15)  ,skipTill = X + i )

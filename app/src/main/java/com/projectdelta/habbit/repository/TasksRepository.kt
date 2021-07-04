@@ -24,6 +24,8 @@ class TasksRepository(private val tasksDao: TasksDao) {
 
 	suspend fun getDay(id : Long) = tasksDao.getDay(id)
 
+	suspend fun getDayRange( start : Long , end : Long ) = tasksDao.getDayRange(start , end)
+
 	fun updateTask( task : Task ) = tasksDao.updateTask( task )
 
 	fun updateDay( day : Day ) = tasksDao.updateDay(day)
@@ -31,15 +33,16 @@ class TasksRepository(private val tasksDao: TasksDao) {
 	fun deleteTask( task : Task ) = tasksDao.deleteTask( task )
 
 	/**
-	 * updates a task in task-database and add corresponding task id to day object and updates day-database
+	 * Updates a task in task-database and add corresponding task id to day object and updates day-database
 	 */
 	suspend fun markTaskCompleted( task: Task ){
 		val dayList = tasksDao.getDay(TimeUtil.getTodayFromEpoch())
-		val day = when( dayList.size ){
-			0 -> Day( TimeUtil.getTodayFromEpoch() , mutableListOf() )
+		val day = when( dayList.size ) {
+			0 -> Day(TimeUtil.getTodayFromEpoch(), mutableListOf(), mutableListOf())
 			else -> dayList.first()
 		}
-		day.tasks.add(task.id)
+		day.tasksID.add(task.id)
+		day.tasksTitle.add(task.taskName)
 		tasksDao.updateTask(task)
 		tasksDao.insertDay(day)
 	}

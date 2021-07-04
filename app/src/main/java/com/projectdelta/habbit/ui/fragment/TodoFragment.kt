@@ -1,10 +1,7 @@
 package com.projectdelta.habbit.ui.fragment
 
 import android.app.Activity
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,7 +11,6 @@ import android.view.ViewTreeObserver
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,6 +22,10 @@ import com.projectdelta.habbit.constant.ICON_SIZE_DP
 import com.projectdelta.habbit.databinding.TodoFragmentBinding
 import com.projectdelta.habbit.ui.MainActivity
 import com.projectdelta.habbit.util.*
+import com.projectdelta.habbit.util.lang.convertDrawableToBitmap
+import com.projectdelta.habbit.util.lang.dpToPx
+import com.projectdelta.habbit.util.lang.tasksBeforeSkipTime
+import com.projectdelta.habbit.util.lang.unfinishedTill
 import com.projectdelta.habbit.util.view.CustomItemTouchHelperCallback
 import com.projectdelta.habbit.util.view.RecyclerItemClickListenr
 import com.projectdelta.habbit.util.view.StatesRecyclerViewAdapter

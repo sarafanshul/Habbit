@@ -17,7 +17,7 @@ import java.util.concurrent.Executors
 		Task::class,
 		Day::class
 	],
-	version = 8,
+	version = 9,
 	exportSchema = false
 )
 @TypeConverters( Converters::class )

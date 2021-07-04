@@ -1,4 +1,4 @@
-package com.projectdelta.habbit.util
+package com.projectdelta.habbit.util.lang
 
 import android.content.Context
 import android.content.res.ColorStateList

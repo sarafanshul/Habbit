@@ -1,4 +1,4 @@
-package com.projectdelta.habbit.util
+package com.projectdelta.habbit.util.lang
 
 import android.app.ActivityManager
 import android.app.KeyguardManager
@@ -10,10 +10,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.res.Resources
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.os.PowerManager
 import android.view.View

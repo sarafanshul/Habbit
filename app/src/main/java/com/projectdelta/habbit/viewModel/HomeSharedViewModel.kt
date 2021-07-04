@@ -14,6 +14,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+/**
+ * Shared ViewModel for fragments
+ * @param repository : injected!
+ */
 @HiltViewModel
 class HomeSharedViewModel @Inject constructor(
 	private val repository: TasksRepository

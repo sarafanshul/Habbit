@@ -2,7 +2,6 @@ package com.projectdelta.habbit.ui.fragment
 
 import android.app.Activity
 import android.graphics.Color
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -21,16 +19,14 @@ import com.google.android.material.textview.MaterialTextView
 import com.projectdelta.habbit.ui.MainActivity
 import com.projectdelta.habbit.R
 import com.projectdelta.habbit.adapter.RecyclerViewSkipAdapter
-import com.projectdelta.habbit.adapter.RecyclerViewTodoAdapter
 import com.projectdelta.habbit.constant.ICON_SIZE_DP
 import com.projectdelta.habbit.databinding.SkipFragmentBinding
 import com.projectdelta.habbit.util.NotFound
-import com.projectdelta.habbit.util.convertDrawableToBitmap
-import com.projectdelta.habbit.util.dpToPx
-import com.projectdelta.habbit.util.lang.TimeUtil
+import com.projectdelta.habbit.util.lang.convertDrawableToBitmap
+import com.projectdelta.habbit.util.lang.dpToPx
 import com.projectdelta.habbit.util.view.RecyclerItemClickListenr
 import com.projectdelta.habbit.util.view.StatesRecyclerViewAdapter
-import com.projectdelta.habbit.util.skippedTill
+import com.projectdelta.habbit.util.lang.skippedTill
 import com.projectdelta.habbit.util.view.CustomItemTouchHelperCallback
 import com.projectdelta.habbit.viewModel.HomeSharedViewModel
 import dagger.hilt.android.AndroidEntryPoint

@@ -5,16 +5,14 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.projectdelta.habbit.data.TasksDatabase
-import com.projectdelta.habbit.data.entities.Day
 import com.projectdelta.habbit.data.entities.Task
 import com.projectdelta.habbit.repository.TasksRepository
-import com.projectdelta.habbit.util.hash
+import com.projectdelta.habbit.util.lang.hash
 import com.projectdelta.habbit.util.lang.TimeUtil
-import com.projectdelta.habbit.util.notificationManager
+import com.projectdelta.habbit.util.lang.notificationManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import com.projectdelta.habbit.BuildConfig.APPLICATION_ID as ID
 
 class NotificationReceiver : BroadcastReceiver() {

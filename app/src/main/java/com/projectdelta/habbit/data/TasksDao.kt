@@ -35,6 +35,15 @@ interface TasksDao {
 	@Query("SELECT * FROM day WHERE id = :id")
 	suspend fun getDay( id : Long ) : List<Day>
 
+	/**
+	 * Returns [Day] in Range [start , end]
+	 * @param start inclusive
+	 * @param end inclusive
+	 * @return [List]
+	 */
+	@Query( "SELECT * FROM Day WHERE ID BETWEEN :start AND :end" )
+	suspend fun getDayRange( start : Long , end : Long ) : List<Day>
+
 	@Update
 	fun updateTask( task : Task )
 

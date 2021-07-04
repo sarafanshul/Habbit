@@ -16,7 +16,7 @@ import com.projectdelta.habbit.databinding.ActivityEditTaskBinding
 import com.projectdelta.habbit.util.lang.TimeUtil
 import com.projectdelta.habbit.util.lang.capitalized
 import com.projectdelta.habbit.util.lang.isOk
-import com.projectdelta.habbit.util.setTint
+import com.projectdelta.habbit.util.lang.setTint
 import com.projectdelta.habbit.viewModel.EditTaskViewModel
 import dagger.hilt.android.AndroidEntryPoint
 

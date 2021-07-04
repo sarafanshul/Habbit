@@ -1,7 +1,6 @@
 package com.projectdelta.habbit.ui.fragment
 
 import android.app.Activity
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -20,7 +19,7 @@ import com.projectdelta.habbit.databinding.DoneFragmentBinding
 import com.projectdelta.habbit.util.NotFound
 import com.projectdelta.habbit.util.view.RecyclerItemClickListenr
 import com.projectdelta.habbit.util.view.StatesRecyclerViewAdapter
-import com.projectdelta.habbit.util.completedTill
+import com.projectdelta.habbit.util.lang.completedTill
 import com.projectdelta.habbit.viewModel.HomeSharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,6 +29,7 @@ class DoneFragment : Fragment() {
 
 	companion object {
 		fun newInstance() = DoneFragment()
+		private const val TAG = "DoneFragment"
 	}
 
 	private val viewModel: HomeSharedViewModel by activityViewModels()
@@ -45,8 +45,6 @@ class DoneFragment : Fragment() {
 		super.onAttach(activity)
 		this.activity = activity as MainActivity
 	}
-
-	private val TAG = "DoneFragment"
 
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
