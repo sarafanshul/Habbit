@@ -1,0 +1,31 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        app:title="Notifications">
+
+        <SwitchPreference
+            app:key="NotificationsEnabled"
+            app:defaultValue="true"
+            app:title="Enable notifications" />
+
+        <ListPreference
+            app:dependency="NotificationsEnabled"
+            app:defaultValue="1 hour"
+            app:entries="@array/notification_entries"
+            app:entryValues="@array/notification_values"
+            app:key="NotificationInterval"
+            app:title="Notification interval"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/sync_header">
+
+        <SwitchPreferenceCompat
+            app:key="Sync"
+            app:title="Sync data periodically" />
+
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

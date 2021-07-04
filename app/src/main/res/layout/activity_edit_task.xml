@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/default_base_margin"
+    tools:context=".ui.activity.EditTaskActivity">
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_save_black_24dp"
+        android:id="@+id/e_task_fab_save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="@dimen/element_padding"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:text="Edit Task"
+                android:textSize="@dimen/H1"
+                android:padding="@dimen/element_padding"
+                android:textColor="?colorPrimaryVariant"/>
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:src="@drawable/ic_delete_black_24dp"
+                android:padding="10dp"
+                android:clickable="true"
+                android:id="@+id/e_task_Iv_delete"
+                app:tint="@color/wet_asphalt"/>
+
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Task name"
+            android:inputType="text"
+            android:maxLines="1"
+            android:id="@+id/e_task_et_task"
+            android:textSize="@dimen/H3"
+            android:layout_margin="@dimen/element_padding"/>
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Summary"
+            android:inputType="text"
+            android:maxLines="1"
+            android:id="@+id/e_task_et_summary"
+            android:textSize="@dimen/H3"
+            android:layout_margin="@dimen/element_padding"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Rating"
+            android:textSize="@dimen/H4"
+            android:paddingTop="@dimen/element_padding"
+            android:textColor="@color/wet_asphalt"
+            android:layout_marginHorizontal="@dimen/element_padding"/>
+
+        <RatingBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:id="@+id/e_task_rt"
+            android:layout_marginHorizontal="@dimen/element_padding"
+            android:stepSize="0.5"/>
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Notify me ?"
+            android:textColor="?colorPrimary"
+            android:layout_marginTop="10dp"
+            android:id="@+id/e_task_sw_notification"
+
+            android:textSize="@dimen/H3"
+            android:padding="@dimen/element_padding"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:text="Time limited ?"
+                android:textColor="?colorPrimary"
+                android:id="@+id/e_task_sw_skip_after"
+                android:textSize="@dimen/H3"
+                android:layout_gravity="center"
+                android:padding="@dimen/element_padding"/>
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="0.2"
+                android:padding="@dimen/default_base_margin"
+                android:id="@+id/e_task_iv_time"
+                android:src="@drawable/ic_schedule_black_24dp"
+                app:tint="@color/wet_asphalt" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:layout_gravity="center"
+                android:textSize="@dimen/H3"
+                android:textColor="?colorPrimary"
+                android:layout_margin="@dimen/element_padding"
+                android:text="Skip days?"/>
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.15"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:src="@drawable/ic_baseline_horizontal_rule_24"
+                android:id="@+id/e_task_btn_skip_sub"
+                app:tint="@color/black" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.15"
+                android:maxLines="1"
+                android:textSize="@dimen/H3"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:digits="123456789"
+                android:inputType="numberSigned"
+                android:id="@+id/e_task_et_skip" />
+
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.15"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:src="@drawable/ic_baseline_add_24"
+                android:id="@+id/e_task_btn_skip_add"
+                app:tint="@color/black" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

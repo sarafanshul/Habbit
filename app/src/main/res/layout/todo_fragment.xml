@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clickable="true"
+    tools:context=".ui.fragment.TodoFragment">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/todo_rv"
+        android:layout_marginVertical="@dimen/default_base_margin"
+        android:layout_marginHorizontal="@dimen/element_padding"
+        android:overScrollMode="never"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</FrameLayout>

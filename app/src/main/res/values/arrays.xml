@@ -1,0 +1,17 @@
+
+<resources>
+    <!-- Reply Preference -->
+    <string-array name="notification_entries">
+        <item>1 Hour</item>
+        <item>3 Hours</item>
+        <item>6 Hours</item>
+        <item>12 Hours</item>
+    </string-array>
+
+    <string-array name="notification_values">
+        <item>1 Hour</item>
+        <item>3 Hours</item>
+        <item>6 Hours</item>
+        <item>12 Hours</item>
+    </string-array>
+</resources>

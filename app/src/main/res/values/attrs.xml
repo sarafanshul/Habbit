@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="FullscreenAttrs">
+        <attr name="fullscreenBackgroundColor" format="color" />
+
+        <attr name="fullscreenTextColor" format="color" />
+
+        <attr name="theme_text" format="color"/>
+
+        <attr name="theme_text_light" format="color"/>
+
+        <attr name="colorSecondaryVariantLight" format="color"/>
+
+        <attr name="colorOther" format="color"/>
+
+        <attr name="colorPrimaryComplementary" format="color"/>
+
+        <attr name="nav_header_color" format="reference" />
+
+        <attr name="light_on_primary" format="reference" />
+
+        <attr name="contrast_background" format="reference"/>
+
+        <attr name="text_on_dark_background" format="color"/>
+
+        <attr name="contrast_theme_color" format="color"/>
+
+        <attr name="colorOnColorOnPrimary" format="color"/>
+    </declare-styleable>
+</resources>

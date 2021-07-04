@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="default_base_margin">8dp</dimen>
+    <dimen name="default_card_elevation_high">14dp</dimen>
+    <dimen name="default_card_radius">8dp</dimen>
+    <dimen name="H1">42sp</dimen>
+    <dimen name="H2">32sp</dimen>
+    <dimen name="H3">28sp</dimen>
+    <dimen name="H4">24sp</dimen>
+    <dimen name="element_padding">16dp</dimen>
+
+    <dimen name="default_card_elevation">8dp</dimen>
+
+    <dimen name="RV_card_height">160dp</dimen>
+
+</resources>
