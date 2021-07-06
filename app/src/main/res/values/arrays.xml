@@ -14,4 +14,14 @@
         <item>6 Hours</item>
         <item>12 Hours</item>
     </string-array>
+
+    <array name="calendar_color">
+        <item>@color/teal_200</item>
+        <item>@color/wet_asphalt</item>
+        <item>@color/matte_red</item>
+        <item>@color/yellow</item>
+        <item>@color/maroon</item>
+        <item>@color/ocean_blue</item>
+        <item>@color/flame_gold</item>
+    </array>
 </resources>

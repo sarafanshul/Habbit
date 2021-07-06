@@ -39,4 +39,10 @@
         <item name="android:iconTint">@drawable/btn_selector_wet_asphalt</item>
     </style>
 
+    <style name="CalendarViewCustomStyle">
+        <item name="calendar_day_bar_weekend_text_color">@color/wet_asphalt</item>
+        <item name="calendar_month_text_color">@color/mat_black</item>
+        <item name="calendar_year_selection_arrows_color">@color/asphalt</item>
+    </style>
+
 </resources>

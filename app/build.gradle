@@ -91,4 +91,7 @@ dependencies {
     implementation "androidx.work:work-gcm:$work_version"
     androidTestImplementation "androidx.work:work-testing:$work_version"
     implementation "androidx.work:work-multiprocess:$work_version"
+
+
+    implementation 'ru.cleverpumpkin:crunchycalendar:2.2.0'
 }

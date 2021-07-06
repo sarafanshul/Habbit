@@ -11,6 +11,8 @@ class InsightsSharedViewModel @Inject constructor(
 	private val repository: TasksRepository
 ) : ViewModel() {
 
+	val getAllDays = repository.getAllDays()
+
 	fun getToday() = TimeUtil.getTodayFromEpoch()
 
 	fun getMSFromMidnight() = TimeUtil.getMSfromMidnight()

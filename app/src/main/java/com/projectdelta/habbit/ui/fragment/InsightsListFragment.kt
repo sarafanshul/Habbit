@@ -1,7 +1,6 @@
 package com.projectdelta.habbit.ui.fragment
 
 import android.app.Activity
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -127,7 +126,7 @@ class InsightsListFragment : Fragment() {
 			object: RecyclerItemClickListenr.OnItemClickListener{
 				override fun onItemClick(view: View, position: Int) {
 					MaterialAlertDialogBuilder(activity).apply {
-						setTitle(TimeUtil.getDateFromOffset((TimeUtil.getTodayFromEpoch() - adapter.data[position].id).toInt()))
+						setTitle(TimeUtil.getPastDateFromOffset((TimeUtil.getTodayFromEpoch() - adapter.data[position].id).toInt()))
 						setMessage( adapter.data[position].tasksTitle.joinToString("\n") { it.chop(30) } )
 						create()
 					}.show()
@@ -146,7 +145,7 @@ class InsightsListFragment : Fragment() {
 			if( ! addData.isNullOrEmpty() ) {
 				if( statesAdapter.state != StatesRecyclerViewAdapter.STATE_NORMAL )
 					statesAdapter.state = StatesRecyclerViewAdapter.STATE_NORMAL
-				adapter.addAll(addData.toMutableList())
+				adapter.addAll(addData.sortedBy { -it.id }.toMutableList())
 			}
 		}
 	}

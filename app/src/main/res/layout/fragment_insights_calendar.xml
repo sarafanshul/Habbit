@@ -5,9 +5,10 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragment.InsightsCalendarFragment">
 
-    <TextView
+    <ru.cleverpumpkin.calendar.CalendarView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="INSIGHTS CALENDAR" />
+        style="@style/CalendarViewCustomStyle"
+        android:id="@+id/insights_cal_v"/>
 
 </FrameLayout>

@@ -7,6 +7,9 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 object TimeUtil {
+
+	private const val MILLISECONDS_IN_DAY : Long = 86400000L
+
 	private fun fromMilliSecondsToMinutes(milli : Long ) : Long = TimeUnit.MINUTES.convert(milli , TimeUnit.MILLISECONDS)
 
 	@Suppress("unused")
@@ -24,16 +27,29 @@ object TimeUtil {
 		return c.get(Calendar.DAY_OF_MONTH)
 	}
 
-	private fun getMonth(month : Int ) = DateFormatSymbols().months[ month - 1 ]
+	fun getMonth(month : Int ) = DateFormatSymbols().months[ month - 1 ]
 
 	/**
-	* Returns Date-Format(dd MMMM) offset to X days
+	* Returns Date-Format(dd MMMM) offset to X days in Past
 	*
 	* @param offset -> days offset to (from today)
 	* @return -> String formatted by "DD MMMM"
 	* */
 	@SuppressLint("SimpleDateFormat")
-	fun getDateFromOffset(offset : Int) : String {
+	fun getPastDateFromOffset(offset : Int) : String {
+		val c = Calendar.getInstance()
+		c.add(Calendar.DAY_OF_YEAR , -offset)
+		return "${SimpleDateFormat("dd").format( Date( c.timeInMillis ) )} ${getMonth(SimpleDateFormat("MM").format( Date( c.timeInMillis ) ).toInt())}"
+	}
+
+	/**
+	 * Returns Date-Format(dd MMMM) offset to X days in Future
+	 *
+	 * @param offset -> days offset to (from today)
+	 * @return -> String formatted by "DD MMMM"
+	 * */
+	@SuppressLint("SimpleDateFormat")
+	fun getFutureDateFromOffset(offset : Int) : String {
 		val c = Calendar.getInstance()
 		c.add(Calendar.DAY_OF_YEAR , offset)
 		return "${SimpleDateFormat("dd").format( Date( c.timeInMillis ) )} ${getMonth(SimpleDateFormat("MM").format( Date( c.timeInMillis ) ).toInt())}"
@@ -47,7 +63,7 @@ object TimeUtil {
 		return (
 				calender.timeInMillis + calender.get( Calendar.ZONE_OFFSET ) +
 				calender.get( Calendar.DST_OFFSET )
-				) / (1000 * 60 * 60 *24)
+				) / MILLISECONDS_IN_DAY
 	}
 
 	@Suppress("SpellCheckingInspection")
@@ -56,6 +72,9 @@ object TimeUtil {
 		return calender.timeInMillis + calender.get( Calendar.ZONE_OFFSET ) + calender.get( Calendar.DST_OFFSET )
 	}
 
-	fun getMSfromMidnight():Long = getMSfromEpoch() % (24 * 60 * 60 * 1000)
+	fun getMSfromMidnight():Long = getMSfromEpoch() % MILLISECONDS_IN_DAY
 
+	fun daysToMilliseconds( X : Long ) = X * MILLISECONDS_IN_DAY
+
+	fun millisecondsToDays( X : Long ) = X / MILLISECONDS_IN_DAY
 }

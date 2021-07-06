@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity() {
 	private fun setLayout(){
 
 		binding.mainToolbar.title = SimpleDateFormat("EEEE").format( Date() )
-		binding.mainToolbar.subtitle = TimeUtil.getDateFromOffset(0)
+		binding.mainToolbar.subtitle = TimeUtil.getPastDateFromOffset(0)
 
 		adapter = HomeViewPagerAdapter(supportFragmentManager)
 		adapter.addFragment( TodoFragment() , "TODO" )

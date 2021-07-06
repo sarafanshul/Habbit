@@ -4,13 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.projectdelta.habbit.data.entities.Day
-import com.projectdelta.habbit.data.entities.Task
-import com.projectdelta.habbit.databinding.FragmentInsightsListBinding
 import com.projectdelta.habbit.databinding.LayoutRvListBinding
 import com.projectdelta.habbit.util.lang.TimeUtil
 import com.projectdelta.habbit.util.lang.capitalized
 import com.projectdelta.habbit.util.lang.chop
-import okhttp3.internal.notify
 
 class RecyclerViewListAdapter():
 	RecyclerView.Adapter<RecyclerViewListAdapter.LayoutViewHolder> ( ){
@@ -20,7 +17,7 @@ class RecyclerViewListAdapter():
 	inner class LayoutViewHolder( private val binding: LayoutRvListBinding) : RecyclerView.ViewHolder(binding.root){
 		fun bind( D : Day ){
 			with(binding){
-				binding.tvDate.text = TimeUtil.getDateFromOffset((TimeUtil.getTodayFromEpoch() - D.id).toInt())
+				binding.tvDate.text = TimeUtil.getPastDateFromOffset((TimeUtil.getTodayFromEpoch() - D.id).toInt())
 				var tasks = D.tasksTitle.take(5).joinToString("\n"){
 					it.chop(30).capitalized()
 				}

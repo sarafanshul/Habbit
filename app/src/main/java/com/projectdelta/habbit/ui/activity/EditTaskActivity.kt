@@ -68,7 +68,7 @@ class EditTaskActivity : AppCompatActivity() {
 			summary = binding.eTaskEtSummary.text.toString()
 
 			if (binding.eTaskEtSkip.text.toString().isOk())
-				skipTill = viewModel.getTodayFromEpoch() + (binding.eTaskEtSkip.text.toString()).toLong()
+				skipTill = viewModel.getTodayFromEpoch() + (getValueTV().toString()).toLong()
 
 			importance = binding.eTaskRt.rating
 			isNotificationEnabled = binding.eTaskSwNotification.isChecked
@@ -90,8 +90,7 @@ class EditTaskActivity : AppCompatActivity() {
 
 		binding.eTaskRt.rating = task.importance
 
-		binding.eTaskEtSkip.text =
-			(if (task.skipTill - viewModel.getTodayFromEpoch() < 0L) -1 else task.skipTill - viewModel.getTodayFromEpoch()).toString()
+		setValueTV((if (task.skipTill - viewModel.getTodayFromEpoch() < 0L) -1 else task.skipTill - viewModel.getTodayFromEpoch()).toInt())
 
 		binding.eTaskSwNotification.isChecked = task.isNotificationEnabled
 
@@ -140,7 +139,7 @@ class EditTaskActivity : AppCompatActivity() {
 			timePicker.setIs24HourView(true)
 			MaterialAlertDialogBuilder(this)
 				.setView(timePickerLayout)
-				.setPositiveButton("ADD"){_ , _ ->
+				.setPositiveButton("SAVE"){_ , _ ->
 					skipTime = TimeUtil.fromMinutesToMilliSeconds(timePicker.hour*60L + timePicker.minute)
 				}
 				.setNegativeButton("Cancel"){_ , _ -> }
@@ -148,6 +147,7 @@ class EditTaskActivity : AppCompatActivity() {
 				.show()
 		}
 	}
+
 
 	private fun resultOk(){
 		setResult( Activity.RESULT_OK)
@@ -160,9 +160,20 @@ class EditTaskActivity : AppCompatActivity() {
 	}
 
 	private fun increment( ){
-		binding.eTaskEtSkip.text = minOf( 30L , binding.eTaskEtSkip.text.toString().toInt() + 1L ).toString()
+//		binding.eTaskEtSkip.text = minOf( 30L , binding.eTaskEtSkip.text.toString().toInt() + 1L ).toString()
+		setValueTV( minOf( 30 , getValueTV() + 1 ) )
 	}
 	private fun decrement( ){
-		binding.eTaskEtSkip.text = maxOf( -1L , binding.eTaskEtSkip.text.toString().toInt() - 1L ).toString()
+//		binding.eTaskEtSkip.text = maxOf( -1L , binding.eTaskEtSkip.text.toString().toInt() - 1L ).toString()
+		setValueTV( maxOf( -1 , getValueTV() - 1 ) )
+	}
+	private val NULL_DISPLAY_ET by lazy { "-" }
+	private fun getValueTV() : Int{
+		if( binding.eTaskEtSkip.text.toString() == NULL_DISPLAY_ET ) return -1
+		return binding.eTaskEtSkip.text.toString().toInt()
+	}
+	private fun setValueTV( X : Int ){
+		if( X == -1 ) binding.eTaskEtSkip.text = NULL_DISPLAY_ET
+		else binding.eTaskEtSkip.text = X.toString()
 	}
 }
