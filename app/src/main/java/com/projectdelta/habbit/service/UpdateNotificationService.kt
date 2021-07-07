@@ -90,9 +90,7 @@ class UpdateNotificationService(
 		if (wakeLock.isHeld) {
 			wakeLock.release()
 		}
-		if (instance == this) {
-			instance = null
-		}
+		instance = null
 		super.onDestroy()
 	}
 
@@ -132,21 +130,23 @@ class UpdateNotificationService(
 	 */
 	private suspend fun updateTaskList( mContext: Context ) {
 
-		val db = TasksDatabase.getInstance( mContext ).tasksDao()
+		val db = TasksDatabase.getInstance(mContext).tasksDao()
 
-		Log.d("UpdateNotificationService" , "updateTaskList")
+		Log.d("UpdateNotificationService", "updateTaskList")
 		val handler = CoroutineExceptionHandler { _, exception ->
-			Log.e("CoroutineExceptionHandler Exception" , exception.message!!)
+			Log.e("CoroutineExceptionHandler Exception", exception.message!!)
 		}
 
-		GlobalScope.launch(Dispatchers.IO + handler) {
-			val data = async{ db.getAllTasksOffline() }
+		GlobalScope.launch {
+			val data = async { db.getAllTasksOffline() }
 			try {
-				UpdateNotificationUtil.showUpdateNotification(this@UpdateNotificationService ,
-					data.await()
-						.tasksBeforeSkipTime( TimeUtil.getMSfromMidnight() )
-						.unfinishedNotifyTill( TimeUtil.getTodayFromEpoch() ) ,
-					DEFAULT_NOTIFICATION_ID )
+			UpdateNotificationUtil.showUpdateNotification(
+				this@UpdateNotificationService,
+				data.await()
+					.tasksBeforeSkipTime(TimeUtil.getMSfromMidnight())
+					.unfinishedNotifyTill(TimeUtil.getTodayFromEpoch()),
+				DEFAULT_NOTIFICATION_ID
+				)
 			}catch ( e : Exception ){
 				Log.e("Exception Sending Notification" , e.message!! )
 			}

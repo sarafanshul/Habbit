@@ -14,12 +14,14 @@ import com.projectdelta.habbit.util.notification.Notifications.DEFAULT_UPDATE_IN
 class SettingsActivity : AppCompatActivity() ,
 	SharedPreferences.OnSharedPreferenceChangeListener {
 
-	lateinit var binding : SettingsActivityBinding
+	private var _binding : SettingsActivityBinding ?= null
+	private val binding : SettingsActivityBinding
+		get() = _binding!!
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
-		binding = SettingsActivityBinding.inflate( layoutInflater )
+		_binding = SettingsActivityBinding.inflate( layoutInflater )
 
 		setContentView( binding.root )
 
@@ -40,6 +42,11 @@ class SettingsActivity : AppCompatActivity() ,
 	override fun onPause() {
 		super.onPause()
 		PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this)
+	}
+
+	override fun onDestroy() {
+		super.onDestroy()
+		_binding = null
 	}
 
 	override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {

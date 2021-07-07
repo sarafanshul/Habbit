@@ -72,6 +72,11 @@ class TodoFragment : Fragment() {
 		setRv()
 
 	}
+	override fun onDestroy() {
+		_binding = null
+		super.onDestroy()
+	}
+
 
 	private fun setRv() {
 		binding.todoRv.layoutManager = LinearLayoutManager(activity)

@@ -12,8 +12,9 @@ object TimeUtil {
 
 	private fun fromMilliSecondsToMinutes(milli : Long ) : Long = TimeUnit.MINUTES.convert(milli , TimeUnit.MILLISECONDS)
 
-	@Suppress("unused")
 	fun fromMinutesToMilliSeconds( min : Long ) : Long = TimeUnit.MILLISECONDS.convert(min , TimeUnit.MINUTES)
+
+	fun fromMillisecondsToHour( ms : Long ) = TimeUnit.HOURS.convert( ms , TimeUnit.MILLISECONDS )
 
 	@Suppress("unused")
 	fun fromMilliSecondsToString( milli : Long ) : String{

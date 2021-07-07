@@ -68,10 +68,8 @@ object UpdateNotificationUtil {
 					setAutoCancel(true)
 				}.build()
 			)
-			GlobalScope.launch (Dispatchers.Main){
-				data.forEach {
-					notify( it.hash() , createNewDataNotification(mContext ,it) )
-				}
+			data.forEach {
+				notify( it.hash() , createNewDataNotification(mContext ,it) )
 			}
 		}
 	}

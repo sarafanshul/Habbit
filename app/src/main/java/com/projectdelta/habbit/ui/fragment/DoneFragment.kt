@@ -37,7 +37,7 @@ class DoneFragment : Fragment() {
 	private val binding
 		get() = _binding!!
 
-	lateinit var adapter : RecyclerViewDoneAdapter
+	private lateinit var adapter : RecyclerViewDoneAdapter
 
 	private lateinit var activity: MainActivity
 
@@ -52,9 +52,12 @@ class DoneFragment : Fragment() {
 	): View? {
 		_binding = DoneFragmentBinding.inflate(inflater , container , false)
 
-		Log.d(TAG, "onCreateView: $viewModel")
-
 		return binding.root
+	}
+
+	override fun onDestroyView() {
+		super.onDestroyView()
+		_binding = null
 	}
 
 
@@ -65,7 +68,7 @@ class DoneFragment : Fragment() {
 	}
 
 	private fun setRv() {
-		binding.doneRv.layoutManager = LinearLayoutManager( activity )
+		binding.doneRv.layoutManager = LinearLayoutManager( requireActivity() )
 		adapter = RecyclerViewDoneAdapter()
 
 		val emptyView : View = layoutInflater.inflate( R.layout.layout_empty_view , binding.doneRv , false )
@@ -106,7 +109,7 @@ class DoneFragment : Fragment() {
 			}
 		)
 
-		binding.doneRv.addOnItemTouchListener(RecyclerItemClickListenr( context?.applicationContext!! ,
+		binding.doneRv.addOnItemTouchListener(RecyclerItemClickListenr( requireActivity() ,
 			binding.doneRv ,
 			object : RecyclerItemClickListenr.OnItemClickListener{
 				override fun onItemClick(view: View, position: Int) {
@@ -118,6 +121,7 @@ class DoneFragment : Fragment() {
 				}
 			}
 		))
+
 
 		viewModel.data.observe(viewLifecycleOwner , {data ->
 			if( data.isNullOrEmpty() ) {

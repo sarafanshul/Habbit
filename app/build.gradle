@@ -30,7 +30,10 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            // Enables resource shrinking, which is performed by the
+            // Android Gradle plugin.
+            shrinkResources = true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -94,4 +97,6 @@ dependencies {
 
 
     implementation 'ru.cleverpumpkin:crunchycalendar:2.2.0'
+
+//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
 }

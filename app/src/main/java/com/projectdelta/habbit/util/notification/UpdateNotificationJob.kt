@@ -33,6 +33,7 @@ class UpdateNotificationJob (private val context: Context, workerParams: WorkerP
 		* */
 		fun setupTask( context: Context , policy : ExistingPeriodicWorkPolicy , prefInterval : Long ?= null ){
 			Log.d("WorkManager" , "Setup Task Called , Args = $policy , $prefInterval")
+
 			val interval = prefInterval ?: DEFAULT_UPDATE_INTERVAL
 			if( interval > 0 ){
 				val request = PeriodicWorkRequestBuilder<UpdateNotificationJob>(

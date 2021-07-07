@@ -40,7 +40,9 @@ import java.util.*
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-	lateinit var binding : ActivityMainBinding
+	private var _binding : ActivityMainBinding ?= null
+	private val binding : ActivityMainBinding
+		get() = _binding!!
 	private val viewModel: MainViewModel by viewModels()
 	lateinit var adapter : HomeViewPagerAdapter
 
@@ -55,12 +57,9 @@ class MainActivity : AppCompatActivity() {
 	private val startForResultTask = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
 			result: ActivityResult ->
 		if (result.resultCode == Activity.RESULT_OK) {
-			if( this::binding.isInitialized )
-				Snackbar.make(binding.root , "Changes saved" , Snackbar.LENGTH_LONG).apply {
-					anchorView = binding.mainFabCreate
-				}.show()
-			else // binding not initialized use toast
-				Toast.makeText(this , "Container updated" , Toast.LENGTH_LONG).show()
+			Snackbar.make(binding.root , "Changes saved" , Snackbar.LENGTH_LONG).apply {
+				anchorView = binding.mainFabCreate
+			}.show()
 		}
 	}
 
@@ -68,7 +67,7 @@ class MainActivity : AppCompatActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
-		binding = ActivityMainBinding.inflate(layoutInflater)
+		_binding = ActivityMainBinding.inflate(layoutInflater)
 
 		setTheme( R.style.Theme_Habbit )
 		setContentView( binding.root )
@@ -85,6 +84,11 @@ class MainActivity : AppCompatActivity() {
 			launchEditActivity( Task( viewModel.getMSfromEpoch() , "" , mutableListOf<Long>() , 0f ) )
 		}
 
+	}
+
+	override fun onDestroy() {
+		super.onDestroy()
+		_binding = null
 	}
 
 	private fun initMenu() {

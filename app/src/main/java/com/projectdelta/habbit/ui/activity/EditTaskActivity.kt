@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
+import android.util.Log
 import android.widget.TimePicker
 import androidx.activity.viewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -27,7 +28,7 @@ class EditTaskActivity : AppCompatActivity() {
 	private val viewModel : EditTaskViewModel by viewModels()
 	private val REPEAT_DELAY = 50L
 	private val TAG = "EditTaskActivity"
-	var skipTime : Long = TimeUtil.getMSfromMidnight()
+	var skipTime : Long = -1
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -82,10 +83,10 @@ class EditTaskActivity : AppCompatActivity() {
 
 	private fun setLayout( task: Task ) {
 
-		if ( task.taskName.isOk() )
+		if (task.taskName.isOk())
 			binding.eTaskEtTask.text = task.taskName.toEditable()
 
-		if ( task.summary.isOk())
+		if (task.summary.isOk())
 			binding.eTaskEtSummary.text = task.summary.toEditable()
 
 		binding.eTaskRt.rating = task.importance
@@ -134,15 +135,22 @@ class EditTaskActivity : AppCompatActivity() {
 		}
 
 		binding.eTaskIvTime.setOnClickListener {
-			val timePickerLayout = layoutInflater.inflate(R.layout.layout_time_picker , null)
+			if( skipTime == -1L )
+				skipTime = TimeUtil.getMSfromMidnight()
+			val timePickerLayout = layoutInflater.inflate(R.layout.layout_time_picker, null)
 			val timePicker = timePickerLayout.findViewById<TimePicker>(R.id.alert_tp)
-			timePicker.setIs24HourView(true)
+			timePicker.apply {
+				hour = (TimeUtil.fromMillisecondsToHour(skipTime)).toInt()
+				minute = ((skipTime / (60*1000)) - TimeUtil.fromMillisecondsToHour(skipTime) * 60 ).toInt()
+				setIs24HourView(true)
+			}
 			MaterialAlertDialogBuilder(this)
 				.setView(timePickerLayout)
-				.setPositiveButton("SAVE"){_ , _ ->
-					skipTime = TimeUtil.fromMinutesToMilliSeconds(timePicker.hour*60L + timePicker.minute)
+				.setPositiveButton("SAVE") { _, _ ->
+					skipTime =
+						TimeUtil.fromMinutesToMilliSeconds(timePicker.hour * 60L + timePicker.minute)
 				}
-				.setNegativeButton("Cancel"){_ , _ -> }
+				.setNegativeButton("Cancel") { _, _ -> }
 				.create()
 				.show()
 		}
@@ -160,11 +168,9 @@ class EditTaskActivity : AppCompatActivity() {
 	}
 
 	private fun increment( ){
-//		binding.eTaskEtSkip.text = minOf( 30L , binding.eTaskEtSkip.text.toString().toInt() + 1L ).toString()
 		setValueTV( minOf( 30 , getValueTV() + 1 ) )
 	}
 	private fun decrement( ){
-//		binding.eTaskEtSkip.text = maxOf( -1L , binding.eTaskEtSkip.text.toString().toInt() - 1L ).toString()
 		setValueTV( maxOf( -1 , getValueTV() - 1 ) )
 	}
 	private val NULL_DISPLAY_ET by lazy { "-" }

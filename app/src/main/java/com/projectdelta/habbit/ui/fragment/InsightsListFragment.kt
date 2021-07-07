@@ -152,6 +152,7 @@ class InsightsListFragment : Fragment() {
 
 	override fun onDestroy() {
 		job?.cancel()
+		_binding = null
 		super.onDestroy()
 	}
 }
