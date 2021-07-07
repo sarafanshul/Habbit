@@ -113,7 +113,8 @@ class DoneFragment : Fragment() {
 			binding.doneRv ,
 			object : RecyclerItemClickListenr.OnItemClickListener{
 				override fun onItemClick(view: View, position: Int) {
-					activity.launchEditActivity( adapter.data[position] )
+					if( adapter.dataIsInitialized() )
+						activity.launchEditActivity( adapter.data[position] )
 				}
 
 				override fun onItemLongClick(view: View?, position: Int) {

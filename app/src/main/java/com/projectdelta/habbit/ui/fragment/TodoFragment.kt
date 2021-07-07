@@ -124,7 +124,8 @@ class TodoFragment : Fragment() {
 			binding.todoRv ,
 			object : RecyclerItemClickListenr.OnItemClickListener{
 				override fun onItemClick(view: View, position: Int) {
-					activity.launchEditActivity( adapter.data[position] )
+					if( adapter.dataIsInitialized() )
+						activity.launchEditActivity( adapter.data[position] )
 				}
 
 				override fun onItemLongClick(view: View?, position: Int) {
@@ -145,23 +146,22 @@ class TodoFragment : Fragment() {
 				override fun onSwipeLeftToRight(vh: RecyclerView.ViewHolder?) {object : RecyclerViewTodoAdapter.OnSwipeRight{
 					override fun doWork(viewHolder: RecyclerView.ViewHolder) {
 						val position = viewHolder.adapterPosition
-						val T = adapter.data.removeAt( position )
-						adapter.notifyItemRemoved( position )
-						viewModel.notifyTaskSkipped( T )
+						val T = adapter.data.removeAt(position)
+						adapter.notifyItemRemoved(position)
+						viewModel.notifyTaskSkipped(T)
 					}
 				}.doWork(vh!!) }
 
 				override fun onSwipeRightToLeft(vh: RecyclerView.ViewHolder?) {object :RecyclerViewTodoAdapter.OnSwipeLeft{
 					override fun doWork(viewHolder: RecyclerView.ViewHolder) {
 						val position = viewHolder.adapterPosition
-						val T = adapter.data.removeAt( position )
-						adapter.notifyItemRemoved( position )
-						viewModel.notifyTaskDone( T )
+						val T = adapter.data.removeAt(position)
+						adapter.notifyItemRemoved(position)
+						viewModel.notifyTaskDone(T)
 					}
 				}.doWork(vh!!) }
 			})
 		}.build())
-		itemTouchHelper.attachToRecyclerView( binding.todoRv )
 
 		viewModel.data.observe(viewLifecycleOwner , {data ->
 			if( data.isNullOrEmpty() ) {
@@ -176,9 +176,10 @@ class TodoFragment : Fragment() {
 
 			if( undoneData.isNullOrEmpty() ) {
 				statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
+				itemTouchHelper.attachToRecyclerView(null)
 			}else {
 				statesAdapter.state = StatesRecyclerViewAdapter.STATE_NORMAL
-
+				itemTouchHelper.attachToRecyclerView( binding.todoRv )
 				adapter.set(
 					undoneData.toMutableList(),
 					viewModel.getToday()

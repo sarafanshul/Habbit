@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity() {
 		}
 
 		binding.mainBtnSignIn.setOnClickListener {
-			this.toast("Test Button Hide It!")
+			this.toast("Coming soon...")
 		}
 	}
 

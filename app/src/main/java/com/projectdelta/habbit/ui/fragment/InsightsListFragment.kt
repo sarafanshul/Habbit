@@ -125,11 +125,12 @@ class InsightsListFragment : Fragment() {
 			binding.insightsListRv,
 			object: RecyclerItemClickListenr.OnItemClickListener{
 				override fun onItemClick(view: View, position: Int) {
-					MaterialAlertDialogBuilder(activity).apply {
-						setTitle(TimeUtil.getPastDateFromOffset((TimeUtil.getTodayFromEpoch() - adapter.data[position].id).toInt()))
-						setMessage( adapter.data[position].tasksTitle.joinToString("\n") { it.chop(30) } )
-						create()
-					}.show()
+					if( adapter.dataIsInitialized() )
+						MaterialAlertDialogBuilder(activity).apply {
+							setTitle(TimeUtil.getPastDateFromOffset((TimeUtil.getTodayFromEpoch() - adapter.data[position].id).toInt()))
+							setMessage( adapter.data[position].tasksTitle.joinToString("\n") { it.chop(30) } )
+							create()
+						}.show()
 				}
 
 				override fun onItemLongClick(view: View?, position: Int) {}

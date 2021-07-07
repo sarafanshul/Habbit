@@ -53,4 +53,6 @@ class RecyclerViewListAdapter():
 			notifyDataSetChanged()
 		}
 	}
+
+	fun dataIsInitialized() = this::data.isInitialized
 }

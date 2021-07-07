@@ -56,4 +56,7 @@ class RecyclerViewSkipAdapter():
 	interface OnSwipeRight{
 		fun doWork(viewHolder: RecyclerView.ViewHolder): Unit
 	}
+
+	fun dataIsInitialized() = this::data.isInitialized
+
 }

@@ -57,6 +57,8 @@ class RecyclerViewTodoAdapter():
 		notifyDataSetChanged()
 	}
 
+	fun dataIsInitialized() = this::data.isInitialized
+
 	interface OnSwipeRight {
 		fun doWork(viewHolder: RecyclerView.ViewHolder): Unit
 	}

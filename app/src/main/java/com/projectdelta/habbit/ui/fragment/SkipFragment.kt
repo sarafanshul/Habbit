@@ -122,7 +122,8 @@ class SkipFragment : Fragment() {
 			binding.skipRv ,
 			object : RecyclerItemClickListenr.OnItemClickListener{
 				override fun onItemClick(view: View, position: Int) {
-					activity.launchEditActivity( adapter.data[position] )
+					if( adapter.dataIsInitialized() )
+						activity.launchEditActivity( adapter.data[position] )
 				}
 
 				override fun onItemLongClick(view: View?, position: Int) {
@@ -151,7 +152,6 @@ class SkipFragment : Fragment() {
 				override fun onSwipeRightToLeft(vh: RecyclerView.ViewHolder?) { }
 			})
 		}.build())
-		itemTouchHelper.attachToRecyclerView( binding.skipRv )
 
 		viewModel.data.observe(viewLifecycleOwner , {data ->
 			if( data.isNullOrEmpty() ) {
@@ -165,9 +165,10 @@ class SkipFragment : Fragment() {
 
 			if( undoneData.isNullOrEmpty() ) {
 				statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
+				itemTouchHelper.attachToRecyclerView( null )
 			}else {
 				statesAdapter.state = StatesRecyclerViewAdapter.STATE_NORMAL
-
+				itemTouchHelper.attachToRecyclerView( binding.skipRv )
 				adapter.set(
 					undoneData.toMutableList(),
 					viewModel.getToday()
