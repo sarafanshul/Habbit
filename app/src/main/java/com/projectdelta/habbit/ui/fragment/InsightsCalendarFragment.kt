@@ -111,7 +111,7 @@ class InsightsCalendarFragment : Fragment() {
 				val cur = data.binarySearchBy( TimeUtil.millisecondsToDays(date.timeInMillis) + 1 ){ it.id }
 				if( cur >= 0 ){
 					val title = when( data[cur].tasksTitle.size ){
-						1 -> "${data[cur].tasksTitle.size} task completed on ${TimeUtil.fromMilliSecondsToString(date.timeInMillis)}"
+						1 -> "${data[cur].tasksTitle.size} task completed on ${TimeUtil.getMonth( date.month + 1 )} ${date.dayOfMonth}"
 						else -> "${data[cur].tasksTitle.size} tasks completed on ${TimeUtil.getMonth( date.month + 1 )} ${date.dayOfMonth}"
 					}
 					val message = data[cur].tasksTitle.joinToString("\n") {

@@ -4,8 +4,8 @@ import kotlin.random.Random
 
 object NotFound {
 
-		private val TextOnlyEmoticons = listOf<String>( "(='X'=)" , "^o^" , "(·_·)" , "(>_<)" ,
-			"(≥o≤)" , "(ㆆ _ ㆆ)" , "(╥﹏╥)" , "<(^_^)>" , "=^_^=" , "( ͡° ͜ʖ ͡°)_/¯" , "(-_-;)" , "(*^_^*)")
+	private val TextOnlyEmoticons = listOf<String>( "(='X'=)" , "^o^" , "(·_·)" , "(>_<)" ,
+		"(≥o≤)" , "(ㆆ _ ㆆ)" , "(╥﹏╥)" , "<(^_^)>" , "=^_^=" , "(-_-;)" , "(*^_^*)" , "(◠﹏◠)")
 
 	/**
 	 * Returns a random text emoticon

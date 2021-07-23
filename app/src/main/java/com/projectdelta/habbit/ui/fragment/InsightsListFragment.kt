@@ -125,12 +125,18 @@ class InsightsListFragment : Fragment() {
 			binding.insightsListRv,
 			object: RecyclerItemClickListenr.OnItemClickListener{
 				override fun onItemClick(view: View, position: Int) {
-					if( adapter.dataIsInitialized() )
+					if( adapter.dataIsInitialized() ) {
+						val title = when( adapter.data[position].tasksTitle.size ){
+							1 -> "${adapter.data[position].tasksTitle.size} task completed on ${TimeUtil.getPastDateFromOffset((TimeUtil.getTodayFromEpoch() - adapter.data[position].id).toInt())}"
+							else -> "${adapter.data[position].tasksTitle.size} tasks completed on ${TimeUtil.getPastDateFromOffset((TimeUtil.getTodayFromEpoch() - adapter.data[position].id).toInt())}"
+						}
+						val message = adapter.data[position].tasksTitle.joinToString("\n") { it.chop(30) }
 						MaterialAlertDialogBuilder(activity).apply {
-							setTitle(TimeUtil.getPastDateFromOffset((TimeUtil.getTodayFromEpoch() - adapter.data[position].id).toInt()))
-							setMessage( adapter.data[position].tasksTitle.joinToString("\n") { it.chop(30) } )
+							setTitle(title)
+							setMessage(message)
 							create()
 						}.show()
+					}
 				}
 
 				override fun onItemLongClick(view: View?, position: Int) {}
