@@ -95,9 +95,9 @@ class TodoFragment : Fragment() {
 		binding.todoRv.adapter = statesAdapter
 		statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
 
-		binding.todoRv.addItemDecoration(
-			DividerItemDecoration( binding.todoRv.context , DividerItemDecoration.VERTICAL)
-		)
+		val divider = DividerItemDecoration( binding.todoRv.context , DividerItemDecoration.VERTICAL)
+		binding.todoRv.addItemDecoration( divider )
+
 
 		// https://stackoverflow.com/a/38909958
 		binding.todoRv.viewTreeObserver.addOnPreDrawListener (
@@ -166,6 +166,7 @@ class TodoFragment : Fragment() {
 		viewModel.data.observe(viewLifecycleOwner , {data ->
 			if( data.isNullOrEmpty() ) {
 				statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
+				binding.todoRv.removeItemDecoration( divider )
 				return@observe
 			}
 			Log.d("DATA" , "${viewModel.getToday()}")
@@ -176,9 +177,11 @@ class TodoFragment : Fragment() {
 
 			if( undoneData.isNullOrEmpty() ) {
 				statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
+				binding.todoRv.removeItemDecoration( divider )
 				itemTouchHelper.attachToRecyclerView(null)
 			}else {
 				statesAdapter.state = StatesRecyclerViewAdapter.STATE_NORMAL
+				binding.todoRv.addItemDecoration( divider )
 				itemTouchHelper.attachToRecyclerView( binding.todoRv )
 				adapter.set(
 					undoneData.toMutableList(),

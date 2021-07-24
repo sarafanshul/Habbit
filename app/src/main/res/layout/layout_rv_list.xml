@@ -25,6 +25,8 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/H5"
         android:textColor="@color/wet_asphalt"
+        android:layout_marginBottom="@dimen/element_padding"
         android:id="@+id/tv_data"/>
+
 
 </LinearLayout>

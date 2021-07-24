@@ -84,9 +84,8 @@ class DoneFragment : Fragment() {
 		binding.doneRv.adapter = statesAdapter
 		statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
 
-		binding.doneRv.addItemDecoration(
-			DividerItemDecoration( binding.doneRv.context , DividerItemDecoration.VERTICAL)
-		)
+		val divider = DividerItemDecoration( binding.doneRv.context , DividerItemDecoration.VERTICAL)
+		binding.doneRv.addItemDecoration( divider )
 
 		// https://stackoverflow.com/a/38909958
 		binding.doneRv.viewTreeObserver.addOnPreDrawListener (
@@ -127,6 +126,7 @@ class DoneFragment : Fragment() {
 		viewModel.data.observe(viewLifecycleOwner , {data ->
 			if( data.isNullOrEmpty() ) {
 				statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
+				binding.doneRv.removeItemDecoration( divider )
 				return@observe
 			}
 
@@ -136,7 +136,9 @@ class DoneFragment : Fragment() {
 
 			if( doneData.isNullOrEmpty() ){
 				statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
+				binding.doneRv.removeItemDecoration( divider )
 			}else {
+				binding.doneRv.addItemDecoration( divider )
 				statesAdapter.state = StatesRecyclerViewAdapter.STATE_NORMAL
 				adapter.set(
 					doneData,

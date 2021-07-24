@@ -8,6 +8,7 @@ import com.projectdelta.habbit.databinding.LayoutRvListBinding
 import com.projectdelta.habbit.util.lang.TimeUtil
 import com.projectdelta.habbit.util.lang.capitalized
 import com.projectdelta.habbit.util.lang.chop
+import com.projectdelta.habbit.util.lang.titlesToBulletList
 
 class RecyclerViewListAdapter():
 	RecyclerView.Adapter<RecyclerViewListAdapter.LayoutViewHolder> ( ){
@@ -17,12 +18,10 @@ class RecyclerViewListAdapter():
 	inner class LayoutViewHolder( private val binding: LayoutRvListBinding) : RecyclerView.ViewHolder(binding.root){
 		fun bind( D : Day ){
 			with(binding){
-				binding.tvDate.text = TimeUtil.getPastDateFromOffset((TimeUtil.getTodayFromEpoch() - D.id).toInt())
-				var tasks = D.tasksTitle.take(5).joinToString("\n"){
-					it.chop(30).capitalized()
-				}
-				if( D.tasksTitle.size > 5 )tasks += "\n${D.tasksTitle.size - 5}+"
-				binding.tvData.text = tasks
+				tvDate.text = TimeUtil.getPastDateFromOffset((TimeUtil.getTodayFromEpoch() - D.id).toInt())
+				var tasks = D.titlesToBulletList(maxLength = 40 ,maxLine = 5)
+				if( D.tasksTitle.size > 5 )tasks += "\nand ${D.tasksTitle.size - 5} more!"
+				tvData.text = tasks
 			}
 		}
 	}

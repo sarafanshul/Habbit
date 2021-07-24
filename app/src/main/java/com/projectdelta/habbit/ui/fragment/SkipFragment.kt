@@ -93,9 +93,9 @@ class SkipFragment : Fragment() {
 		binding.skipRv.adapter = statesAdapter
 		statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
 
-		binding.skipRv.addItemDecoration(
-			DividerItemDecoration( binding.skipRv.context , DividerItemDecoration.VERTICAL)
-		)
+		val divider = DividerItemDecoration( binding.skipRv.context , DividerItemDecoration.VERTICAL)
+
+		binding.skipRv.addItemDecoration( divider )
 
 		// https://stackoverflow.com/a/38909958
 		binding.skipRv.viewTreeObserver.addOnPreDrawListener (
@@ -156,6 +156,7 @@ class SkipFragment : Fragment() {
 		viewModel.data.observe(viewLifecycleOwner , {data ->
 			if( data.isNullOrEmpty() ) {
 				statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
+				binding.skipRv.removeItemDecoration( divider )
 				return@observe
 			}
 
@@ -165,10 +166,12 @@ class SkipFragment : Fragment() {
 
 			if( undoneData.isNullOrEmpty() ) {
 				statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
+				binding.skipRv.removeItemDecoration( divider )
 				itemTouchHelper.attachToRecyclerView( null )
 			}else {
 				statesAdapter.state = StatesRecyclerViewAdapter.STATE_NORMAL
 				itemTouchHelper.attachToRecyclerView( binding.skipRv )
+				binding.skipRv.addItemDecoration( divider )
 				adapter.set(
 					undoneData.toMutableList(),
 					viewModel.getToday()
