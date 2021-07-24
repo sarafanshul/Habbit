@@ -11,98 +11,101 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="3dp"
+        android:animateLayoutChanges="true"
         app:cardCornerRadius="3dp"
         android:clickable="true">
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:animateLayoutChanges="true"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:padding="10dp"
-            android:orientation="horizontal">
-
-            <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.8"
             android:orientation="vertical">
 
-            <RatingBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="?android:attr/ratingBarStyleSmall"
-                android:paddingVertical="10dp"
-                android:numStars="5"
-                android:progressTint="@color/flame_gold"
-                android:id="@+id/tasks_tw_rating"/>
-
-            <com.google.android.material.textview.MaterialTextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Task name"
-                android:textSize="26sp"
-                android:singleLine="true"
-                android:ellipsize="marquee"
-                android:textColor="?colorOnColorOnPrimary"
-                android:gravity="center_vertical"
-                android:id="@+id/tasks_tw_id"/>
+                android:layout_margin="4dp"
+                android:padding="10dp"
+                android:orientation="horizontal">
 
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.8"
+                    android:orientation="vertical">
 
-        </LinearLayout>
+                    <RatingBar
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="?android:attr/ratingBarStyleSmall"
+                        android:paddingVertical="10dp"
+                        android:numStars="5"
+                        android:progressTint="@color/flame_gold"
+                        android:id="@+id/tasks_tw_rating"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Task name"
+                        android:textSize="26sp"
+                        android:singleLine="true"
+                        android:ellipsize="marquee"
+                        android:textColor="?colorOnColorOnPrimary"
+                        android:gravity="center_vertical"
+                        android:id="@+id/tasks_tw_id"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:src="@drawable/ic_local_fire_department_black_24dp"
+                        app:tint="@color/flame_red"
+                        android:layout_weight="0.9"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="0.5"
+                        android:text="100 days"
+                        android:textColor="?colorOnColorOnPrimary"
+                        android:gravity="center"
+                        android:id="@+id/tasks_tw_streak"
+                        android:textStyle="bold"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.3"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:src="@drawable/ic_local_fire_department_black_24dp"
-                    app:tint="@color/flame_red"
-                    android:layout_weight="0.9"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="7dp"
+                android:id="@+id/tasks_ll"
+                android:animateLayoutChanges="true"
+                android:clickable="true"
+                android:visibility="gone">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="0.5"
-                    android:text="100 days"
-                    android:textColor="?colorOnColorOnPrimary"
-                    android:gravity="center"
-                    android:id="@+id/tasks_tw_streak"
-                    android:textStyle="bold"/>
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tasks_tw_summary"
+                    android:gravity="left|center_vertical"
+                    android:textSize="17dp"
+                    android:text="  Done"/>
 
             </LinearLayout>
 
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingHorizontal="10dp"
-        android:paddingVertical="7dp"
-        android:id="@+id/tasks_btn_done"
-        android:animateLayoutChanges="true"
-        android:clickable="true"
-        android:visibility="gone"
-        android:background="@color/lime">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_done_black_24dp"/>
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="17dp"
-            android:text="  Done"/>
-
-    </LinearLayout>
 
 </LinearLayout>

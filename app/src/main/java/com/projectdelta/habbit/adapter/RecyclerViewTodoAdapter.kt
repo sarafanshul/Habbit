@@ -18,6 +18,7 @@ class RecyclerViewTodoAdapter():
 				tasksTwId.isSelected = true
 				tasksTwStreak.text = streakString
 				tasksTwRating.rating = T.importance
+				tasksTwSummary.text = T.summary
 			}
 		}
 	}

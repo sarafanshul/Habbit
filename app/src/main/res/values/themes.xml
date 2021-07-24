@@ -19,6 +19,7 @@
 
         <item name="fontFamily">@font/product_sans_font_family</item>
 
+        <item name="theme_text">@color/asphalt</item>
         <item name="colorOnColorOnPrimary">@color/asphalt</item>
     </style>
 

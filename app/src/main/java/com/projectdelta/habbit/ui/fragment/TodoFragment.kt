@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -129,7 +130,10 @@ class TodoFragment : Fragment() {
 				}
 
 				override fun onItemLongClick(view: View?, position: Int) {
-
+					view?.findViewById<LinearLayout>(R.id.tasks_ll)?.visibility = when( view?.findViewById<LinearLayout>(R.id.tasks_ll)?.visibility ){
+						View.VISIBLE -> View.GONE
+						else -> View.VISIBLE
+					}
 				}
 			}
 		))
