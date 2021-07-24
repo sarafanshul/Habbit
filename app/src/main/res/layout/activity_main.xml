@@ -13,6 +13,7 @@
         android:layout_height="match_parent">
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
+            android:id="@+id/main_app_bar"
             android:layout_height="wrap_content">
 
             <com.google.android.material.appbar.MaterialToolbar
@@ -44,20 +45,29 @@
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/main_fab_create"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Create"
-        android:textSize="18sp"
-        android:backgroundTint="?colorPrimary"
-        android:textColor="?colorOnPrimary"
-        android:src="@drawable/ic_baseline_add_24"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/element_padding"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/main_rv_tasks"
-        android:contentDescription="Create new Task" />
+            android:id="@+id/main_fab_create"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Create"
+            android:textSize="18sp"
+            android:backgroundTint="?colorPrimary"
+            android:textColor="?colorOnPrimary"
+            android:src="@drawable/ic_baseline_add_24"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/element_padding"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/main_rv_tasks"
+            android:contentDescription="Create new Task" />
+
+        <View
+            android:id="@+id/main_circle"
+            android:layout_width="58dp"
+            android:layout_height="57dp"
+            android:visibility="visible"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/element_padding"
+            android:background="@drawable/circle"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

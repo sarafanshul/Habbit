@@ -5,7 +5,7 @@
 
         <SwitchPreference
             app:key="NotificationsEnabled"
-            app:defaultValue="true"
+            app:defaultValue="false"
             app:title="Enable notifications" />
 
         <ListPreference

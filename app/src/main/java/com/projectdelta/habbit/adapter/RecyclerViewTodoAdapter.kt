@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.projectdelta.habbit.data.entities.Task
 import com.projectdelta.habbit.databinding.LayoutRvTodoBinding
+import com.projectdelta.habbit.util.lang.isOk
 
 class RecyclerViewTodoAdapter():
 	RecyclerView.Adapter< RecyclerViewTodoAdapter.LayoutViewHolder >( ) {
@@ -18,7 +19,7 @@ class RecyclerViewTodoAdapter():
 				tasksTwId.isSelected = true
 				tasksTwStreak.text = streakString
 				tasksTwRating.rating = T.importance
-				tasksTwSummary.text = T.summary
+				tasksTwSummary.text = if(T.summary.isOk()) T.summary else "Tap to add summary!"
 			}
 		}
 	}

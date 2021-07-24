@@ -1,17 +1,26 @@
 package com.projectdelta.habbit.ui
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.AnimationUtils
+import android.view.animation.LinearInterpolator
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.viewpager.widget.ViewPager
 import androidx.work.ExistingPeriodicWorkPolicy
 import com.google.android.material.snackbar.Snackbar
@@ -81,9 +90,47 @@ class MainActivity : AppCompatActivity() {
 		cancelAllNotifications()
 
 		binding.mainFabCreate.setOnClickListener {
-			launchEditActivity( Task( viewModel.getMSfromEpoch() , "" , mutableListOf<Long>() , 0f ) )
+			animateAndDoStuff {
+				launchEditActivity( Task( viewModel.getMSfromEpoch() , "" , mutableListOf<Long>() , 0f ) , false )
+			}
 		}
+	}
 
+	private fun animateAndDoStuff( stuff : () -> Unit ){
+		binding.mainCircle.isVisible = true
+		binding.mainFabCreate.isVisible = false
+		animateAppBar()
+		val animation = AnimationUtils.loadAnimation(this , R.anim.circle_explosion_anim).apply {
+			duration = 250
+			fillAfter = true
+			interpolator = AccelerateDecelerateInterpolator()
+		}
+		binding.mainCircle.startAnimation(animation){
+			stuff()
+			Handler( Looper.getMainLooper() ).postDelayed({
+				animation.fillAfter = false
+				binding.mainCircle.isVisible = false
+				binding.mainFabCreate.isVisible = true
+				resetAppBar()
+			} , 750)
+		}
+	}
+
+	private fun resetAppBar( ){
+		binding.mainAppBar.animate().translationY( 0F )
+	}
+
+	private fun animateAppBar( ){
+		binding.mainAppBar.animate().apply {
+			translationY((- binding.mainAppBar.height).toFloat())
+			interpolator = LinearInterpolator()
+			duration = 200
+		}
+	}
+
+	override fun onPause() {
+		binding.mainCircle.isVisible = false
+		super.onPause()
 	}
 
 	override fun onDestroy() {
@@ -108,9 +155,11 @@ class MainActivity : AppCompatActivity() {
 		}
 	}
 
-	fun launchEditActivity(task: Task) {
+	fun launchEditActivity(task: Task , anim : Boolean = true) {
 		Intent( this , EditTaskActivity::class.java ).apply {
 			putExtra( "TASK" , task )
+			if( !anim )
+				addFlags( Intent.FLAG_ACTIVITY_NO_ANIMATION )
 		}.also{
 			startForResultTask.launch( it )
 		}
