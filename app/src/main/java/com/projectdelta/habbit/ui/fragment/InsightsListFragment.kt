@@ -22,6 +22,7 @@ import com.projectdelta.habbit.ui.activity.InsightsActivity
 import com.projectdelta.habbit.util.NotFound
 import com.projectdelta.habbit.util.lang.TimeUtil
 import com.projectdelta.habbit.util.lang.chop
+import com.projectdelta.habbit.util.lang.titlesToBulletList
 import com.projectdelta.habbit.util.view.EndlessRecyclerViewScrollListener
 import com.projectdelta.habbit.util.view.RecyclerItemClickListenr
 import com.projectdelta.habbit.util.view.StatesRecyclerViewAdapter
@@ -130,7 +131,7 @@ class InsightsListFragment : Fragment() {
 							1 -> "${adapter.data[position].tasksTitle.size} task completed on ${TimeUtil.getPastDateFromOffset((TimeUtil.getTodayFromEpoch() - adapter.data[position].id).toInt())}"
 							else -> "${adapter.data[position].tasksTitle.size} tasks completed on ${TimeUtil.getPastDateFromOffset((TimeUtil.getTodayFromEpoch() - adapter.data[position].id).toInt())}"
 						}
-						val message = adapter.data[position].tasksTitle.joinToString("\n") { it.chop(30) }
+						val message = adapter.data[position].titlesToBulletList()
 						MaterialAlertDialogBuilder(activity).apply {
 							setTitle(title)
 							setMessage(message)

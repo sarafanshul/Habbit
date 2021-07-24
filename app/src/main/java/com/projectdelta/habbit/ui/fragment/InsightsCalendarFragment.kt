@@ -18,6 +18,7 @@ import com.projectdelta.habbit.ui.activity.InsightsActivity
 import com.projectdelta.habbit.util.NotFound
 import com.projectdelta.habbit.util.lang.TimeUtil
 import com.projectdelta.habbit.util.lang.chop
+import com.projectdelta.habbit.util.lang.titlesToBulletList
 import com.projectdelta.habbit.viewModel.InsightsSharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import ru.cleverpumpkin.calendar.CalendarDate
@@ -114,9 +115,7 @@ class InsightsCalendarFragment : Fragment() {
 						1 -> "${data[cur].tasksTitle.size} task completed on ${TimeUtil.getMonth( date.month + 1 )} ${date.dayOfMonth}"
 						else -> "${data[cur].tasksTitle.size} tasks completed on ${TimeUtil.getMonth( date.month + 1 )} ${date.dayOfMonth}"
 					}
-					val message = data[cur].tasksTitle.joinToString("\n") {
-						it.chop(30)
-					}
+					val message = data[cur].titlesToBulletList()
 					MaterialAlertDialogBuilder(activity).apply{
 						setTitle( title )
 						setMessage(message)
