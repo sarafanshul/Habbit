@@ -15,9 +15,10 @@ class RecyclerViewSkipAdapter():
 		RecyclerView.ViewHolder(binding.root) {
 		fun bind(T: Task, streakString: String) {
 			with(binding) {
-				binding.tasksTwId.text = T.taskName
-				binding.tasksTwStreak.text = streakString
-				binding.tasksTwRating.rating = T.importance
+				tasksTwId.text = T.taskName
+				tasksTwId.isSelected = true
+				tasksTwStreak.text = streakString
+				tasksTwRating.rating = T.importance
 			}
 		}
 	}

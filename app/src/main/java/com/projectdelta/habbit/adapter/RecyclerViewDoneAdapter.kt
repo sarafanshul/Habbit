@@ -12,12 +12,13 @@ class RecyclerViewDoneAdapter():
 	lateinit var data : List<Task>
 	var today = 0L
 
-	inner class LayoutViewHolder( private val binding: LayoutRvDoneBinding) : RecyclerView.ViewHolder( binding.root ){
-		fun bind(T : Task , streakString : String){
-			with(binding){
-				binding.tasksTwId.text = T.taskName
-				binding.tasksTwStreak.text = streakString
-				binding.tasksTwRating.rating = T.importance
+	inner class LayoutViewHolder( private val binding: LayoutRvDoneBinding) : RecyclerView.ViewHolder( binding.root ) {
+		fun bind(T: Task, streakString: String) {
+			with(binding) {
+				tasksTwId.text = T.taskName
+				tasksTwId.isSelected = true
+				tasksTwStreak.text = streakString
+				tasksTwRating.rating = T.importance
 			}
 		}
 	}
