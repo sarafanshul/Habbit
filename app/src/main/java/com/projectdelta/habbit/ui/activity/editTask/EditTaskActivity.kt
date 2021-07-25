@@ -1,24 +1,27 @@
-package com.projectdelta.habbit.ui.activity
+package com.projectdelta.habbit.ui.activity.editTask
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
-import android.util.Log
+import android.widget.TextView
 import android.widget.TimePicker
 import androidx.activity.viewModels
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.projectdelta.habbit.R
+import com.projectdelta.habbit.constant.COLLAPSING_TOOLBAR_VISIBILITY_THRESHOLD
 import com.projectdelta.habbit.data.entities.Task
 import com.projectdelta.habbit.databinding.ActivityEditTaskBinding
-import com.projectdelta.habbit.util.lang.TimeUtil
-import com.projectdelta.habbit.util.lang.capitalized
-import com.projectdelta.habbit.util.lang.isOk
-import com.projectdelta.habbit.util.lang.setTint
-import com.projectdelta.habbit.viewModel.EditTaskViewModel
+import com.projectdelta.habbit.ui.activity.editTask.state.CollapsingToolbarState
+import com.projectdelta.habbit.ui.activity.editTask.state.EditTaskInteractionState
+import com.projectdelta.habbit.ui.viewModel.EditTaskViewModel
+import com.projectdelta.habbit.util.TodoCallback
+import com.projectdelta.habbit.util.lang.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -26,9 +29,12 @@ class EditTaskActivity : AppCompatActivity() {
 
 	lateinit var binding : ActivityEditTaskBinding
 	private val viewModel : EditTaskViewModel by viewModels()
-	private val REPEAT_DELAY = 50L
-	private val TAG = "EditTaskActivity"
 	var skipTime : Long = -1
+
+	companion object{
+		private const val REPEAT_DELAY = 50L
+		private const val TAG = "EditTaskActivity"
+	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -61,6 +67,12 @@ class EditTaskActivity : AppCompatActivity() {
 			resultOk()
 		}
 
+		binding.noteTitle.setOnClickListener {
+			if (!viewModel.isEditingTitle()) {
+				viewModel.setInteractionTitleState(EditTaskInteractionState.EditState())
+			}
+		}
+
 	}
 
 	private fun getUpdatedTask(task: Task ): Task {
@@ -82,6 +94,41 @@ class EditTaskActivity : AppCompatActivity() {
 	private fun String.toEditable(): Editable =  Editable.Factory.getInstance().newEditable(this)
 
 	private fun setLayout( task: Task ) {
+
+		binding.noteTitle.disableContentInteraction()
+		displayDefaultToolBar()
+		transitionToExpandedMode()
+
+		binding.appBar.addOnOffsetChangedListener(
+			AppBarLayout.OnOffsetChangedListener{ _, offset ->
+				if( offset < COLLAPSING_TOOLBAR_VISIBILITY_THRESHOLD ){
+					if( viewModel.isEditingTitle() ){
+						viewModel.exitEditState()
+						displayDefaultToolBar()
+					}
+					viewModel.setCollapsingToolbarState( CollapsingToolbarState.Collapsed() )
+				}else{
+					viewModel.setCollapsingToolbarState( CollapsingToolbarState.Expanded() )
+				}
+			}
+		)
+
+		binding.toolbarPrimaryIcon.setOnClickListener {
+			if( viewModel.checkEditState() ){
+				displayDefaultToolBar()
+			}else {
+				resultCancel()
+			}
+		}
+
+		binding.toolbarSecondaryIcon.setOnClickListener {
+			if( viewModel.checkEditState() ){
+				displayDefaultToolBar()
+			}else {
+				viewModel.delete( task )
+				resultOk()
+			}
+		}
 
 		if (task.taskName.isOk())
 			binding.eTaskEtTask.text = task.taskName.toEditable()
@@ -157,6 +204,96 @@ class EditTaskActivity : AppCompatActivity() {
 	}
 
 
+
+	private fun subscribeObservers(){
+
+		viewModel.collapsingToolbarState.observe( this , { state ->
+
+			when(state){
+				is CollapsingToolbarState.Expanded -> {
+					transitionToExpandedMode()
+				}
+				is CollapsingToolbarState.Collapsed -> {
+					transitionToCollapsedMode()
+				}
+			}
+		} )
+
+		viewModel.titleInteractionState.observe( this , { state ->
+
+			when(state){
+				is EditTaskInteractionState.DefaultState -> {
+					binding.noteTitle.disableContentInteraction()
+				}
+				is EditTaskInteractionState.EditState -> {
+					displayEditStateToolbar()
+					binding.noteTitle.enableContentInteraction()
+					this.showKeyboard()
+				}
+			}
+		})
+
+		/**
+		 * TODO(Link Summary edit text with listener here)
+		 */
+		viewModel.bodyInteractionState.observe(this , {state ->
+			when( state ) {
+				is EditTaskInteractionState.EditState -> {
+					displayEditStateToolbar()
+				}
+				is EditTaskInteractionState.DefaultState -> {
+
+				}
+			}
+		})
+
+	}
+
+	private fun transitionToExpandedMode() {
+		binding.noteTitle.fadeIn()
+		displayToolbarTitle( binding.toolBarTitle , null , true )
+	}
+
+	private fun transitionToCollapsedMode() {
+		binding.noteTitle.fadeOut()
+		displayToolbarTitle( binding.toolBarTitle , getToolbarTitle() , true )
+	}
+	fun getToolbarTitle() = "Test String "
+
+	@SuppressLint("UseCompatLoadingForDrawables")
+	private fun displayDefaultToolBar() {
+		binding.toolbarPrimaryIcon.setImageDrawable(
+			resources.getDrawable(
+				R.drawable.ic_baseline_arrow_back_24,
+				theme
+			)
+		)
+
+		binding.toolbarSecondaryIcon.setImageDrawable(
+			resources.getDrawable(
+				R.drawable.ic_delete_black_24dp,
+				theme
+			)
+		)
+	}
+
+	@SuppressLint("UseCompatLoadingForDrawables")
+	private fun displayEditStateToolbar(){
+		binding.toolbarPrimaryIcon.setImageDrawable(
+			resources.getDrawable(
+				R.drawable.ic_baseline_close_24,
+				theme
+			)
+		)
+
+		binding.toolbarSecondaryIcon.setImageDrawable(
+			resources.getDrawable(
+				R.drawable.ic_done_black_24dp,
+				theme
+			)
+		)
+	}
+
 	private fun resultOk(){
 		setResult( Activity.RESULT_OK)
 		finish()
@@ -170,16 +307,59 @@ class EditTaskActivity : AppCompatActivity() {
 	private fun increment( ){
 		setValueTV( minOf( 30 , getValueTV() + 1 ) )
 	}
+
 	private fun decrement( ){
 		setValueTV( maxOf( -1 , getValueTV() - 1 ) )
 	}
+
 	private val NULL_DISPLAY_ET by lazy { "-" }
+
 	private fun getValueTV() : Int{
 		if( binding.eTaskEtSkip.text.toString() == NULL_DISPLAY_ET ) return -1
 		return binding.eTaskEtSkip.text.toString().toInt()
 	}
+
 	private fun setValueTV( X : Int ){
 		if( X == -1 ) binding.eTaskEtSkip.text = NULL_DISPLAY_ET
 		else binding.eTaskEtSkip.text = X.toString()
+	}
+
+	fun displayToolbarTitle(textView: TextView, title: String?, useAnimation: Boolean) {
+		if(title != null){
+			showToolbarTitle(textView, title, useAnimation)
+		}
+		else{
+			hideToolbarTitle(textView, useAnimation)
+		}
+	}
+
+	private fun hideToolbarTitle(textView: TextView, animation: Boolean){
+		if(animation){
+			textView.fadeOut(
+				object: TodoCallback {
+					override fun execute() {
+						textView.text = ""
+					}
+				}
+			)
+		}
+		else{
+			textView.text = ""
+			textView.gone()
+		}
+	}
+
+	private fun showToolbarTitle(
+		textView: TextView,
+		title: String,
+		animation: Boolean
+	){
+		textView.text = title
+		if(animation){
+			textView.fadeIn()
+		}
+		else{
+			textView.visible()
+		}
 	}
 }

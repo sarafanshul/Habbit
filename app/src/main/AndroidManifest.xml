@@ -19,7 +19,7 @@
             android:name=".ui.setting.SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity
-            android:name=".ui.activity.EditTaskActivity"
+            android:name=".ui.activity.editTask.EditTaskActivity"
             android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".ui.MainActivity"

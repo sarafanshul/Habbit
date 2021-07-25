@@ -21,12 +21,11 @@ import com.projectdelta.habbit.databinding.FragmentInsightsListBinding
 import com.projectdelta.habbit.ui.activity.InsightsActivity
 import com.projectdelta.habbit.util.NotFound
 import com.projectdelta.habbit.util.lang.TimeUtil
-import com.projectdelta.habbit.util.lang.chop
 import com.projectdelta.habbit.util.lang.titlesToBulletList
 import com.projectdelta.habbit.util.view.EndlessRecyclerViewScrollListener
 import com.projectdelta.habbit.util.view.RecyclerItemClickListenr
 import com.projectdelta.habbit.util.view.StatesRecyclerViewAdapter
-import com.projectdelta.habbit.viewModel.InsightsSharedViewModel
+import com.projectdelta.habbit.ui.viewModel.InsightsSharedViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
