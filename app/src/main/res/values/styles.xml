@@ -43,6 +43,8 @@
         <item name="calendar_day_bar_weekend_text_color">@color/wet_asphalt</item>
         <item name="calendar_month_text_color">@color/mat_black</item>
         <item name="calendar_year_selection_arrows_color">@color/asphalt</item>
+        <item name="calendar_grid_color">@android:color/transparent</item>
+        <item name="calendar_grid_on_selected_dates">false</item>
     </style>
 
 </resources>

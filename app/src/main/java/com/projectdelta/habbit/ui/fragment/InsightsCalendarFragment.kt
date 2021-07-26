@@ -14,12 +14,14 @@ import com.projectdelta.habbit.ui.activity.InsightsActivity
 import com.projectdelta.habbit.util.lang.TimeUtil
 import com.projectdelta.habbit.util.lang.titlesToBulletList
 import com.projectdelta.habbit.ui.viewModel.InsightsSharedViewModel
+import com.projectdelta.habbit.util.NotFound
 import dagger.hilt.android.AndroidEntryPoint
 import ru.cleverpumpkin.calendar.CalendarDate
 import ru.cleverpumpkin.calendar.CalendarView
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.random.Random
 
 @AndroidEntryPoint
 class InsightsCalendarFragment : Fragment() {
@@ -91,11 +93,10 @@ class InsightsCalendarFragment : Fragment() {
 			if( X.isNullOrEmpty() ) return@observe
 			val data = X.sortedBy { it.id }
 			binding.insightsCalV.datesIndicators = data.flatMap { day ->
-				var i = 0
-				day.tasksID.take(MAX_CALENDAR_DOTS).map { _ ->
+				day.tasksID.take(MAX_CALENDAR_DOTS).map {
 					object: CalendarView.DateIndicator{
 						override val color: Int
-							get() = COLORS[ i++ % COLORS.size ]
+							get() = COLORS[ (it % COLORS.size).toInt() ]
 						override val date: CalendarDate
 							get() = CalendarDate( TimeUtil.daysToMilliseconds( day.id ) )
 					}
@@ -110,6 +111,15 @@ class InsightsCalendarFragment : Fragment() {
 						else -> "${data[cur].tasksTitle.size} tasks completed on ${TimeUtil.getMonth( date.month + 1 )} ${date.dayOfMonth}"
 					}
 					val message = data[cur].titlesToBulletList()
+					MaterialAlertDialogBuilder(activity).apply{
+						setTitle( title )
+						setMessage(message)
+						create()
+					}.show()
+				}
+				else {
+					val title = "No tasks completed on ${TimeUtil.getMonth( date.month + 1 )} ${date.dayOfMonth}"
+					val message = NotFound.get()
 					MaterialAlertDialogBuilder(activity).apply{
 						setTitle( title )
 						setMessage(message)

@@ -30,7 +30,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
 //            // Enables resource shrinking, which is performed by the
 //            // Android Gradle plugin.
 //            shrinkResources = true
@@ -97,6 +97,8 @@ dependencies {
 
 
     implementation 'ru.cleverpumpkin:crunchycalendar:2.2.0'
+
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.22'
 
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
 }
