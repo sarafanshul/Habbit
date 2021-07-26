@@ -1,15 +1,13 @@
-package com.projectdelta.habbit.viewModel
+package com.projectdelta.habbit.ui.viewModel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.projectdelta.habbit.data.entities.Day
 import com.projectdelta.habbit.data.entities.Task
 import com.projectdelta.habbit.repository.TasksRepository
 import com.projectdelta.habbit.util.lang.TimeUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

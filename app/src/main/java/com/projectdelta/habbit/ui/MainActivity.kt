@@ -1,10 +1,7 @@
 package com.projectdelta.habbit.ui
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -16,7 +13,6 @@ import android.provider.Settings
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
-import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -25,7 +21,7 @@ import androidx.viewpager.widget.ViewPager
 import androidx.work.ExistingPeriodicWorkPolicy
 import com.google.android.material.snackbar.Snackbar
 import com.projectdelta.habbit.R
-import com.projectdelta.habbit.ui.activity.EditTaskActivity
+import com.projectdelta.habbit.ui.activity.editTask.EditTaskActivity
 import com.projectdelta.habbit.adapter.HomeViewPagerAdapter
 import com.projectdelta.habbit.data.TasksDatabase
 import com.projectdelta.habbit.data.entities.Task
@@ -38,7 +34,7 @@ import com.projectdelta.habbit.util.lang.*
 import com.projectdelta.habbit.util.view.NavigationUtil
 import com.projectdelta.habbit.util.notification.Notifications.DEFAULT_UPDATE_INTERVAL
 import com.projectdelta.habbit.util.notification.UpdateNotificationJob
-import com.projectdelta.habbit.viewModel.MainViewModel
+import com.projectdelta.habbit.ui.viewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

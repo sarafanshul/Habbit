@@ -32,6 +32,9 @@ interface TasksDao {
 	@Query( "SELECT * FROM task WHERE id = :id")
 	fun getTaskById( id : Long ) : Task
 
+	@Query( "SELECT * FROM task WHERE id = :id")
+	fun getTaskByIdLive( id : Long ) : LiveData<List<Task>>
+
 	@Query("SELECT * FROM day WHERE id = :id")
 	suspend fun getDay( id : Long ) : List<Day>
 

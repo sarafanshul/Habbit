@@ -4,15 +4,33 @@
     <dimen name="default_base_margin">8dp</dimen>
     <dimen name="default_card_elevation_high">14dp</dimen>
     <dimen name="default_card_radius">8dp</dimen>
+
     <dimen name="H1">42sp</dimen>
     <dimen name="H2">32sp</dimen>
     <dimen name="H3">28sp</dimen>
     <dimen name="H4">24sp</dimen>
+    <dimen name="H5">17sp</dimen>
+
     <dimen name="element_padding">16dp</dimen>
 
     <dimen name="default_card_elevation">8dp</dimen>
 
     <dimen name="RV_card_height">160dp</dimen>
-    <dimen name="H5">17dp</dimen>
+    <dimen name="scrollview_bottom_margin">30dp</dimen>
+
+    <dimen name="toolbar_height">55dp</dimen>
+    <dimen name="toolbar_height_tall">120dp</dimen>
+    <!-- toolbar_height_tall - toolbar_height  -->
+    <dimen name="toolbar_title_offset_height">65dp</dimen>
+
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="default_view_margin">16dp</dimen>
+    <dimen name="default_view_margin_negative">-16dp</dimen>
+    <dimen name="toolbar_item_margin">24dp</dimen>
+    <dimen name="toolbar_title_margin">32dp</dimen>
+    <dimen name="view_between_spacing">7dp</dimen>
+    <dimen name="recyclerview_start_end_margins">5dp</dimen>
+
+    <dimen name="scrollview_bottom_margin_1">80dp</dimen>
 
 </resources>

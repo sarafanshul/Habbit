@@ -20,7 +20,7 @@ import com.projectdelta.habbit.util.NotFound
 import com.projectdelta.habbit.util.view.RecyclerItemClickListenr
 import com.projectdelta.habbit.util.view.StatesRecyclerViewAdapter
 import com.projectdelta.habbit.util.lang.completedTill
-import com.projectdelta.habbit.viewModel.HomeSharedViewModel
+import com.projectdelta.habbit.ui.viewModel.HomeSharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 

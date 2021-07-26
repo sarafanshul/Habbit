@@ -1,4 +1,4 @@
-package com.projectdelta.habbit.viewModel
+package com.projectdelta.habbit.ui.viewModel
 
 
 import androidx.lifecycle.LiveData

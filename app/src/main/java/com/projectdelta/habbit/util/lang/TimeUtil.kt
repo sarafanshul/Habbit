@@ -67,6 +67,26 @@ object TimeUtil {
 				) / MILLISECONDS_IN_DAY
 	}
 
+	/**
+	 * Returns epoch time to date string 'mm:HH dd-MM-yyyy' format
+	 * @param milli milliseconds from midnight
+	 */
+	fun fromMStoDateString( milli: Long , format : String = "HH:mm dd-MM-yyyy" ) : String {
+		val sdf = SimpleDateFormat(format)
+		sdf.timeZone = TimeZone.getTimeZone("IST")
+		return sdf.format(Date(milli))
+	}
+
+	/**
+	 * Returns string in format of 'dd MMMM'
+	 * @param dayFromEpoch
+	 */
+	@SuppressLint("SimpleDateFormat")
+	fun getDayFromEpochToDateString(dayFromEpoch : Long ) : String {
+		val milli = daysToMilliseconds( dayFromEpoch )
+		return "${SimpleDateFormat("dd").format( Date( milli ) )} ${getMonth(SimpleDateFormat("MM").format( Date( milli ) ).toInt())}"
+	}
+
 	@Suppress("SpellCheckingInspection")
 	fun getMSfromEpoch( ) : Long {
 		val calender = Calendar.getInstance()

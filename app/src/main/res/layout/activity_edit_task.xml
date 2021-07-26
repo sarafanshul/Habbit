@@ -1,180 +1,284 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="@dimen/default_base_margin"
-    tools:context=".ui.activity.EditTaskActivity">
+    tools:context=".ui.activity.editTask.EditTaskActivity">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_save_black_24dp"
         android:id="@+id/e_task_fab_save"
-        
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_margin="@dimen/element_padding"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_margin="@dimen/fab_margin"
+        android:layout_gravity="bottom|right"/>
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/add_a_summary"
+                android:id="@+id/e_task_et_summary"
+                android:textSize="@dimen/H3"
+                android:layout_marginTop="@dimen/element_padding"
+                android:layout_marginHorizontal="@dimen/element_padding"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="@dimen/element_padding"
+                android:layout_marginHorizontal="@dimen/element_padding"
+                android:background="@color/light_grey"/>
 
             <com.google.android.material.textview.MaterialTextView
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.8"
-                android:text="Edit Task"
-                android:textSize="@dimen/H1"
-                android:padding="@dimen/element_padding"
-                android:textColor="?colorPrimaryVariant"/>
+                android:text="Rating"
+                android:textSize="@dimen/H4"
+                android:paddingTop="@dimen/element_padding"
+                android:textColor="@color/wet_asphalt"
+                android:layout_marginHorizontal="@dimen/element_padding"/>
 
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.2"
-                android:src="@drawable/ic_delete_black_24dp"
-                android:padding="10dp"
-                android:clickable="true"
-                android:id="@+id/e_task_Iv_delete"
-                app:tint="@color/wet_asphalt"/>
-
-        </LinearLayout>
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Task name"
-            android:inputType="text"
-            android:maxLines="1"
-            android:id="@+id/e_task_et_task"
-            android:textSize="@dimen/H3"
-            android:layout_margin="@dimen/element_padding"/>
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Summary"
-            android:inputType="text"
-            android:maxLines="1"
-            android:id="@+id/e_task_et_summary"
-            android:textSize="@dimen/H3"
-            android:layout_margin="@dimen/element_padding"/>
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Rating"
-            android:textSize="@dimen/H4"
-            android:paddingTop="@dimen/element_padding"
-            android:textColor="@color/wet_asphalt"
-            android:layout_marginHorizontal="@dimen/element_padding"/>
-
-        <RatingBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:numStars="5"
-            android:id="@+id/e_task_rt"
-            android:layout_marginHorizontal="@dimen/element_padding"
-            android:stepSize="0.5"/>
-
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Notify me ?"
-            android:textColor="?colorPrimary"
-            android:layout_marginTop="10dp"
-            android:id="@+id/e_task_sw_notification"
-
-            android:textSize="@dimen/H3"
-            android:padding="@dimen/element_padding"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
+            <RatingBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:id="@+id/e_task_rt"
+                android:layout_marginHorizontal="@dimen/element_padding"
+                android:stepSize="0.5"/>
 
             <com.google.android.material.switchmaterial.SwitchMaterial
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.8"
-                android:text="Time limited ?"
+                android:text="Notify me ?"
                 android:textColor="?colorPrimary"
-                android:id="@+id/e_task_sw_skip_after"
+                android:layout_marginTop="10dp"
+                android:id="@+id/e_task_sw_notification"
                 android:textSize="@dimen/H3"
-                android:layout_gravity="center"
                 android:padding="@dimen/element_padding"/>
 
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="0.2"
-                android:padding="@dimen/default_base_margin"
-                android:id="@+id/e_task_iv_time"
-                android:src="@drawable/ic_schedule_black_24dp"
-                app:tint="@color/wet_asphalt" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.8"
+                    android:text="Time limited ?"
+                    android:textColor="?colorPrimary"
+                    android:id="@+id/e_task_sw_skip_after"
+                    android:textSize="@dimen/H3"
+                    android:layout_gravity="center"
+                    android:padding="@dimen/element_padding"/>
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.2"
+                    android:padding="@dimen/default_base_margin"
+                    android:id="@+id/e_task_iv_time"
+                    android:src="@drawable/ic_schedule_black_24dp"
+                    app:tint="@color/wet_asphalt" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4"
+                    android:layout_gravity="center"
+                    android:textSize="@dimen/H3"
+                    android:textColor="?colorPrimary"
+                    android:layout_margin="@dimen/element_padding"
+                    android:text="Skip days?"/>
+                <ImageButton
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.15"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:src="@drawable/ic_baseline_horizontal_rule_24"
+                    android:id="@+id/e_task_btn_skip_sub"
+                    app:tint="@color/black" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.15"
+                    android:maxLines="1"
+                    android:textSize="@dimen/H3"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:digits="123456789"
+                    android:inputType="numberSigned"
+                    android:id="@+id/e_task_et_skip" />
+
+                <ImageButton
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.15"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:src="@drawable/ic_baseline_add_24"
+                    android:id="@+id/e_task_btn_skip_add"
+                    app:tint="@color/black" />
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="@dimen/element_padding"
+                android:layout_marginHorizontal="@dimen/element_padding"
+                android:layout_marginTop="@dimen/element_padding"
+                android:background="@color/light_grey"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="History"
+                android:textSize="@dimen/H3"
+                android:paddingTop="@dimen/element_padding"
+                android:textColor="@color/wet_asphalt"
+                android:layout_marginHorizontal="@dimen/element_padding"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/no_history"
+                android:id="@+id/e_task_tv_history"
+                android:textSize="20sp"
+                android:textColor="@color/light_grey"
+                android:layout_marginHorizontal="@dimen/element_padding"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/scrollview_bottom_margin_1">
+
+            </View>
 
         </LinearLayout>
 
-        <LinearLayout
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:id="@+id/app_bar">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
+            app:expandedTitleGravity="top"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.4"
-                android:layout_gravity="center"
-                android:textSize="@dimen/H3"
-                android:textColor="?colorPrimary"
-                android:layout_margin="@dimen/element_padding"
-                android:text="Skip days?"/>
-            <ImageButton
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.15"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:src="@drawable/ic_baseline_horizontal_rule_24"
-                android:id="@+id/e_task_btn_skip_sub"
-                app:tint="@color/black" />
+                app:layout_collapseMode="parallax"
+                android:layout_marginTop="@dimen/toolbar_title_offset_height"
+                android:paddingHorizontal="@dimen/element_padding"
+                android:clipToPadding="false"
+                android:orientation="vertical">
 
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.15"
-                android:maxLines="1"
-                android:textSize="@dimen/H3"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:digits="123456789"
-                android:inputType="numberSigned"
-                android:id="@+id/e_task_et_skip" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/toolbar_height"
+                    android:id="@+id/note_title"
+                    android:textColor="?colorPrimary"
+                    android:textSize="@dimen/H3"
+                    android:hint="@string/text_enter_a_title"
+                    />
 
-            <ImageButton
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.15"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:src="@drawable/ic_baseline_add_24"
-                android:id="@+id/e_task_btn_skip_add"
-                app:tint="@color/black" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/light_grey"/>
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/toolbar_height"
+                app:layout_collapseMode="pin"
+                >
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/toolbar_height"
+                    >
 
 
-        </LinearLayout>
+                    <ImageView
+                        android:layout_width="@dimen/toolbar_item_margin"
+                        android:layout_height="@dimen/toolbar_item_margin"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        android:id="@+id/toolbar_primary_icon"
+                        />
 
-    </LinearLayout>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toRightOf="@id/toolbar_primary_icon"
+                        app:layout_constraintRight_toLeftOf="@id/toolbar_secondary_icon"
+                        app:layout_constraintHorizontal_bias="0"
+                        android:id="@+id/tool_bar_title"
+                        android:textColor="@color/light_grey"
+                        android:layout_marginStart="@dimen/toolbar_title_margin"
+                        android:layout_marginEnd="@dimen/default_view_margin"
+                        android:gravity="center_vertical"
+                        android:textSize="20sp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <ImageView
+                        android:layout_width="@dimen/toolbar_item_margin"
+                        android:layout_height="@dimen/toolbar_item_margin"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:id="@+id/toolbar_secondary_icon"
+                        android:layout_marginEnd="@dimen/default_view_margin"
+                        />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.appcompat.widget.Toolbar>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
