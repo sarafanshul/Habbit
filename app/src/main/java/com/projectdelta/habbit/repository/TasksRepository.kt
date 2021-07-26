@@ -20,6 +20,8 @@ class TasksRepository(private val tasksDao: TasksDao) {
 
 	fun getTaskById(id: Long): Task = tasksDao.getTaskById( id )
 
+	fun getTaskByIdLive( id : Long ) = tasksDao.getTaskByIdLive( id )
+
 	suspend fun getTask( taskName : String ) : List<Task> = tasksDao.getTask( taskName )
 
 	suspend fun getDay(id : Long) = tasksDao.getDay(id)

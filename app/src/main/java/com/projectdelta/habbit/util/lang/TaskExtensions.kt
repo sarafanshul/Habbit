@@ -1,5 +1,6 @@
 package com.projectdelta.habbit.util.lang
 
+import android.text.Html
 import com.projectdelta.habbit.data.entities.Task
 
 /**
@@ -59,3 +60,8 @@ fun List<Task>.tasksBeforeSkipTime( X : Long ) = filter{
  * Returns Id (Int) of a task
  */
 fun Task.hash() = (this.id%((1L shl 31) - 1)).toInt()
+
+
+fun Task.toDateBulletList(delimiter: String = "\n" , maxLine : Int = 20) = lastDayCompleted.asReversed().joinToString (delimiter) {
+	"${Html.fromHtml(bullet)} ${TimeUtil.getDayFromEpochToDateString(it)}" + if( lastDayCompleted.size > maxLine ) "and ${lastDayCompleted - maxLine} more!" else ""
+}

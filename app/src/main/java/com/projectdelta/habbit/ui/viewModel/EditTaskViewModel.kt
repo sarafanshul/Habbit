@@ -33,6 +33,8 @@ class EditTaskViewModel @Inject constructor(
 
 	fun getTaskById( id : Long ) : Task = repository.getTaskById( id )
 
+	fun getTaskByIdLive( id : Long ) = repository.getTaskByIdLive( id )
+
 	fun updateTask( task: Task ) = viewModelScope.launch(Dispatchers.IO) {
 		repository.insertTask( task )
 	}

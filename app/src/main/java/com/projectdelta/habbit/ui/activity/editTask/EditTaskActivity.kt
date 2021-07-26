@@ -29,11 +29,14 @@ class EditTaskActivity : AppCompatActivity() {
 
 	lateinit var binding : ActivityEditTaskBinding
 	private val viewModel : EditTaskViewModel by viewModels()
-	var skipTime : Long = -1
+	private var skipTime : Long = -1
 
 	companion object{
 		private const val REPEAT_DELAY = 50L
 		private const val TAG = "EditTaskActivity"
+		private const val NULL_DISPLAY_ET = "-"
+		private const val DEFAULT_TITLE = "Add a title"
+		private const val ERROR_SAVE_WARNING = "Please enter a valid title!"
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,36 +52,14 @@ class EditTaskActivity : AppCompatActivity() {
 			resultCancel()
 
 		setLayout(task)
-
-		binding.eTaskFabSave.setOnClickListener {
-			val newTask = getUpdatedTask( task )
-			if( ! newTask.taskName.isOk() ){
-				Snackbar.make( binding.root , "Please enter valid info!" , Snackbar.LENGTH_SHORT ).apply {
-					anchorView = binding.eTaskFabSave
-				}.show()
-			}else {
-				viewModel.updateTask(newTask)
-				resultOk()
-			}
-		}
-
-		binding.eTaskIvDelete.setOnClickListener {
-			viewModel.delete(task)
-			resultOk()
-		}
-
-		binding.noteTitle.setOnClickListener {
-			if (!viewModel.isEditingTitle()) {
-				viewModel.setInteractionTitleState(EditTaskInteractionState.EditState())
-			}
-		}
+		subscribeObservers()
 
 	}
 
 	private fun getUpdatedTask(task: Task ): Task {
 		task.apply {
-			taskName = binding.eTaskEtTask.text.toString().trim().capitalized()
-			summary = binding.eTaskEtSummary.text.toString()
+			taskName = binding.noteTitle.text.toString().trim().capitalized()
+			summary = binding.eTaskEtSummary.text.toString().trim()
 
 			if (binding.eTaskEtSkip.text.toString().isOk())
 				skipTill = viewModel.getTodayFromEpoch() + (getValueTV().toString()).toLong()
@@ -98,6 +79,7 @@ class EditTaskActivity : AppCompatActivity() {
 		binding.noteTitle.disableContentInteraction()
 		displayDefaultToolBar()
 		transitionToExpandedMode()
+		addHistory( task )
 
 		binding.appBar.addOnOffsetChangedListener(
 			AppBarLayout.OnOffsetChangedListener{ _, offset ->
@@ -114,7 +96,10 @@ class EditTaskActivity : AppCompatActivity() {
 		)
 
 		binding.toolbarPrimaryIcon.setOnClickListener {
+			this.hideKeyboard()
 			if( viewModel.checkEditState() ){
+				viewModel.setInteractionTitleState(EditTaskInteractionState.DefaultState())
+				viewModel.setInteractionBodyState( EditTaskInteractionState.DefaultState() )
 				displayDefaultToolBar()
 			}else {
 				resultCancel()
@@ -122,7 +107,10 @@ class EditTaskActivity : AppCompatActivity() {
 		}
 
 		binding.toolbarSecondaryIcon.setOnClickListener {
+			this.hideKeyboard()
 			if( viewModel.checkEditState() ){
+				viewModel.setInteractionTitleState(EditTaskInteractionState.DefaultState())
+				viewModel.setInteractionBodyState( EditTaskInteractionState.DefaultState() )
 				displayDefaultToolBar()
 			}else {
 				viewModel.delete( task )
@@ -130,8 +118,33 @@ class EditTaskActivity : AppCompatActivity() {
 			}
 		}
 
+		binding.eTaskFabSave.setOnClickListener {
+			val newTask = getUpdatedTask( task )
+			if( ! newTask.taskName.isOk() ){
+				Snackbar.make( binding.root , ERROR_SAVE_WARNING , Snackbar.LENGTH_SHORT ).apply {
+					anchorView = binding.eTaskFabSave
+				}.show()
+			}else {
+				viewModel.updateTask(newTask)
+				resultOk()
+			}
+		}
+
+
+		binding.noteTitle.setOnClickListener {
+			if (!viewModel.isEditingTitle()) {
+				viewModel.setInteractionTitleState(EditTaskInteractionState.EditState())
+			}
+		}
+
+		binding.eTaskEtSummary.setOnClickListener {
+			if( !viewModel.isEditingBody() ){
+				viewModel.setInteractionBodyState( EditTaskInteractionState.EditState() )
+			}
+		}
+
 		if (task.taskName.isOk())
-			binding.eTaskEtTask.text = task.taskName.toEditable()
+			binding.noteTitle.text = task.taskName.toEditable()
 
 		if (task.summary.isOk())
 			binding.eTaskEtSummary.text = task.summary.toEditable()
@@ -203,7 +216,14 @@ class EditTaskActivity : AppCompatActivity() {
 		}
 	}
 
+	private fun addHistory( task: Task ) {
+		viewModel.getTaskByIdLive( task.id ).observe( this , observeLive@{ data ->
+			if( data.isNullOrEmpty() || data.first().lastDayCompleted.isNullOrEmpty() )
+				return@observeLive
 
+			binding.eTaskTvHistory.text = data.first().toDateBulletList( )
+		} )
+	}
 
 	private fun subscribeObservers(){
 
@@ -240,9 +260,11 @@ class EditTaskActivity : AppCompatActivity() {
 			when( state ) {
 				is EditTaskInteractionState.EditState -> {
 					displayEditStateToolbar()
+					binding.eTaskEtSummary.enableContentInteraction()
+					this.showKeyboard()
 				}
 				is EditTaskInteractionState.DefaultState -> {
-
+					binding.eTaskEtSummary.disableContentInteraction()
 				}
 			}
 		})
@@ -258,7 +280,7 @@ class EditTaskActivity : AppCompatActivity() {
 		binding.noteTitle.fadeOut()
 		displayToolbarTitle( binding.toolBarTitle , getToolbarTitle() , true )
 	}
-	fun getToolbarTitle() = "Test String "
+	private fun getToolbarTitle() = if( binding.noteTitle.text.toString().isOk() ) binding.noteTitle.text.toString().capitalized() else DEFAULT_TITLE
 
 	@SuppressLint("UseCompatLoadingForDrawables")
 	private fun displayDefaultToolBar() {
@@ -312,8 +334,6 @@ class EditTaskActivity : AppCompatActivity() {
 		setValueTV( maxOf( -1 , getValueTV() - 1 ) )
 	}
 
-	private val NULL_DISPLAY_ET by lazy { "-" }
-
 	private fun getValueTV() : Int{
 		if( binding.eTaskEtSkip.text.toString() == NULL_DISPLAY_ET ) return -1
 		return binding.eTaskEtSkip.text.toString().toInt()
@@ -324,7 +344,7 @@ class EditTaskActivity : AppCompatActivity() {
 		else binding.eTaskEtSkip.text = X.toString()
 	}
 
-	fun displayToolbarTitle(textView: TextView, title: String?, useAnimation: Boolean) {
+	private fun displayToolbarTitle(textView: TextView, title: String?, useAnimation: Boolean) {
 		if(title != null){
 			showToolbarTitle(textView, title, useAnimation)
 		}
@@ -349,11 +369,7 @@ class EditTaskActivity : AppCompatActivity() {
 		}
 	}
 
-	private fun showToolbarTitle(
-		textView: TextView,
-		title: String,
-		animation: Boolean
-	){
+	private fun showToolbarTitle( textView: TextView, title: String, animation: Boolean){
 		textView.text = title
 		if(animation){
 			textView.fadeIn()
