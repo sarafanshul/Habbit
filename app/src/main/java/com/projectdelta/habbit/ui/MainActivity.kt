@@ -88,6 +88,8 @@ class MainActivity : AppCompatActivity() {
 
 		cancelAllNotifications()
 
+		syncData()
+
 		binding.mainFabCreate.setOnClickListener {
 			animateAndDoStuff {
 				launchEditActivity( Task( viewModel.getMSfromEpoch() , "" , mutableListOf<Long>() , 0f ) , false )
@@ -224,17 +226,25 @@ class MainActivity : AppCompatActivity() {
 	 */
 	private fun checkNotificationPreferences() {
 		val sharedPref = this.getSharedPreferences(this.packageName + "_preferences", Context.MODE_PRIVATE)
-		val interval = when(sharedPref.getString("NotificationInterval" , "")){
+		val interval = when(sharedPref.getString(resources.getString( R.string.id_notification_interval ) , "")){
 			"1 Hour" -> 1L
 			"3 Hours" -> 3L
 			"6 Hours" -> 6L
 			"12 Hours" -> 12L
 			else ->  DEFAULT_UPDATE_INTERVAL
 		}
-		if( sharedPref.getBoolean("NotificationsEnabled" , false) )
+		if( sharedPref.getBoolean(resources.getString( R.string.id_notification_enabled ) , false) )
 			UpdateNotificationJob.setupTask( this , ExistingPeriodicWorkPolicy.KEEP , interval )
 		else
 			UpdateNotificationJob.setupTask( this , ExistingPeriodicWorkPolicy.REPLACE , 0 )
+	}
+
+	private fun syncData() {
+		val sharedPref = this.getSharedPreferences(this.packageName + "_preferences", Context.MODE_PRIVATE)
+		if( sharedPref.getBoolean(resources.getString( R.string.id_sync ) , false) &&
+			sharedPref.getBoolean(resources.getString( R.string.id_sync_on_startup ) , false) ){
+			SyncUtil.syncNow( this )
+		}
 	}
 
 	/**
@@ -250,42 +260,6 @@ class MainActivity : AppCompatActivity() {
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 			if (! this.powerManager.isIgnoringBatteryOptimizations( packageName ) ) {
 				startActivity( Intent( Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS ) )
-			}
-		}
-	}
-
-	private fun test() {
-
-		fun getRandomString(length: Int) : String {
-			val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
-			return (1..length)
-				.map { allowedChars.random() }
-				.joinToString("")
-		}
-
-		GlobalScope.launch(Dispatchers.IO) {
-			val Dao = TasksDatabase.getInstance(this@MainActivity).tasksDao()
-			val X = viewModel.getTodayFromEpoch()
-			for( i in 0..10 ){
-				val cur = Task( viewModel.getMSfromEpoch() + i , "Test : TODO/DONE MIX ${(i + 1)%10}" , mutableListOf() ,
-					i + 0f , true , getRandomString((i + 1)*15) )
-				for( d in 1 until i )
-					cur.lastDayCompleted.add( X - d )
-				cur.lastDayCompleted.reverse()
-				launch { Dao.insertTask(cur) }
-			}
-//			for( i in 0..5 ){
-//				val cur = Task( viewModel.getMSfromEpoch() + i , "Test : DONE ${i + 1}" , mutableListOf() ,
-//					i + 0f, true , getRandomString((i + 1)*15)  )
-//				for( d in 0 .. i )
-//					cur.lastDayCompleted.add( X - d )
-//				cur.lastDayCompleted.reverse()
-//				launch { Dao.insertTask(cur) }
-//			}
-			for( i in 0..5 ){
-				val cur = Task( viewModel.getMSfromEpoch() + i , "Test : SKIP ${i + 1}" , mutableListOf() , i + 0f  ,
-					true , getRandomString((i + 1)*15)  ,skipTill = X + i )
-				launch { Dao.insertTask(cur) }
 			}
 		}
 	}

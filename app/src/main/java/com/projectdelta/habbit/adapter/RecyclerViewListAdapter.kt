@@ -19,9 +19,7 @@ class RecyclerViewListAdapter():
 		fun bind( D : Day ){
 			with(binding){
 				tvDate.text = TimeUtil.getPastDateFromOffset((TimeUtil.getTodayFromEpoch() - D.id).toInt())
-				var tasks = D.titlesToBulletList(maxLength = 40 ,maxLine = 5)
-				if( D.tasksTitle.size > 5 )tasks += "\nand ${D.tasksTitle.size - 5} more!"
-				tvData.text = tasks
+				tvData.text = D.titlesToBulletList(maxLength = 40 ,maxLine = 5)
 			}
 		}
 	}

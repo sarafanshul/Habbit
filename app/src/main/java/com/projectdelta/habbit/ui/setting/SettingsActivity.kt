@@ -2,12 +2,15 @@ package com.projectdelta.habbit.ui.setting
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import androidx.work.ExistingPeriodicWorkPolicy
 import com.projectdelta.habbit.R
 import com.projectdelta.habbit.databinding.SettingsActivityBinding
+import com.projectdelta.habbit.util.SyncUtil
 import com.projectdelta.habbit.util.notification.UpdateNotificationJob
 import com.projectdelta.habbit.util.notification.Notifications.DEFAULT_UPDATE_INTERVAL
 
@@ -51,9 +54,9 @@ class SettingsActivity : AppCompatActivity() ,
 
 	override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
 		when( key ){
-			"NotificationsEnabled" -> {
-				if( sharedPreferences?.getBoolean("NotificationsEnabled" , false)!! ){
-					val interval = when(sharedPreferences.getString("NotificationInterval" , "")){
+			resources.getString(R.string.id_notification_enabled) -> {
+				if( sharedPreferences?.getBoolean(resources.getString(R.string.id_notification_enabled) , false)!! ){
+					val interval = when(sharedPreferences.getString(resources.getString(R.string.id_notification_interval) , "")){
 						"1 Hour" -> 1L
 						"3 Hours" -> 3L
 						"6 Hours" -> 6L
@@ -66,8 +69,8 @@ class SettingsActivity : AppCompatActivity() ,
 					UpdateNotificationJob.setupTask( this , ExistingPeriodicWorkPolicy.REPLACE , 0L )
 				}
 			}
-			"NotificationInterval" -> {
-				val interval = when(sharedPreferences?.getString("NotificationInterval" , "")){
+			resources.getString(R.string.id_notification_interval) -> {
+				val interval = when(sharedPreferences?.getString(resources.getString(R.string.id_notification_interval) , "")){
 					"1 Hour" -> 1L
 					"3 Hours" -> 3L
 					"6 Hours" -> 6L
@@ -83,6 +86,11 @@ class SettingsActivity : AppCompatActivity() ,
 	class SettingsFragment : PreferenceFragmentCompat() {
 		override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
 			setPreferencesFromResource(R.xml.root_preferences, rootKey)
+
+			findPreference<Preference>(resources.getString(R.string.id_sync_now))?.setOnPreferenceClickListener { _ ->
+				context?.let { it -> SyncUtil.syncNow(it) }
+				true
+			}
 		}
 	}
 }
