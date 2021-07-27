@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.projectdelta.habbit.data.entities.Task
 import com.projectdelta.habbit.repository.TasksRepository
+import com.projectdelta.habbit.repository.TasksRepositoryImpl
 import com.projectdelta.habbit.util.lang.TimeUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +19,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class HomeSharedViewModel @Inject constructor(
-	private val repository: TasksRepository
+	private val repository: TasksRepositoryImpl
 ) : ViewModel() {
 
 	private var _data : LiveData<List<Task>> ?= null
@@ -26,7 +27,7 @@ class HomeSharedViewModel @Inject constructor(
 		get() = _data!!
 
 	init {
-		_data = repository.getAllTasks
+		_data = repository.getAllTasks()
 	}
 
 	fun getToday() = TimeUtil.getTodayFromEpoch()

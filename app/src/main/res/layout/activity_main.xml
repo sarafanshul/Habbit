@@ -22,6 +22,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="?colorOnPrimary"
                 app:title="Today"
+                app:layout_scrollFlags="scroll|enterAlways"
                 app:subtitle="19 Jan 2021"
                 app:titleTextColor="?colorOnColorOnPrimary"/>
 

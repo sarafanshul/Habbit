@@ -7,6 +7,7 @@ import android.content.Intent
 import com.projectdelta.habbit.data.TasksDatabase
 import com.projectdelta.habbit.data.entities.Task
 import com.projectdelta.habbit.repository.TasksRepository
+import com.projectdelta.habbit.repository.TasksRepositoryImpl
 import com.projectdelta.habbit.util.lang.hash
 import com.projectdelta.habbit.util.lang.TimeUtil
 import com.projectdelta.habbit.util.lang.notificationManager
@@ -33,7 +34,7 @@ class NotificationReceiver : BroadcastReceiver() {
 	private fun notifyTaskCompleted( context: Context , task: Task ) {
 		task.lastDayCompleted.add( TimeUtil.getTodayFromEpoch() )
 		GlobalScope.launch(Dispatchers.IO) {
-			TasksRepository(TasksDatabase.getInstance( context ).tasksDao())
+			TasksRepositoryImpl(TasksDatabase.getInstance( context ).tasksDao())
 				.markTaskCompleted( task )
 		}
 		dismissNotification( context , task.hash() )

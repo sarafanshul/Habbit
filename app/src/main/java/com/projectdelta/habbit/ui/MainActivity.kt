@@ -53,6 +53,9 @@ class MainActivity : AppCompatActivity() {
 
 	companion object{
 		fun getInstance() = this
+		private const val APPBAR_ANIMATION_DURATION = 100L
+		private const val ANIMATION_RESET_DELAY = 700L
+		private const val EXPLODE_ANIMATION_DURATION = 150L
 	}
 
 	/**
@@ -97,7 +100,7 @@ class MainActivity : AppCompatActivity() {
 		binding.mainFabCreate.isVisible = false
 		animateAppBar()
 		val animation = AnimationUtils.loadAnimation(this , R.anim.circle_explosion_anim).apply {
-			duration = 250
+			duration = EXPLODE_ANIMATION_DURATION
 			fillAfter = true
 			interpolator = AccelerateDecelerateInterpolator()
 		}
@@ -108,7 +111,7 @@ class MainActivity : AppCompatActivity() {
 				binding.mainCircle.isVisible = false
 				binding.mainFabCreate.isVisible = true
 				resetAppBar()
-			} , 750)
+			} , ANIMATION_RESET_DELAY)
 		}
 	}
 
@@ -120,7 +123,7 @@ class MainActivity : AppCompatActivity() {
 		binding.mainAppBar.animate().apply {
 			translationY((- binding.mainAppBar.height).toFloat())
 			interpolator = LinearInterpolator()
-			duration = 200
+			duration = APPBAR_ANIMATION_DURATION
 		}
 	}
 
@@ -243,7 +246,7 @@ class MainActivity : AppCompatActivity() {
 	}
 
 	@SuppressLint("ObsoleteSdkInt")
-	protected open fun getUserPermissions() {
+	private fun getUserPermissions() {
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 			if (! this.powerManager.isIgnoringBatteryOptimizations( packageName ) ) {
 				startActivity( Intent( Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS ) )

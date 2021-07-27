@@ -9,10 +9,10 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/todo_rv"
-        android:layout_marginVertical="@dimen/default_base_margin"
         android:layout_marginHorizontal="@dimen/element_padding"
         android:overScrollMode="never"
         android:layout_width="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_height="match_parent" />
 
 </FrameLayout>

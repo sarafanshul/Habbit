@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.projectdelta.habbit.data.entities.Task
 import com.projectdelta.habbit.repository.TasksRepository
+import com.projectdelta.habbit.repository.TasksRepositoryImpl
 import com.projectdelta.habbit.ui.activity.editTask.state.CollapsingToolbarState
 import com.projectdelta.habbit.ui.activity.editTask.state.EditTaskInteractionManager
 import com.projectdelta.habbit.ui.activity.editTask.state.EditTaskInteractionState
@@ -16,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EditTaskViewModel @Inject constructor(
-	private val repository: TasksRepository
+	private val repository: TasksRepositoryImpl
 ) : ViewModel() {
 
 	private val editTaskInteractionManager : EditTaskInteractionManager = EditTaskInteractionManager()

@@ -22,4 +22,5 @@
     <string name="text_enter_a_title">Enter a title</string>
     <string name="add_a_summary">Add a summary</string>
     <string name="no_history">Complete this task for a day to unlock this feature.</string>
+    <string name="add_a_title">Add a title</string>
 </resources>

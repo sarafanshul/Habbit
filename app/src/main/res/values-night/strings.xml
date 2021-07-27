@@ -2,4 +2,5 @@
 <resources>
     <string name="add_a_summary">Add a summary</string>
     <string name="no_history">Complete task for history!</string>
+    <string name="add_a_title">Add a title</string>
 </resources>

@@ -14,6 +14,7 @@
         android:src="@drawable/ic_save_black_24dp"
         android:id="@+id/e_task_fab_save"
         android:layout_margin="@dimen/fab_margin"
+        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
         android:layout_gravity="bottom|right"/>
 
     <androidx.core.widget.NestedScrollView
@@ -213,7 +214,7 @@
                     android:id="@+id/note_title"
                     android:textColor="?colorPrimary"
                     android:textSize="@dimen/H3"
-                    android:hint="@string/text_enter_a_title"
+                    android:hint="@string/add_a_title"
                     />
 
                 <View
