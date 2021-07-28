@@ -1,7 +1,10 @@
 package com.projectdelta.habbit.ui
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -43,7 +46,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(){
 
 	private var _binding : ActivityMainBinding ?= null
 	private val binding : ActivityMainBinding
@@ -90,70 +93,6 @@ class MainActivity : AppCompatActivity() {
 
 		syncData()
 
-		binding.mainFabCreate.setOnClickListener {
-			animateAndDoStuff {
-				launchEditActivity( Task( viewModel.getMSfromEpoch() , "" , mutableListOf<Long>() , 0f ) , false )
-			}
-		}
-	}
-
-	private fun animateAndDoStuff( stuff : () -> Unit ){
-		binding.mainCircle.isVisible = true
-		binding.mainFabCreate.isVisible = false
-		animateAppBar()
-		val animation = AnimationUtils.loadAnimation(this , R.anim.circle_explosion_anim).apply {
-			duration = EXPLODE_ANIMATION_DURATION
-			fillAfter = true
-			interpolator = AccelerateDecelerateInterpolator()
-		}
-		binding.mainCircle.startAnimation(animation){
-			stuff()
-			Handler( Looper.getMainLooper() ).postDelayed({
-				animation.fillAfter = false
-				binding.mainCircle.isVisible = false
-				binding.mainFabCreate.isVisible = true
-				resetAppBar()
-			} , ANIMATION_RESET_DELAY)
-		}
-	}
-
-	private fun resetAppBar( ){
-		binding.mainAppBar.animate().translationY( 0F )
-	}
-
-	private fun animateAppBar( ){
-		binding.mainAppBar.animate().apply {
-			translationY((- binding.mainAppBar.height).toFloat())
-			interpolator = LinearInterpolator()
-			duration = APPBAR_ANIMATION_DURATION
-		}
-	}
-
-	override fun onPause() {
-		binding.mainCircle.isVisible = false
-		super.onPause()
-	}
-
-	override fun onDestroy() {
-		super.onDestroy()
-		_binding = null
-	}
-
-	private fun initMenu() {
-
-		binding.mainNavigation.setNavigationItemSelectedListener {
-			when( it.itemId ){
-				R.id.menu_insights -> NavigationUtil.insights(this)
-				R.id.menu_settings -> NavigationUtil.settings(this)
-				R.id.menu_about    -> NavigationUtil.about(this)
-				else -> Throwable("404 Not found")
-			}
-			true
-		}
-
-		binding.mainBtnSignIn.setOnClickListener {
-			this.toast("Coming soon...")
-		}
 	}
 
 	fun launchEditActivity(task: Task , anim : Boolean = true) {
@@ -211,6 +150,43 @@ class MainActivity : AppCompatActivity() {
 
 			override fun onPageScrollStateChanged(state: Int) {}
 		} )
+
+		binding.mainFabCreate.setOnClickListener {
+			animateAndDoStuff {
+				launchEditActivity( Task( viewModel.getMSfromEpoch() , "" , mutableListOf<Long>() , 0f ) , false )
+			}
+		}
+	}
+
+	private fun animateAndDoStuff( stuff : () -> Unit ){
+		binding.mainFabCreate.getCoordinates().let { coordinates ->
+			binding.mainCircle.showRevealEffect(
+				coordinates.x ,
+				coordinates.y ,
+				object : AnimatorListenerAdapter() {
+					override fun onAnimationStart(animation: Animator?) {
+						stuff()
+					}
+				}
+			)
+		}
+	}
+
+	private fun initMenu() {
+
+		binding.mainNavigation.setNavigationItemSelectedListener {
+			when( it.itemId ){
+				R.id.menu_insights -> NavigationUtil.insights(this)
+				R.id.menu_settings -> NavigationUtil.settings(this)
+				R.id.menu_about    -> NavigationUtil.about(this)
+				else -> Throwable("404 Not found")
+			}
+			true
+		}
+
+		binding.mainBtnSignIn.setOnClickListener {
+			this.toast("Coming soon...")
+		}
 	}
 
 	private fun setTabIcons() {
@@ -263,4 +239,21 @@ class MainActivity : AppCompatActivity() {
 			}
 		}
 	}
+
+	override fun onRestart() {
+		super.onRestart()
+		if( binding.mainCircle.isVisible )
+			binding.mainFabCreate.getCoordinates().let { coordinates ->
+				binding.mainCircle.hideRevealEffect(
+					coordinates.x ,
+					coordinates.y ,
+					1929
+				)
+			}
+	}
+	override fun onDestroy() {
+		super.onDestroy()
+		_binding = null
+	}
+
 }
