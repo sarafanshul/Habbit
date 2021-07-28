@@ -1,16 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="170dp"
+    android:layout_height="@dimen/header_height"
+    android:orientation="vertical"
     android:background="@color/white">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/element_padding"
-        android:src="@drawable/ic_way_of_samurai_24dp"
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/header_image"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:adjustViewBounds="true"
         android:foregroundGravity="center"
-        app:tint="@color/black" />
+        android:layout_marginVertical="20dp"
+        android:layout_gravity="center"
+        android:scaleType="centerCrop"
+        app:shapeAppearanceOverlay="@style/roundedImageView" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/element_padding"
+            android:id="@+id/header_name"
+            android:textSize="15sp"
+            android:textColor="@color/asphalt"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/element_padding"
+            android:id="@+id/header_email"
+            android:textSize="10sp"/>
+
+    </LinearLayout>
+
+    <View
+        style="@style/Divider"/>
+
+</LinearLayout>

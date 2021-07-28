@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "693436403887",
+    "project_id": "habbit-ebaa0",
+    "storage_bucket": "habbit-ebaa0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:693436403887:android:1da2c663455696b97c845a",
+        "android_client_info": {
+          "package_name": "com.projectdelta.habbit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "693436403887-ri4eqrace555lshe49f6iv76vbb526bt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.projectdelta.habbit",
+            "certificate_hash": "a1d844d7f8b3dc5ae30058bc8a7040e30b87bcb9"
+          }
+        },
+        {
+          "client_id": "693436403887-3j13sqto6dq48dmfvporomtnffc6i1sm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKXeyBIIrugw9F_NXLdHRZZpgMe-jycQo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "693436403887-3j13sqto6dq48dmfvporomtnffc6i1sm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

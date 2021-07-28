@@ -13,6 +13,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
+import android.util.Log
+import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
@@ -22,7 +24,18 @@ import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.viewpager.widget.ViewPager
 import androidx.work.ExistingPeriodicWorkPolicy
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textview.MaterialTextView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.projectdelta.habbit.R
 import com.projectdelta.habbit.ui.activity.editTask.EditTaskActivity
 import com.projectdelta.habbit.adapter.HomeViewPagerAdapter
@@ -38,12 +51,14 @@ import com.projectdelta.habbit.util.view.NavigationUtil
 import com.projectdelta.habbit.util.notification.Notifications.DEFAULT_UPDATE_INTERVAL
 import com.projectdelta.habbit.util.notification.UpdateNotificationJob
 import com.projectdelta.habbit.ui.viewModel.MainViewModel
+import com.projectdelta.habbit.util.firebase.FirebaseUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(){
@@ -53,12 +68,19 @@ class MainActivity : AppCompatActivity(){
 		get() = _binding!!
 	private val viewModel: MainViewModel by viewModels()
 	lateinit var adapter : HomeViewPagerAdapter
+	private lateinit var auth: FirebaseAuth
+
+
+	@Inject
+	lateinit var firebaseUtil: FirebaseUtil
+
 
 	companion object{
 		fun getInstance() = this
 		private const val APPBAR_ANIMATION_DURATION = 100L
 		private const val ANIMATION_RESET_DELAY = 700L
 		private const val EXPLODE_ANIMATION_DURATION = 150L
+		private const val TAG = "MainActivity"
 	}
 
 	/**
@@ -74,11 +96,29 @@ class MainActivity : AppCompatActivity(){
 		}
 	}
 
+	private val startForResultSignIn = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+			result: ActivityResult ->
+		if (result.resultCode == Activity.RESULT_OK) {
+			val task = GoogleSignIn.getSignedInAccountFromIntent( result.data )
+			if(task.isSuccessful) {
+				// Google Sign In was successful, authenticate with Firebase
+				val account = task.getResult(ApiException::class.java)!!
+				Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
+				this.toast("Sign In successful!")
+				firebaseAuthWithGoogle(account.idToken!!)
+			} else {
+				// Google Sign In failed, update UI appropriately
+				this.toast("Unable to sign in.")
+			}
+		}
+	}
+
 	@SuppressLint("SimpleDateFormat")
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
 		_binding = ActivityMainBinding.inflate(layoutInflater)
+		auth = Firebase.auth
 
 		setTheme( R.style.Theme_Habbit )
 		setContentView( binding.root )
@@ -93,15 +133,62 @@ class MainActivity : AppCompatActivity(){
 
 		syncData()
 
+		setupUser(auth.currentUser)
+
 	}
 
-	fun launchEditActivity(task: Task , anim : Boolean = true) {
-		Intent( this , EditTaskActivity::class.java ).apply {
-			putExtra( "TASK" , task )
-			if( !anim )
-				addFlags( Intent.FLAG_ACTIVITY_NO_ANIMATION )
-		}.also{
-			startForResultTask.launch( it )
+	private fun signIn() {
+		val signInIntent = firebaseUtil.googleSignInClient.signInIntent
+		startForResultSignIn.launch(signInIntent)
+	}
+	private fun signOut() {
+		Firebase.auth.signOut()
+        setupUser(null)
+	}
+
+	private fun firebaseAuthWithGoogle(idToken: String) {
+		val credential = GoogleAuthProvider.getCredential(idToken, null)
+		auth.signInWithCredential(credential)
+			.addOnCompleteListener(this) { task ->
+				if (task.isSuccessful) {
+					// Sign in success, update UI with the signed-in user's information
+					Log.d(TAG, "signInWithCredential:success")
+					val user = auth.currentUser
+					setupUser(user)
+				} else {
+					// If sign in fails, display a message to the user.
+					Log.w(TAG, "signInWithCredential:failure", task.exception)
+					setupUser(null)
+				}
+			}
+	}
+
+	private fun setupUser(user: FirebaseUser?) {
+		val headerView : View = binding.mainNavigation.getHeaderView(0)
+		if( user == null ) {
+			binding.mainBtnSignIn.text = resources.getString(R.string.sign_in)
+			binding.mainBtnSignIn.setOnClickListener {
+				signIn()
+			}
+			headerView.findViewById<MaterialTextView>(R.id.header_name).text = getString(R.string.guest)
+			headerView.findViewById<ShapeableImageView>(R.id.header_image).setImageDrawable(getDrawable(R.drawable.ic_guest_user))
+		}else {
+			Log.d(TAG, "setupUser: ${user.displayName} @ ${user.email}")
+			binding.mainBtnSignIn.text = resources.getString(R.string.sign_out)
+			binding.mainBtnSignIn.setOnClickListener {
+				MaterialAlertDialogBuilder(this).apply {
+					setTitle("Sign out from this device ?")
+					setMessage("You can sign in again any time, meanwhile you will not be able to sync with cloud")
+					setPositiveButton("Sign Out"){_ , _ ->
+						signOut()
+					}
+					setNeutralButton("CANCEL"){_, _ -> }
+					create()
+				}.show()
+			}
+			headerView.findViewById<MaterialTextView>(R.id.header_name).text = user.displayName?.split(" ")?.joinToString(" ") { it.capitalized() }
+			headerView.findViewById<MaterialTextView>(R.id.header_mail).text = user.email
+			headerView.findViewById<ShapeableImageView>(R.id.header_image).setImageDrawable(getDrawable(R.drawable.ic_guest_user))
 		}
 	}
 
@@ -183,10 +270,6 @@ class MainActivity : AppCompatActivity(){
 			}
 			true
 		}
-
-		binding.mainBtnSignIn.setOnClickListener {
-			this.toast("Coming soon...")
-		}
 	}
 
 	private fun setTabIcons() {
@@ -196,6 +279,17 @@ class MainActivity : AppCompatActivity(){
 
 		binding.mainTabs.getTabAt(0)!!.text = ""
 	}
+
+	fun launchEditActivity(task: Task , anim : Boolean = true) {
+		Intent( this , EditTaskActivity::class.java ).apply {
+			putExtra( "TASK" , task )
+			if( !anim )
+				addFlags( Intent.FLAG_ACTIVITY_NO_ANIMATION )
+		}.also{
+			startForResultTask.launch( it )
+		}
+	}
+
 
 	/**
 	 * If notifications enabled and "somehow ended" by system restart job

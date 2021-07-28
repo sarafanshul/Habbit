@@ -6,6 +6,8 @@ plugins {
     id 'com.google.secrets_gradle_plugin' version '0.5'
 }
 apply plugin: 'kotlin-parcelize'
+apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 30
@@ -99,6 +101,11 @@ dependencies {
     implementation 'ru.cleverpumpkin:crunchycalendar:2.2.0'
 
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.22'
+
+    implementation platform('com.google.firebase:firebase-bom:28.3.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation 'com.google.android.gms:play-services-auth:19.2.0'
 
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
 }

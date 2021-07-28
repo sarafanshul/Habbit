@@ -32,4 +32,10 @@
     <string name="id_notification_enabled">NotificationsEnabled</string>
     <string name="id_notification_interval">NotificationInterval</string>
 
+    <!-- button sign in strings -->
+    <string name="sign_in">SIGN IN</string>
+    <string name="sign_out">SIGN OUT</string>
+
+    <string name="guest">GUEST</string>
+
 </resources>
