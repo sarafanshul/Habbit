@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
@@ -11,15 +12,20 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import com.projectdelta.habbit.R
 import com.projectdelta.habbit.databinding.SettingsActivityBinding
 import com.projectdelta.habbit.util.SyncUtil
+import com.projectdelta.habbit.util.lang.toast
 import com.projectdelta.habbit.util.notification.UpdateNotificationJob
 import com.projectdelta.habbit.util.notification.Notifications.DEFAULT_UPDATE_INTERVAL
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SettingsActivity : AppCompatActivity() ,
 	SharedPreferences.OnSharedPreferenceChangeListener {
 
 	private var _binding : SettingsActivityBinding ?= null
 	private val binding : SettingsActivityBinding
 		get() = _binding!!
+
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -79,16 +85,23 @@ class SettingsActivity : AppCompatActivity() ,
 				}
 				UpdateNotificationJob.setupTask( this , ExistingPeriodicWorkPolicy.REPLACE , interval )
 			}
-			else -> {}
+			resources.getString(R.string.id_sync_on_startup) -> {
+				this.toast("Coming Soon...")
+				// TODO( set to false )
+			}
 		}
 	}
 
+	@AndroidEntryPoint
 	class SettingsFragment : PreferenceFragmentCompat() {
+
+		@Inject lateinit var syncUtil : SyncUtil
+
 		override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
 			setPreferencesFromResource(R.xml.root_preferences, rootKey)
 
 			findPreference<Preference>(resources.getString(R.string.id_sync_now))?.setOnPreferenceClickListener { _ ->
-				context?.let { it -> SyncUtil.syncNow(it) }
+				requireActivity().let { it -> syncUtil.syncNow(it) }
 				true
 			}
 		}

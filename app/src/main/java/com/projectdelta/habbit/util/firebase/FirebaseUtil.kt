@@ -8,6 +8,7 @@ import androidx.core.app.ActivityCompat.startActivityForResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.Source
 import com.projectdelta.habbit.R
 import dagger.hilt.android.qualifiers.ActivityContext
 import javax.inject.Inject
@@ -15,6 +16,11 @@ import javax.inject.Inject
 class FirebaseUtil @Inject constructor(
     @ActivityContext context: Context
 ) {
+
+    companion object{
+        const val USERS = "users"
+        val SOURCE = Source.DEFAULT
+    }
 
     val gso by lazy {
         GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -26,6 +32,7 @@ class FirebaseUtil @Inject constructor(
     val googleSignInClient by lazy {
         GoogleSignIn.getClient(context, gso)
     }
+
 
 
 }

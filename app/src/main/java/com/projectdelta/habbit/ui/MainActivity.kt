@@ -24,6 +24,7 @@ import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.viewpager.widget.ViewPager
 import androidx.work.ExistingPeriodicWorkPolicy
+import com.bumptech.glide.Glide
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -131,10 +132,10 @@ class MainActivity : AppCompatActivity(){
 
 		cancelAllNotifications()
 
-		syncData()
+		// TODO (add feature for sync data on startup)
+		// syncData()
 
 		setupUser(auth.currentUser)
-
 	}
 
 	private fun signIn() {
@@ -171,6 +172,7 @@ class MainActivity : AppCompatActivity(){
 				signIn()
 			}
 			headerView.findViewById<MaterialTextView>(R.id.header_name).text = getString(R.string.guest)
+			headerView.findViewById<MaterialTextView>(R.id.header_email).text = ""
 			headerView.findViewById<ShapeableImageView>(R.id.header_image).setImageDrawable(getDrawable(R.drawable.ic_guest_user))
 		}else {
 			Log.d(TAG, "setupUser: ${user.displayName} @ ${user.email}")
@@ -187,8 +189,10 @@ class MainActivity : AppCompatActivity(){
 				}.show()
 			}
 			headerView.findViewById<MaterialTextView>(R.id.header_name).text = user.displayName?.split(" ")?.joinToString(" ") { it.capitalized() }
-			headerView.findViewById<MaterialTextView>(R.id.header_mail).text = user.email
-			headerView.findViewById<ShapeableImageView>(R.id.header_image).setImageDrawable(getDrawable(R.drawable.ic_guest_user))
+			headerView.findViewById<MaterialTextView>(R.id.header_email).text = user.email
+			Glide.with(this)
+				.load( user.photoUrl )
+				.into(headerView.findViewById<ShapeableImageView>(R.id.header_image))
 		}
 	}
 
@@ -290,7 +294,6 @@ class MainActivity : AppCompatActivity(){
 		}
 	}
 
-
 	/**
 	 * If notifications enabled and "somehow ended" by system restart job
 	 */
@@ -313,7 +316,7 @@ class MainActivity : AppCompatActivity(){
 		val sharedPref = this.getSharedPreferences(this.packageName + "_preferences", Context.MODE_PRIVATE)
 		if( sharedPref.getBoolean(resources.getString( R.string.id_sync ) , false) &&
 			sharedPref.getBoolean(resources.getString( R.string.id_sync_on_startup ) , false) ){
-			SyncUtil.syncNow( this )
+//			SyncUtil().syncNow( this )
 		}
 	}
 

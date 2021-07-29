@@ -9,7 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginHorizontal="@dimen/element_padding"
-        android:layout_marginBottom="@dimen/element_padding"
         android:id="@+id/insights_list_rv"/>
 
 </FrameLayout>

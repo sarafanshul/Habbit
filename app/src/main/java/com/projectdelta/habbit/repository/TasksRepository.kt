@@ -18,8 +18,6 @@ interface TasksRepository {
 
 	fun getTaskById(id: Long): Task
 
-	fun getTaskByIdLive( id : Long ): LiveData<List<Task>>
-
 	suspend fun getTask( taskName : String ): List<Task>
 
 	suspend fun getDay(id : Long): List<Day>
