@@ -14,15 +14,19 @@ class TasksRepositoryImpl( private val tasksDao: TasksDao) : TasksRepository{
 
     override fun getAllTasks( ) : LiveData<List<Task>> = tasksDao.getAllTasks()
 
+    fun getAllTasksOffline() : List<Task> = tasksDao.getAllTasksOffline()
+
     override fun getAllDays() : LiveData<List<Day>> = tasksDao.getAllDays()
 
     override fun getTaskById(id: Long): Task = tasksDao.getTaskById( id )
 
-    override fun getTaskByIdLive(id : Long ) = tasksDao.getTaskByIdLive( id )
+    fun getTaskByIdLive(id : Long ) = tasksDao.getTaskByIdLive( id )
 
     override suspend fun getTask(taskName : String ) : List<Task> = tasksDao.getTask( taskName )
 
     override suspend fun getDay(id : Long) = tasksDao.getDay(id)
+
+    fun getAllDayOffline( ): List<Day> = tasksDao.getAllDaysOffline()
 
     override suspend fun getDayRange(start : Long, end : Long ) = tasksDao.getDayRange(start , end)
 

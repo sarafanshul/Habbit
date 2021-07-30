@@ -14,11 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.textview.MaterialTextView
 import com.projectdelta.habbit.ui.MainActivity
 import com.projectdelta.habbit.R
-import com.projectdelta.habbit.adapter.RecyclerViewDoneAdapter
+import com.projectdelta.habbit.ui.adapter.RecyclerViewDoneAdapter
 import com.projectdelta.habbit.databinding.DoneFragmentBinding
 import com.projectdelta.habbit.util.NotFound
-import com.projectdelta.habbit.util.view.RecyclerItemClickListenr
-import com.projectdelta.habbit.util.view.StatesRecyclerViewAdapter
+import com.projectdelta.habbit.ui.adapter.RecyclerItemClickListenr
+import com.projectdelta.habbit.ui.adapter.StatesRecyclerViewAdapter
 import com.projectdelta.habbit.util.lang.completedTill
 import com.projectdelta.habbit.ui.viewModel.HomeSharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -75,12 +75,12 @@ class DoneFragment : Fragment() {
 		emptyView.findViewById<MaterialTextView>(R.id.empty_view_tw_string).text = NotFound.get()
 
 		val statesAdapter =
-			StatesRecyclerViewAdapter(
-				adapter,
-				emptyView,
-				emptyView,
-				emptyView
-			)
+            StatesRecyclerViewAdapter(
+                adapter,
+                emptyView,
+                emptyView,
+                emptyView
+            )
 		binding.doneRv.adapter = statesAdapter
 		statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
 

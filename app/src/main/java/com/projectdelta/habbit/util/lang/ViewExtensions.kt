@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.app.Activity
 import android.content.Context
+import android.graphics.Point
 import android.graphics.drawable.ColorDrawable
 import android.view.View
 import android.view.animation.Animation
@@ -34,6 +35,11 @@ fun View.startAnimation( animation : Animation , onEnd : () -> Unit ) {
     } )
     this.startAnimation(animation)
 }
+
+fun View.getCoordinates() = Point(
+    (left + right) / 2 ,
+    (top + bottom) / 2
+)
 
 fun View.visible() {
     visibility = View.VISIBLE

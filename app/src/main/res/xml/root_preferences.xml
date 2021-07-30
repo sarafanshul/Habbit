@@ -4,28 +4,58 @@
         app:title="Notifications">
 
         <SwitchPreference
-            app:key="NotificationsEnabled"
+            app:key="@string/id_notification_enabled"
             app:defaultValue="false"
             app:title="Enable notifications" />
 
         <ListPreference
-            app:dependency="NotificationsEnabled"
+            app:dependency="@string/id_notification_enabled"
             app:defaultValue="1 hour"
             app:entries="@array/notification_entries"
             app:entryValues="@array/notification_values"
-            app:key="NotificationInterval"
+            app:key="@string/id_notification_interval"
             app:title="Notification interval"
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/sync_header">
+    <PreferenceCategory app:title="@string/sync_header"
+        app:summary="For Privacy we only use in app sync">
 
         <SwitchPreferenceCompat
-            app:key="Sync"
-            app:title="Sync data periodically" />
+            app:key="@string/id_sync"
+            app:defaultValue="false"
+            app:title="Sync my data" />
+
+        <SwitchPreference
+            app:key="@string/id_sync_on_startup"
+            app:dependency="@string/id_sync"
+            app:enabled="false"
+            app:title="Sync my data when app starts"/>
+
+        <Preference
+            app:title="Sync my data now"
+            app:dependency="@string/id_sync"
+            app:key="@string/id_sync_now"/>
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="User">
+
+        <com.projectdelta.habbit.util.view.CustomTextPreference
+            app:key="@string/id_delete_all_data_local"
+            app:title="Delete local data"
+            app:summary="Delete all my data from this device"/>
+
+        <com.projectdelta.habbit.util.view.CustomTextPreference
+            app:key="@string/id_delete_all_data_cloud"
+            app:title="Delete cloud data"
+            app:summary="Delete all my data from cloud"/>
+
+        <com.projectdelta.habbit.util.view.CustomTextPreference
+            app:key="@string/id_sign_out"
+            app:title="Sign out"/>
+
+    </PreferenceCategory>
 
 </PreferenceScreen>

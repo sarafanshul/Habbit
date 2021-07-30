@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textview.MaterialTextView
 import com.projectdelta.habbit.R
-import com.projectdelta.habbit.adapter.RecyclerViewTodoAdapter
+import com.projectdelta.habbit.ui.adapter.RecyclerViewTodoAdapter
 import com.projectdelta.habbit.constant.ICON_SIZE_DP
 import com.projectdelta.habbit.databinding.TodoFragmentBinding
 import com.projectdelta.habbit.ui.MainActivity
@@ -27,9 +27,9 @@ import com.projectdelta.habbit.util.lang.convertDrawableToBitmap
 import com.projectdelta.habbit.util.lang.dpToPx
 import com.projectdelta.habbit.util.lang.tasksBeforeSkipTime
 import com.projectdelta.habbit.util.lang.unfinishedTill
-import com.projectdelta.habbit.util.view.CustomItemTouchHelperCallback
-import com.projectdelta.habbit.util.view.RecyclerItemClickListenr
-import com.projectdelta.habbit.util.view.StatesRecyclerViewAdapter
+import com.projectdelta.habbit.ui.adapter.CustomItemTouchHelperCallback
+import com.projectdelta.habbit.ui.adapter.RecyclerItemClickListenr
+import com.projectdelta.habbit.ui.adapter.StatesRecyclerViewAdapter
 import com.projectdelta.habbit.ui.viewModel.HomeSharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -87,12 +87,12 @@ class TodoFragment : Fragment() {
 		emptyView.findViewById<MaterialTextView>(R.id.empty_view_tw_string).text = NotFound.get()
 
 		val statesAdapter =
-			StatesRecyclerViewAdapter(
-				adapter,
-				emptyView,
-				emptyView,
-				emptyView
-			)
+            StatesRecyclerViewAdapter(
+                adapter,
+                emptyView,
+                emptyView,
+                emptyView
+            )
 		binding.todoRv.adapter = statesAdapter
 		statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
 

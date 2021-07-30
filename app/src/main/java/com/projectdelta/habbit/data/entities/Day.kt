@@ -3,6 +3,7 @@ package com.projectdelta.habbit.data.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
+import com.google.gson.annotations.SerializedName
 import com.projectdelta.habbit.util.lang.Converters
 import java.io.Serializable
 
@@ -19,12 +20,15 @@ import java.io.Serializable
 data class Day(
 
 	@PrimaryKey(autoGenerate = false)
-	val id: Long,
+	@SerializedName("id")
+	var id: Long = 0,
 
 	@TypeConverters( Converters::class )
-	val tasksID: MutableList<Long>,
+	@SerializedName("tasksID")
+	var tasksID: MutableList<Long> = mutableListOf(),
 
 	@TypeConverters( Converters::class )
-	val tasksTitle : MutableList<String>,
+	@SerializedName("tasksTitle")
+	var tasksTitle : MutableList<String> = mutableListOf(),
 
-):Serializable
+	):Serializable

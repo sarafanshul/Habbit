@@ -1,4 +1,4 @@
-package com.projectdelta.habbit.adapter
+package com.projectdelta.habbit.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

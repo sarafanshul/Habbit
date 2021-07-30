@@ -9,6 +9,12 @@
         <item name="android:background">@color/mat_black</item>
     </style>
 
+    <style name="DividerLight">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1px</item>
+        <item name="android:background">@color/focused_color</item>
+    </style>
+
     <style name="NewAlertDialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
         <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
         <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
@@ -45,6 +51,11 @@
         <item name="calendar_year_selection_arrows_color">@color/asphalt</item>
         <item name="calendar_grid_color">@android:color/transparent</item>
         <item name="calendar_grid_on_selected_dates">false</item>
+    </style>
+
+    <style name="roundedImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
     </style>
 
 </resources>

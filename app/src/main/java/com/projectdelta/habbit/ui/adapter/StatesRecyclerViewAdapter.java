@@ -1,4 +1,4 @@
-package com.projectdelta.habbit.util.view;
+package com.projectdelta.habbit.ui.adapter;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,8 +7,6 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.projectdelta.habbit.util.view.RecyclerViewAdapterWrapper;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

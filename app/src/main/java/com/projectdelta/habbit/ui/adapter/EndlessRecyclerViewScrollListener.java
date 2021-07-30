@@ -1,4 +1,4 @@
-package com.projectdelta.habbit.util.view;
+package com.projectdelta.habbit.ui.adapter;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;

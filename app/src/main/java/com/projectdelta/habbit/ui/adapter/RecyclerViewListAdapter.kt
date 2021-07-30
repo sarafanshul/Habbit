@@ -1,4 +1,4 @@
-package com.projectdelta.habbit.adapter
+package com.projectdelta.habbit.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,8 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.projectdelta.habbit.data.entities.Day
 import com.projectdelta.habbit.databinding.LayoutRvListBinding
 import com.projectdelta.habbit.util.lang.TimeUtil
-import com.projectdelta.habbit.util.lang.capitalized
-import com.projectdelta.habbit.util.lang.chop
 import com.projectdelta.habbit.util.lang.titlesToBulletList
 
 class RecyclerViewListAdapter():
@@ -19,9 +17,7 @@ class RecyclerViewListAdapter():
 		fun bind( D : Day ){
 			with(binding){
 				tvDate.text = TimeUtil.getPastDateFromOffset((TimeUtil.getTodayFromEpoch() - D.id).toInt())
-				var tasks = D.titlesToBulletList(maxLength = 40 ,maxLine = 5)
-				if( D.tasksTitle.size > 5 )tasks += "\nand ${D.tasksTitle.size - 5} more!"
-				tvData.text = tasks
+				tvData.text = D.titlesToBulletList(maxLength = 40 ,maxLine = 5)
 			}
 		}
 	}

@@ -1,5 +1,7 @@
 package com.projectdelta.habbit.ui
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -7,55 +9,67 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.provider.Settings
-import android.view.animation.AccelerateDecelerateInterpolator
-import android.view.animation.AnimationUtils
-import android.view.animation.LinearInterpolator
+import android.util.Log
+import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.viewpager.widget.ViewPager
 import androidx.work.ExistingPeriodicWorkPolicy
+import com.bumptech.glide.Glide
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.common.api.ApiException
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textview.MaterialTextView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.projectdelta.habbit.R
 import com.projectdelta.habbit.ui.activity.editTask.EditTaskActivity
-import com.projectdelta.habbit.adapter.HomeViewPagerAdapter
-import com.projectdelta.habbit.data.TasksDatabase
+import com.projectdelta.habbit.ui.adapter.HomeViewPagerAdapter
 import com.projectdelta.habbit.data.entities.Task
 import com.projectdelta.habbit.databinding.ActivityMainBinding
 import com.projectdelta.habbit.ui.fragment.DoneFragment
 import com.projectdelta.habbit.ui.fragment.SkipFragment
 import com.projectdelta.habbit.ui.fragment.TodoFragment
-import com.projectdelta.habbit.util.*
 import com.projectdelta.habbit.util.lang.*
-import com.projectdelta.habbit.util.view.NavigationUtil
+import com.projectdelta.habbit.ui.navigation.NavigationUtil
 import com.projectdelta.habbit.util.notification.Notifications.DEFAULT_UPDATE_INTERVAL
 import com.projectdelta.habbit.util.notification.UpdateNotificationJob
 import com.projectdelta.habbit.ui.viewModel.MainViewModel
+import com.projectdelta.habbit.util.firebase.FirebaseUtil
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(){
 
 	private var _binding : ActivityMainBinding ?= null
 	private val binding : ActivityMainBinding
 		get() = _binding!!
 	private val viewModel: MainViewModel by viewModels()
 	lateinit var adapter : HomeViewPagerAdapter
+	private lateinit var auth: FirebaseAuth
+
+
+	@Inject
+	lateinit var firebaseUtil: FirebaseUtil
+
 
 	companion object{
 		fun getInstance() = this
 		private const val APPBAR_ANIMATION_DURATION = 100L
 		private const val ANIMATION_RESET_DELAY = 700L
 		private const val EXPLODE_ANIMATION_DURATION = 150L
+		private const val TAG = "MainActivity"
 	}
 
 	/**
@@ -71,11 +85,29 @@ class MainActivity : AppCompatActivity() {
 		}
 	}
 
+	private val startForResultSignIn = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+			result: ActivityResult ->
+		if (result.resultCode == Activity.RESULT_OK) {
+			val task = GoogleSignIn.getSignedInAccountFromIntent( result.data )
+			if(task.isSuccessful) {
+				// Google Sign In was successful, authenticate with Firebase
+				val account = task.getResult(ApiException::class.java)!!
+				Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
+				this.toast("Sign In successful!")
+				firebaseAuthWithGoogle(account.idToken!!)
+			} else {
+				// Google Sign In failed, update UI appropriately
+				this.toast("Unable to sign in.")
+			}
+		}
+	}
+
 	@SuppressLint("SimpleDateFormat")
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
 		_binding = ActivityMainBinding.inflate(layoutInflater)
+		auth = Firebase.auth
 
 		setTheme( R.style.Theme_Habbit )
 		setContentView( binding.root )
@@ -88,79 +120,56 @@ class MainActivity : AppCompatActivity() {
 
 		cancelAllNotifications()
 
-		binding.mainFabCreate.setOnClickListener {
-			animateAndDoStuff {
-				launchEditActivity( Task( viewModel.getMSfromEpoch() , "" , mutableListOf<Long>() , 0f ) , false )
+		// TODO (add feature for sync data on startup)
+		// syncData()
+
+		setupUser(auth.currentUser)
+	}
+
+	private fun signIn() {
+		val signInIntent = firebaseUtil.googleSignInClient.signInIntent
+		startForResultSignIn.launch(signInIntent)
+	}
+	private fun signOut() {
+		Firebase.auth.signOut()
+        setupUser(null)
+	}
+
+	private fun firebaseAuthWithGoogle(idToken: String) {
+		val credential = GoogleAuthProvider.getCredential(idToken, null)
+		auth.signInWithCredential(credential)
+			.addOnCompleteListener(this) { task ->
+				if (task.isSuccessful) {
+					// Sign in success, update UI with the signed-in user's information
+					Log.d(TAG, "signInWithCredential:success")
+					val user = auth.currentUser
+					setupUser(user)
+				} else {
+					// If sign in fails, display a message to the user.
+					Log.w(TAG, "signInWithCredential:failure", task.exception)
+					setupUser(null)
+				}
 			}
-		}
 	}
 
-	private fun animateAndDoStuff( stuff : () -> Unit ){
-		binding.mainCircle.isVisible = true
-		binding.mainFabCreate.isVisible = false
-		animateAppBar()
-		val animation = AnimationUtils.loadAnimation(this , R.anim.circle_explosion_anim).apply {
-			duration = EXPLODE_ANIMATION_DURATION
-			fillAfter = true
-			interpolator = AccelerateDecelerateInterpolator()
-		}
-		binding.mainCircle.startAnimation(animation){
-			stuff()
-			Handler( Looper.getMainLooper() ).postDelayed({
-				animation.fillAfter = false
-				binding.mainCircle.isVisible = false
-				binding.mainFabCreate.isVisible = true
-				resetAppBar()
-			} , ANIMATION_RESET_DELAY)
-		}
-	}
-
-	private fun resetAppBar( ){
-		binding.mainAppBar.animate().translationY( 0F )
-	}
-
-	private fun animateAppBar( ){
-		binding.mainAppBar.animate().apply {
-			translationY((- binding.mainAppBar.height).toFloat())
-			interpolator = LinearInterpolator()
-			duration = APPBAR_ANIMATION_DURATION
-		}
-	}
-
-	override fun onPause() {
-		binding.mainCircle.isVisible = false
-		super.onPause()
-	}
-
-	override fun onDestroy() {
-		super.onDestroy()
-		_binding = null
-	}
-
-	private fun initMenu() {
-
-		binding.mainNavigation.setNavigationItemSelectedListener {
-			when( it.itemId ){
-				R.id.menu_insights -> NavigationUtil.insights(this)
-				R.id.menu_settings -> NavigationUtil.settings(this)
-				R.id.menu_about    -> NavigationUtil.about(this)
-				else -> Throwable("404 Not found")
+	private fun setupUser(user: FirebaseUser?) {
+		val headerView : View = binding.mainNavigation.getHeaderView(0)
+		if( user == null ) {
+			binding.mainBtnSignIn.text = resources.getString(R.string.sign_in)
+			binding.mainBtnSignIn.setOnClickListener {
+				signIn()
 			}
-			true
-		}
-
-		binding.mainBtnSignIn.setOnClickListener {
-			this.toast("Coming soon...")
-		}
-	}
-
-	fun launchEditActivity(task: Task , anim : Boolean = true) {
-		Intent( this , EditTaskActivity::class.java ).apply {
-			putExtra( "TASK" , task )
-			if( !anim )
-				addFlags( Intent.FLAG_ACTIVITY_NO_ANIMATION )
-		}.also{
-			startForResultTask.launch( it )
+			headerView.findViewById<MaterialTextView>(R.id.header_name).text = getString(R.string.guest)
+			headerView.findViewById<MaterialTextView>(R.id.header_email).text = ""
+			headerView.findViewById<ShapeableImageView>(R.id.header_image).setImageDrawable(getDrawable(R.drawable.ic_guest_user))
+		}else {
+			Log.d(TAG, "setupUser: ${user.displayName} @ ${user.email}")
+			binding.mainBtnSignIn.text = ""
+			headerView.findViewById<MaterialTextView>(R.id.header_name).text = user.displayName?.split(" ")?.joinToString(" ") { it.capitalized() }
+			headerView.findViewById<MaterialTextView>(R.id.header_email).text = user.email
+			Glide.with(this)
+				.load( user.photoUrl )
+				.into(headerView.findViewById<ShapeableImageView>(R.id.header_image))
 		}
 	}
 
@@ -209,6 +218,39 @@ class MainActivity : AppCompatActivity() {
 
 			override fun onPageScrollStateChanged(state: Int) {}
 		} )
+
+		binding.mainFabCreate.setOnClickListener {
+			animateAndDoStuff {
+				launchEditActivity( Task( viewModel.getMSfromEpoch() , "" , mutableListOf<Long>() , 0f ) , false )
+			}
+		}
+	}
+
+	private fun animateAndDoStuff( stuff : () -> Unit ){
+		binding.mainFabCreate.getCoordinates().let { coordinates ->
+			binding.mainCircle.showRevealEffect(
+				coordinates.x ,
+				coordinates.y ,
+				object : AnimatorListenerAdapter() {
+					override fun onAnimationStart(animation: Animator?) {
+						stuff()
+					}
+				}
+			)
+		}
+	}
+
+	private fun initMenu() {
+
+		binding.mainNavigation.setNavigationItemSelectedListener {
+			when( it.itemId ){
+				R.id.menu_insights -> NavigationUtil.insights(this)
+				R.id.menu_settings -> NavigationUtil.settings(this)
+				R.id.menu_about    -> NavigationUtil.about(this)
+				else -> Throwable("404 Not found")
+			}
+			true
+		}
 	}
 
 	private fun setTabIcons() {
@@ -219,22 +261,40 @@ class MainActivity : AppCompatActivity() {
 		binding.mainTabs.getTabAt(0)!!.text = ""
 	}
 
+	fun launchEditActivity(task: Task , anim : Boolean = true) {
+		Intent( this , EditTaskActivity::class.java ).apply {
+			putExtra( "TASK" , task )
+			if( !anim )
+				addFlags( Intent.FLAG_ACTIVITY_NO_ANIMATION )
+		}.also{
+			startForResultTask.launch( it )
+		}
+	}
+
 	/**
 	 * If notifications enabled and "somehow ended" by system restart job
 	 */
 	private fun checkNotificationPreferences() {
 		val sharedPref = this.getSharedPreferences(this.packageName + "_preferences", Context.MODE_PRIVATE)
-		val interval = when(sharedPref.getString("NotificationInterval" , "")){
+		val interval = when(sharedPref.getString(resources.getString( R.string.id_notification_interval ) , "")){
 			"1 Hour" -> 1L
 			"3 Hours" -> 3L
 			"6 Hours" -> 6L
 			"12 Hours" -> 12L
 			else ->  DEFAULT_UPDATE_INTERVAL
 		}
-		if( sharedPref.getBoolean("NotificationsEnabled" , false) )
+		if( sharedPref.getBoolean(resources.getString( R.string.id_notification_enabled ) , false) )
 			UpdateNotificationJob.setupTask( this , ExistingPeriodicWorkPolicy.KEEP , interval )
 		else
 			UpdateNotificationJob.setupTask( this , ExistingPeriodicWorkPolicy.REPLACE , 0 )
+	}
+
+	private fun syncData() {
+		val sharedPref = this.getSharedPreferences(this.packageName + "_preferences", Context.MODE_PRIVATE)
+		if( sharedPref.getBoolean(resources.getString( R.string.id_sync ) , false) &&
+			sharedPref.getBoolean(resources.getString( R.string.id_sync_on_startup ) , false) ){
+//			SyncUtil().syncNow( this )
+		}
 	}
 
 	/**
@@ -254,39 +314,21 @@ class MainActivity : AppCompatActivity() {
 		}
 	}
 
-	private fun test() {
-
-		fun getRandomString(length: Int) : String {
-			val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
-			return (1..length)
-				.map { allowedChars.random() }
-				.joinToString("")
-		}
-
-		GlobalScope.launch(Dispatchers.IO) {
-			val Dao = TasksDatabase.getInstance(this@MainActivity).tasksDao()
-			val X = viewModel.getTodayFromEpoch()
-			for( i in 0..10 ){
-				val cur = Task( viewModel.getMSfromEpoch() + i , "Test : TODO/DONE MIX ${(i + 1)%10}" , mutableListOf() ,
-					i + 0f , true , getRandomString((i + 1)*15) )
-				for( d in 1 until i )
-					cur.lastDayCompleted.add( X - d )
-				cur.lastDayCompleted.reverse()
-				launch { Dao.insertTask(cur) }
+	override fun onRestart() {
+		super.onRestart()
+		if( binding.mainCircle.isVisible )
+			binding.mainFabCreate.getCoordinates().let { coordinates ->
+				binding.mainCircle.hideRevealEffect(
+					coordinates.x ,
+					coordinates.y ,
+					1929
+				)
 			}
-//			for( i in 0..5 ){
-//				val cur = Task( viewModel.getMSfromEpoch() + i , "Test : DONE ${i + 1}" , mutableListOf() ,
-//					i + 0f, true , getRandomString((i + 1)*15)  )
-//				for( d in 0 .. i )
-//					cur.lastDayCompleted.add( X - d )
-//				cur.lastDayCompleted.reverse()
-//				launch { Dao.insertTask(cur) }
-//			}
-			for( i in 0..5 ){
-				val cur = Task( viewModel.getMSfromEpoch() + i , "Test : SKIP ${i + 1}" , mutableListOf() , i + 0f  ,
-					true , getRandomString((i + 1)*15)  ,skipTill = X + i )
-				launch { Dao.insertTask(cur) }
-			}
-		}
+		setupUser(auth?.currentUser)
 	}
+	override fun onDestroy() {
+		super.onDestroy()
+		_binding = null
+	}
+
 }

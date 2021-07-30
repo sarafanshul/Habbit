@@ -16,15 +16,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textview.MaterialTextView
 import com.projectdelta.habbit.R
-import com.projectdelta.habbit.adapter.RecyclerViewListAdapter
+import com.projectdelta.habbit.ui.adapter.RecyclerViewListAdapter
 import com.projectdelta.habbit.databinding.FragmentInsightsListBinding
 import com.projectdelta.habbit.ui.activity.InsightsActivity
 import com.projectdelta.habbit.util.NotFound
 import com.projectdelta.habbit.util.lang.TimeUtil
 import com.projectdelta.habbit.util.lang.titlesToBulletList
-import com.projectdelta.habbit.util.view.EndlessRecyclerViewScrollListener
-import com.projectdelta.habbit.util.view.RecyclerItemClickListenr
-import com.projectdelta.habbit.util.view.StatesRecyclerViewAdapter
+import com.projectdelta.habbit.ui.adapter.EndlessRecyclerViewScrollListener
+import com.projectdelta.habbit.ui.adapter.RecyclerItemClickListenr
+import com.projectdelta.habbit.ui.adapter.StatesRecyclerViewAdapter
 import com.projectdelta.habbit.ui.viewModel.InsightsSharedViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -79,12 +79,12 @@ class InsightsListFragment : Fragment() {
 		emptyView.findViewById<MaterialTextView>(R.id.empty_view_tw_string).text = NotFound.get()
 
 		statesAdapter =
-			StatesRecyclerViewAdapter(
-				adapter,
-				emptyView,
-				emptyView,
-				emptyView
-			)
+            StatesRecyclerViewAdapter(
+                adapter,
+                emptyView,
+                emptyView,
+                emptyView
+            )
 		binding.insightsListRv.adapter = statesAdapter
 		statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
 
