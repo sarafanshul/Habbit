@@ -1,4 +1,4 @@
-package com.projectdelta.habbit.util.view
+package com.projectdelta.habbit.ui.navigation
 
 import android.content.Context
 import android.content.Intent

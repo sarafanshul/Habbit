@@ -1,4 +1,4 @@
-package com.projectdelta.habbit.util.view
+package com.projectdelta.habbit.ui.adapter
 
 import android.content.Context
 import android.view.GestureDetector

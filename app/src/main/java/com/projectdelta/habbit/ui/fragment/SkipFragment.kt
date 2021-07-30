@@ -24,10 +24,10 @@ import com.projectdelta.habbit.databinding.SkipFragmentBinding
 import com.projectdelta.habbit.util.NotFound
 import com.projectdelta.habbit.util.lang.convertDrawableToBitmap
 import com.projectdelta.habbit.util.lang.dpToPx
-import com.projectdelta.habbit.util.view.RecyclerItemClickListenr
-import com.projectdelta.habbit.util.view.StatesRecyclerViewAdapter
+import com.projectdelta.habbit.ui.adapter.RecyclerItemClickListenr
+import com.projectdelta.habbit.ui.adapter.StatesRecyclerViewAdapter
 import com.projectdelta.habbit.util.lang.skippedTill
-import com.projectdelta.habbit.util.view.CustomItemTouchHelperCallback
+import com.projectdelta.habbit.ui.adapter.CustomItemTouchHelperCallback
 import com.projectdelta.habbit.ui.viewModel.HomeSharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -84,12 +84,12 @@ class SkipFragment : Fragment() {
 		emptyView.findViewById<MaterialTextView>(R.id.empty_view_tw_string).text = NotFound.get()
 
 		val statesAdapter =
-			StatesRecyclerViewAdapter(
-				adapter,
-				emptyView,
-				emptyView,
-				emptyView
-			)
+            StatesRecyclerViewAdapter(
+                adapter,
+                emptyView,
+                emptyView,
+                emptyView
+            )
 		binding.skipRv.adapter = statesAdapter
 		statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
 

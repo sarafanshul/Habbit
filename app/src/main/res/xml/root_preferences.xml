@@ -40,4 +40,22 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="User">
+
+        <com.projectdelta.habbit.util.view.CustomTextPreference
+            app:key="@string/id_delete_all_data_local"
+            app:title="Delete local data"
+            app:summary="Delete all my data from this device"/>
+
+        <com.projectdelta.habbit.util.view.CustomTextPreference
+            app:key="@string/id_delete_all_data_cloud"
+            app:title="Delete cloud data"
+            app:summary="Delete all my data from cloud"/>
+
+        <com.projectdelta.habbit.util.view.CustomTextPreference
+            app:key="@string/id_sign_out"
+            app:title="Sign out"/>
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

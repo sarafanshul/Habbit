@@ -39,7 +39,7 @@ import com.projectdelta.habbit.ui.fragment.DoneFragment
 import com.projectdelta.habbit.ui.fragment.SkipFragment
 import com.projectdelta.habbit.ui.fragment.TodoFragment
 import com.projectdelta.habbit.util.lang.*
-import com.projectdelta.habbit.util.view.NavigationUtil
+import com.projectdelta.habbit.ui.navigation.NavigationUtil
 import com.projectdelta.habbit.util.notification.Notifications.DEFAULT_UPDATE_INTERVAL
 import com.projectdelta.habbit.util.notification.UpdateNotificationJob
 import com.projectdelta.habbit.ui.viewModel.MainViewModel
@@ -164,18 +164,7 @@ class MainActivity : AppCompatActivity(){
 			headerView.findViewById<ShapeableImageView>(R.id.header_image).setImageDrawable(getDrawable(R.drawable.ic_guest_user))
 		}else {
 			Log.d(TAG, "setupUser: ${user.displayName} @ ${user.email}")
-			binding.mainBtnSignIn.text = resources.getString(R.string.sign_out)
-			binding.mainBtnSignIn.setOnClickListener {
-				MaterialAlertDialogBuilder(this).apply {
-					setTitle("Sign out from this device ?")
-					setMessage("You can sign in again any time, meanwhile you will not be able to sync with cloud")
-					setPositiveButton("Sign Out"){_ , _ ->
-						signOut()
-					}
-					setNeutralButton("CANCEL"){_, _ -> }
-					create()
-				}.show()
-			}
+			binding.mainBtnSignIn.text = ""
 			headerView.findViewById<MaterialTextView>(R.id.header_name).text = user.displayName?.split(" ")?.joinToString(" ") { it.capitalized() }
 			headerView.findViewById<MaterialTextView>(R.id.header_email).text = user.email
 			Glide.with(this)
@@ -335,6 +324,7 @@ class MainActivity : AppCompatActivity(){
 					1929
 				)
 			}
+		setupUser(auth?.currentUser)
 	}
 	override fun onDestroy() {
 		super.onDestroy()

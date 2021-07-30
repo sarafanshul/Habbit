@@ -1,5 +1,6 @@
 package com.projectdelta.habbit.util.lang
 
+import android.annotation.SuppressLint
 import android.app.ActivityManager
 import android.app.KeyguardManager
 import android.app.Notification
@@ -10,15 +11,21 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.PowerManager
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.projectdelta.habbit.R
 
 /**
  * Display a toast in this context.
@@ -38,6 +45,44 @@ fun Context.toast(@StringRes resource: Int, duration: Int = Toast.LENGTH_SHORT, 
  */
 fun Context.toast(text: String?, duration: Int = Toast.LENGTH_SHORT, block: (Toast) -> Unit = {}): Toast {
 	return Toast.makeText(this, text.orEmpty(), duration).also {
+		block(it)
+		it.show()
+	}
+}
+
+/**
+ * Display a Dark toast in this context.
+ *
+ * @param text the text to display.
+ * @param duration the duration of the toast. Defaults to short.
+ */
+@SuppressLint("ResourceAsColor")
+fun Context.darkToast(text: String?, duration: Int = Toast.LENGTH_SHORT, block: (Toast) -> Unit = {}): Toast {
+	return Toast.makeText(this, text.orEmpty(), duration).apply {
+		view?.background?.setColorFilter(Color.DKGRAY, PorterDuff.Mode.SRC_IN)
+		view?.findViewById<TextView>(android.R.id.message)?.setTextColor(Color.WHITE)
+	}.also {
+		block(it)
+		it.show()
+	}
+}
+
+/**
+ * Display a Customizable toast in this context.
+ *
+ * @param text the text to display.
+ * @param duration the duration of the toast. Defaults to short.
+ */
+fun Context.customToast(text: String?,
+	duration: Int = Toast.LENGTH_SHORT,
+	background : Int = Color.GREEN,
+	textColor : Int = Color.RED,
+	block: (Toast) -> Unit = {}
+): Toast {
+	return Toast.makeText(this, text.orEmpty(), duration).apply {
+		view?.background?.setColorFilter(background, PorterDuff.Mode.SRC_IN)
+		view?.findViewById<TextView>(android.R.id.message)?.setTextColor(textColor)
+	}.also {
 		block(it)
 		it.show()
 	}
@@ -169,4 +214,24 @@ fun Context.isServiceRunning(serviceClass: Class<*>): Boolean {
 	@Suppress("DEPRECATION")
 	return manager.getRunningServices(Integer.MAX_VALUE)
 		.any { className == it.service.className }
+}
+
+/**
+ * Returns if a network connection is available or not. [For more info](https://stackoverflow.com/a/58605532)
+ */
+@SuppressLint("ObsoleteSdkInt")
+fun Context.isOnline(): Boolean {
+	val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+		val n = cm.activeNetwork
+		if (n != null) {
+			val nc = cm.getNetworkCapabilities(n)
+			//It will check for both wifi and cellular network
+			return nc!!.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+		}
+		return false
+	} else {
+		val netInfo = cm.activeNetworkInfo
+		return netInfo != null && netInfo.isConnectedOrConnecting
+	}
 }

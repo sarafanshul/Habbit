@@ -3,4 +3,7 @@
     <string name="add_a_summary">Add a summary</string>
     <string name="no_history">Complete task for history!</string>
     <string name="add_a_title">Add a title</string>
+    <string name="id_delete_all_data_local">DeleteAllDataLocal</string>
+    <string name="id_delete_all_data_cloud">DeleteAllDataCloud</string>
+    <string name="id_sign_out">SignOut</string>
 </resources>

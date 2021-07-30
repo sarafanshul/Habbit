@@ -11,7 +11,10 @@ import com.google.firebase.ktx.Firebase
 import com.projectdelta.habbit.data.FirestoreQueryObject
 import com.projectdelta.habbit.repository.TasksRepositoryImpl
 import com.projectdelta.habbit.util.firebase.FirebaseUtil.Companion.USERS
-import com.projectdelta.habbit.util.lang.toast
+import com.projectdelta.habbit.util.firebase.FirebaseUtil.Companion.getAuth
+import com.projectdelta.habbit.util.firebase.FirebaseUtil.Companion.getDocumentUser
+import com.projectdelta.habbit.util.lang.isOnline
+import com.projectdelta.habbit.util.lang.darkToast
 import kotlinx.coroutines.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,10 +30,7 @@ class SyncUtil @Inject constructor(
     private var updateJob: Job? = null
     private lateinit var ioScope: CoroutineScope
 
-    private fun getDocumentUser() : CollectionReference {
-        return Firebase.firestore.collection(USERS)
-    }
-    private fun getAuth() = Firebase.auth
+
 
     /**
      * my garbage collector
@@ -44,7 +44,10 @@ class SyncUtil @Inject constructor(
     fun syncNow( activity : Activity ){
 
         if( getAuth().currentUser == null ){
-            activity.toast("Please sign in to use this feature")
+            activity.darkToast("Please sign in to use this feature")
+        }
+        else if( ! activity.isOnline() ){
+            activity.darkToast("No network connection available")
         }
         else {
             MaterialAlertDialogBuilder(activity).apply {
@@ -114,11 +117,11 @@ class SyncUtil @Inject constructor(
             .set(firestoreQueryObject)
             .addOnSuccessListener { _ ->
                 Log.d(TAG, "DocumentSnapshot added with ID: $id")
-                mContext.toast("Sync completed successfully")
+                mContext.darkToast("Sync completed successfully")
             }
             .addOnFailureListener { e ->
                 Log.w(TAG, "Error adding document", e)
-                mContext.toast("Sync failed!, Retry again later")
+                mContext.darkToast("Sync failed!, Retry again later")
             }
     }
 
@@ -133,15 +136,15 @@ class SyncUtil @Inject constructor(
                     if( document != null ){
                         addDataToLocalDB( document.toObject( FirestoreQueryObject::class.java ) )
                         Log.d(TAG, "Found document for ${auth.currentUser!!.uid}")
-                        context.toast("Sync successful")
+                        context.darkToast("Sync successful")
                     }else {
                         Log.d(TAG, "No such document for ${auth.currentUser!!.uid}")
-                        context.toast("No saved data found!")
+                        context.darkToast("No saved data found!")
                     }
                 }
                 .addOnFailureListener { e ->
                     Log.w(TAG, "get() failed with", e)
-                    context.toast("Restoration failed!")
+                    context.darkToast("Restoration failed!")
                 }
         }
     }
