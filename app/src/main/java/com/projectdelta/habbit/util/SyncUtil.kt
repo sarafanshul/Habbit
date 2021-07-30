@@ -5,12 +5,11 @@ import android.content.Context
 import android.util.Log
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.projectdelta.habbit.data.FirestoreQueryObject
-import com.projectdelta.habbit.data.entities.Task
 import com.projectdelta.habbit.repository.TasksRepositoryImpl
-import com.projectdelta.habbit.util.firebase.FirebaseUtil.Companion.SOURCE
 import com.projectdelta.habbit.util.firebase.FirebaseUtil.Companion.USERS
 import com.projectdelta.habbit.util.lang.toast
 import kotlinx.coroutines.*
@@ -25,46 +24,102 @@ class SyncUtil @Inject constructor(
         private const val TAG = "SyncUtil"
     }
 
-    fun syncNow( activity : Activity ){
-        MaterialAlertDialogBuilder(activity).apply {
-            setTitle( "Are you saving data to cloud or restoring from cloud ?" )
-            setPositiveButton("Save"){ _ , _ ->
-                syncFromLocalDB(activity.baseContext)
-            }
-            setNeutralButton("Restore"){ _ , _ ->
-                syncFromCloud(activity.baseContext)
-            }
-            create()
-        }.show()
+    private var updateJob: Job? = null
+    private lateinit var ioScope: CoroutineScope
+
+    private fun getDocumentUser() : CollectionReference {
+        return Firebase.firestore.collection(USERS)
+    }
+    private fun getAuth() = Firebase.auth
+
+    /**
+     * my garbage collector
+     */
+    private fun destroyEverything() {
+        updateJob?.cancel()
+        if( this::ioScope.isInitialized )
+            ioScope.cancel()
     }
 
-    private fun syncFromLocalDB(context: Context) {
-        val db = Firebase.firestore
-        val auth = Firebase.auth
-        if( auth.currentUser != null ) {
-            val job = GlobalScope.launch(Dispatchers.IO) {
-                val taskData = async { repositoryImpl.getAllTasksOffline() }
-                val dayData = async { repositoryImpl.getAllDayOffline() }
-                db.collection(USERS)
-                    .document(auth.currentUser!!.uid)
-                    .set(
-                        hashMapOf(
-                            "uid" to auth.currentUser!!.uid,
-                            "Task" to taskData.await(),
-                            "Day" to dayData.await()
-                        )
-                    )
-                    .addOnSuccessListener { _ ->
-                        Log.d(TAG, "DocumentSnapshot added with ID: ${auth.currentUser!!.uid}")
-                        context.toast("Sync completed successfully")
-                    }
-                    .addOnFailureListener { e ->
-                        Log.w(TAG, "Error adding document", e)
-                        context.toast("Sync failed!")
-                    }
+    fun syncNow( activity : Activity ){
 
-            }
+        if( getAuth().currentUser == null ){
+            activity.toast("Please sign in to use this feature")
         }
+        else {
+            MaterialAlertDialogBuilder(activity).apply {
+                setTitle("Are you saving data to cloud or restoring from cloud ?")
+                setPositiveButton("Save") { _, _ ->
+                    syncFromLocalDB(activity)
+                }
+                setNeutralButton("Restore") { _, _ ->
+                    syncFromCloud(activity.baseContext)
+                }
+                create()
+            }.show()
+        }
+    }
+
+    private fun syncFromLocalDB(activity: Activity) {
+        val auth = getAuth()
+        if( auth.currentUser != null ) {
+            val user = auth.currentUser!!
+            val doc = getDocumentUser()
+            doc.document( user.uid ).get()
+                .addOnSuccessListener { document ->
+                    if( document == null ){
+                        // new document addition
+                        addNewDocument(activity.baseContext ,doc , user.uid)
+                    }
+                    else {
+                        // document  , ask then add .
+                        MaterialAlertDialogBuilder(activity).apply {
+                            setTitle( "A save with same name was found!" )
+                            setMessage( "Saved data for ${user.displayName} already exists , do you want to rewrite saved data ?" )
+                            setPositiveButton("Rewrite"){_ , _ ->
+                                addNewDocument(activity.baseContext , doc , user.uid)
+                            }
+                            setNeutralButton("CANCEL"){_ , _ -> }
+                            create()
+                        }.show()
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Log.w(TAG, "Error getting document", e)
+                }
+        }
+    }
+
+    /**
+     * Warning instance of context is used inside a co-routine please fucking take care of memory leak
+     */
+    private fun addNewDocument( mContext : Context , doc: CollectionReference , id : String ){
+        val handler = CoroutineExceptionHandler { _, exception ->
+            Log.e(TAG, "addNewDocument: handler", exception)
+            destroyEverything()
+        }
+        updateJob = CoroutineScope(SupervisorJob() + Dispatchers.IO).launch(handler) {
+            val taskData = async { repositoryImpl.getAllTasksOffline() }
+            val dayData = async { repositoryImpl.getAllDayOffline() }
+            addNewDocument( mContext , doc , id , FirestoreQueryObject( dayData.await() , taskData.await() , id ) )
+        }
+    }
+
+    /**
+     * Warning instance of context is used inside a co-routine please fucking take care of memory leak
+     */
+    private suspend fun addNewDocument( mContext: Context , doc: CollectionReference , id : String , firestoreQueryObject: FirestoreQueryObject ) {
+        doc
+            .document( id )
+            .set(firestoreQueryObject)
+            .addOnSuccessListener { _ ->
+                Log.d(TAG, "DocumentSnapshot added with ID: $id")
+                mContext.toast("Sync completed successfully")
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error adding document", e)
+                mContext.toast("Sync failed!, Retry again later")
+            }
     }
 
     private fun syncFromCloud(context: Context){
@@ -76,8 +131,9 @@ class SyncUtil @Inject constructor(
                 .get()
                 .addOnSuccessListener { document ->
                     if( document != null ){
-                        document.toObject( FirestoreQueryObject::class.java )
                         addDataToLocalDB( document.toObject( FirestoreQueryObject::class.java ) )
+                        Log.d(TAG, "Found document for ${auth.currentUser!!.uid}")
+                        context.toast("Sync successful")
                     }else {
                         Log.d(TAG, "No such document for ${auth.currentUser!!.uid}")
                         context.toast("No saved data found!")
@@ -91,19 +147,28 @@ class SyncUtil @Inject constructor(
     }
 
     private fun addDataToLocalDB(response: FirestoreQueryObject?) {
-//        getTestDataLocalAndCompare(response!!)
-    }
+        if( response != null && response.Task != null ) {
+            val handler = CoroutineExceptionHandler { _, exception ->
+                Log.e(TAG, "addDataToLocalDB: handler", exception)
+                destroyEverything()
+            }
+            updateJob = CoroutineScope(SupervisorJob() + Dispatchers.IO).launch(handler) {
 
+                response.Task?.map { T ->  async {
+                    repositoryImpl.insertTask(T)
+                } }?.forEach { it.await() }
 
-    private fun testData( from : FirestoreQueryObject , to : FirestoreQueryObject ){
-        if(from != to){
-            Log.e(TAG, "testData: $from")
-            Log.e(TAG, "testData: $to")
-        }else {
-            Log.d(TAG, "testData: Pass")
+                response.Day?.map { D ->  async {
+                    repositoryImpl.insertDay( D )
+                } }?.forEach { it.await() }
+                Log.d(TAG,"addDataToLocalDB: adding data of size ${response?.Day?.size} , ${response?.Task?.size}")
+            }
         }
     }
 
+    /**
+     * Testing functions to move to Test later
+     */
     private fun getTestDataLocalAndCompare( compareTo : FirestoreQueryObject ){
         val x = FirestoreQueryObject()
         GlobalScope.launch(Dispatchers.IO) {
@@ -113,6 +178,15 @@ class SyncUtil @Inject constructor(
             x.Task = taskData.await()
             x.uid = Firebase.auth.currentUser!!.uid
             testData( x , compareTo )
+        }
+    }
+
+    private fun testData( from : FirestoreQueryObject , to : FirestoreQueryObject ){
+        if(from != to){
+            Log.e(TAG, "testData: $from")
+            Log.e(TAG, "testData: $to")
+        }else {
+            Log.d(TAG, "testData: Pass")
         }
     }
 

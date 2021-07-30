@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.textview.MaterialTextView
 import com.projectdelta.habbit.ui.MainActivity
 import com.projectdelta.habbit.R
-import com.projectdelta.habbit.adapter.RecyclerViewDoneAdapter
+import com.projectdelta.habbit.ui.adapter.RecyclerViewDoneAdapter
 import com.projectdelta.habbit.databinding.DoneFragmentBinding
 import com.projectdelta.habbit.util.NotFound
 import com.projectdelta.habbit.util.view.RecyclerItemClickListenr

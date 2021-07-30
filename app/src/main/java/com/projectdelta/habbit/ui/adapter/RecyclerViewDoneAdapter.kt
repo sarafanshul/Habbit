@@ -1,31 +1,30 @@
-package com.projectdelta.habbit.adapter
+package com.projectdelta.habbit.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.projectdelta.habbit.data.entities.Task
-import com.projectdelta.habbit.databinding.LayoutRvTodoBinding
-import com.projectdelta.habbit.util.lang.isOk
+import com.projectdelta.habbit.databinding.LayoutRvDoneBinding
 
-class RecyclerViewTodoAdapter():
-	RecyclerView.Adapter< RecyclerViewTodoAdapter.LayoutViewHolder >( ) {
-	lateinit var data : MutableList<Task>
+
+class RecyclerViewDoneAdapter():
+	RecyclerView.Adapter< RecyclerViewDoneAdapter.LayoutViewHolder >( ) {
+	lateinit var data : List<Task>
 	var today = 0L
 
-	inner class LayoutViewHolder( private val binding: LayoutRvTodoBinding ) : RecyclerView.ViewHolder( binding.root ){
-		fun bind(T : Task , streakString : String){
-			with(binding){
+	inner class LayoutViewHolder( private val binding: LayoutRvDoneBinding) : RecyclerView.ViewHolder( binding.root ) {
+		fun bind(T: Task, streakString: String) {
+			with(binding) {
 				tasksTwId.text = T.taskName
 				tasksTwId.isSelected = true
 				tasksTwStreak.text = streakString
 				tasksTwRating.rating = T.importance
-				tasksTwSummary.text = if(T.summary.isOk()) T.summary else "Tap to add summary!"
 			}
 		}
 	}
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LayoutViewHolder {
-		val binding = LayoutRvTodoBinding.inflate( LayoutInflater.from( parent.context ) , parent , false )
+		val binding = LayoutRvDoneBinding.inflate( LayoutInflater.from( parent.context ) , parent , false )
 		return LayoutViewHolder( binding )
 	}
 
@@ -34,17 +33,15 @@ class RecyclerViewTodoAdapter():
 		var cur = today
 		if( ! data[position].lastDayCompleted.isNullOrEmpty() ){
 			for( i in data[position].lastDayCompleted.size - 1 downTo 0 )
-				if(data[position].lastDayCompleted[i] + 1 == cur) {
+				if(data[position].lastDayCompleted[i] == cur) {
 					cur-- ;streak++
 				}
 		}
-
 		val streakString = when( streak ){
 			0 -> "No streak"
-			1 -> "$streak day"
-			else -> "$streak days"
+			1 -> "${streak} day"
+			else -> "${streak} days"
 		}
-
 		holder.bind(data[position] , streakString)
 	}
 
@@ -53,20 +50,13 @@ class RecyclerViewTodoAdapter():
 		return 0
 	}
 
-	fun set( _data : MutableList<Task> , _today : Long){
+	fun set(_data : List<Task>, _today : Long){
+		data = emptyList()
 		today = _today
-		if( this::data.isInitialized && data == _data ) return
 		data = _data
 		notifyDataSetChanged()
 	}
 
 	fun dataIsInitialized() = this::data.isInitialized
 
-	interface OnSwipeRight {
-		fun doWork(viewHolder: RecyclerView.ViewHolder): Unit
-	}
-
-	interface OnSwipeLeft{
-		fun doWork(viewHolder: RecyclerView.ViewHolder): Unit
-	}
 }

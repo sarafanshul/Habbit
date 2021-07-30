@@ -30,6 +30,7 @@
         <SwitchPreference
             app:key="@string/id_sync_on_startup"
             app:dependency="@string/id_sync"
+            app:enabled="false"
             app:title="Sync my data when app starts"/>
 
         <Preference

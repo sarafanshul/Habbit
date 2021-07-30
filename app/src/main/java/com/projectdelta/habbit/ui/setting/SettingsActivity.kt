@@ -59,35 +59,49 @@ class SettingsActivity : AppCompatActivity() ,
 	}
 
 	override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-		when( key ){
+		when (key) {
 			resources.getString(R.string.id_notification_enabled) -> {
-				if( sharedPreferences?.getBoolean(resources.getString(R.string.id_notification_enabled) , false)!! ){
-					val interval = when(sharedPreferences.getString(resources.getString(R.string.id_notification_interval) , "")){
+				if (sharedPreferences?.getBoolean(
+						resources.getString(R.string.id_notification_enabled),
+						false
+					)!!
+				) {
+					val interval = when (sharedPreferences.getString(
+						resources.getString(R.string.id_notification_interval),
+						""
+					)) {
 						"1 Hour" -> 1L
 						"3 Hours" -> 3L
 						"6 Hours" -> 6L
 						"12 Hours" -> 12L
-						else ->  DEFAULT_UPDATE_INTERVAL
+						else -> DEFAULT_UPDATE_INTERVAL
 					}
-					UpdateNotificationJob.setupTask( this , ExistingPeriodicWorkPolicy.REPLACE , interval )
-				}
-				else {
-					UpdateNotificationJob.setupTask( this , ExistingPeriodicWorkPolicy.REPLACE , 0L )
+					UpdateNotificationJob.setupTask(
+						this,
+						ExistingPeriodicWorkPolicy.REPLACE,
+						interval
+					)
+				} else {
+					UpdateNotificationJob.setupTask(this, ExistingPeriodicWorkPolicy.REPLACE, 0L)
 				}
 			}
 			resources.getString(R.string.id_notification_interval) -> {
-				val interval = when(sharedPreferences?.getString(resources.getString(R.string.id_notification_interval) , "")){
+				val interval = when (sharedPreferences?.getString(
+					resources.getString(R.string.id_notification_interval),
+					""
+				)) {
 					"1 Hour" -> 1L
 					"3 Hours" -> 3L
 					"6 Hours" -> 6L
 					"12 Hours" -> 12L
 					else -> DEFAULT_UPDATE_INTERVAL
 				}
-				UpdateNotificationJob.setupTask( this , ExistingPeriodicWorkPolicy.REPLACE , interval )
+				UpdateNotificationJob.setupTask(this, ExistingPeriodicWorkPolicy.REPLACE, interval)
 			}
 			resources.getString(R.string.id_sync_on_startup) -> {
 				this.toast("Coming Soon...")
-				// TODO( set to false )
+				sharedPreferences?.edit()
+					?.putBoolean(resources.getString(R.string.id_sync_on_startup), false)?.apply()
 			}
 		}
 	}

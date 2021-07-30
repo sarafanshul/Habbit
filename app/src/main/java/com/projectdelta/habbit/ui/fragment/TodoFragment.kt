@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textview.MaterialTextView
 import com.projectdelta.habbit.R
-import com.projectdelta.habbit.adapter.RecyclerViewTodoAdapter
+import com.projectdelta.habbit.ui.adapter.RecyclerViewTodoAdapter
 import com.projectdelta.habbit.constant.ICON_SIZE_DP
 import com.projectdelta.habbit.databinding.TodoFragmentBinding
 import com.projectdelta.habbit.ui.MainActivity

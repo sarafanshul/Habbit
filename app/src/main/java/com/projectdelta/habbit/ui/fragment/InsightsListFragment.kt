@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textview.MaterialTextView
 import com.projectdelta.habbit.R
-import com.projectdelta.habbit.adapter.RecyclerViewListAdapter
+import com.projectdelta.habbit.ui.adapter.RecyclerViewListAdapter
 import com.projectdelta.habbit.databinding.FragmentInsightsListBinding
 import com.projectdelta.habbit.ui.activity.InsightsActivity
 import com.projectdelta.habbit.util.NotFound
