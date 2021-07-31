@@ -7,7 +7,6 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
 import com.projectdelta.habbit.R
 import com.projectdelta.habbit.data.entities.Task
 import com.projectdelta.habbit.receiver.NotificationReceiver
@@ -18,9 +17,6 @@ import com.projectdelta.habbit.util.notification.Notifications.CHANNEL_UPDATE
 import com.projectdelta.habbit.util.notification.Notifications.GROUP_KEY
 import com.projectdelta.habbit.util.notification.Notifications.ID_UPDATES
 import com.projectdelta.habbit.util.notification.Notifications.NOTIF_TITLE_MAX_LEN
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 object UpdateNotificationUtil {
 
@@ -32,7 +28,7 @@ object UpdateNotificationUtil {
 	fun foregroundUpdateNotification( mContext: Context ) : NotificationCompat.Builder{
 		return NotificationCompat.Builder(mContext , CHANNEL_UPDATE).apply {
 			setContentTitle(mContext.getString(R.string.app_name))
-			setSmallIcon(R.drawable.ic_way_of_samurai_24dp)
+			setSmallIcon(getIcon())
 			setOngoing(true)
 			setOnlyAlertOnce(true)
 		}
@@ -52,7 +48,7 @@ object UpdateNotificationUtil {
 				NotificationCompat.Builder( mContext , CHANNEL_UPDATE ).apply {
 					setContentTitle( "Incomplete tasks" )
 					setContentText("${data.size} pending tasks for today!")
-					setSmallIcon(R.drawable.ic_way_of_samurai_24dp)
+					setSmallIcon(getIcon())
 					setLargeIcon(BitmapFactory.decodeResource( mContext.resources , R.mipmap.ic_launcher ))
 					setStyle(
 						NotificationCompat.BigTextStyle().bigText(
@@ -88,7 +84,7 @@ object UpdateNotificationUtil {
 
 			setStyle( NotificationCompat.BigTextStyle().bigText( task.summary.chop(NOTIF_TITLE_MAX_LEN) ) )
 
-			setSmallIcon( R.drawable.ic_way_of_samurai_24dp )
+			setSmallIcon( getIcon() )
 
 			setGroup( GROUP_KEY )
 			setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
@@ -113,6 +109,10 @@ object UpdateNotificationUtil {
 			)
 
 		}.build()
+	}
+
+	private fun getIcon(): Int {
+		return R.drawable.ic_kanji_gold_notification
 	}
 
 	private fun getNotificationIntent(mContext : Context): PendingIntent {

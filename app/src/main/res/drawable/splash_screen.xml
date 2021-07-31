@@ -4,6 +4,6 @@
     <item android:drawable="@color/white"/>
     <item
         android:gravity="center"
-        android:drawable="@drawable/ic_splash_screen_foreground"/>
+        android:drawable="@drawable/ic_kanji_gold_new"/>
 
 </layer-list>

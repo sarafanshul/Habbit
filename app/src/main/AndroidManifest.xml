@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Habbit">
-        <activity android:name=".ui.activity.InsightsActivity"></activity>
+        <activity android:name=".ui.activity.InsightsActivity" />
         <activity
             android:name=".ui.setting.SettingsActivity"
             android:label="@string/title_activity_settings" />

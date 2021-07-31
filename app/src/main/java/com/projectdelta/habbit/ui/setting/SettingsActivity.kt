@@ -12,7 +12,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.projectdelta.habbit.R
 import com.projectdelta.habbit.databinding.SettingsActivityBinding
-import com.projectdelta.habbit.util.SyncUtil
+import com.projectdelta.habbit.util.database.SyncUtil
 import com.projectdelta.habbit.util.database.DatabaseUtil
 import com.projectdelta.habbit.util.lang.darkToast
 import com.projectdelta.habbit.util.lang.isOnline
@@ -138,7 +138,7 @@ class SettingsActivity : AppCompatActivity() ,
 				requireActivity().let {
 					if (it.isOnline()) {
 						MaterialAlertDialogBuilder(it).apply {
-							setTitle("Are you sure! , This is an irreversible process.")
+							setTitle("Are you sure , This is an irreversible process.")
 							setPositiveButton("Delete") { _, _ -> databaseUtil.nukeCloud(it) }
 							create()
 						}.show()
@@ -152,7 +152,7 @@ class SettingsActivity : AppCompatActivity() ,
 			findPreference<CustomTextPreference>(resources.getString(R.string.id_delete_all_data_local))?.setOnPreferenceClickListener { _ ->
 				requireActivity().let {
 					MaterialAlertDialogBuilder(it).apply {
-						setTitle("Are you sure! , This is an irreversible process.")
+						setTitle("Are you sure , This is an irreversible process.")
 						setPositiveButton("Delete") { _, _ -> databaseUtil.nukeLocal(it) }
 						create()
 					}.show()

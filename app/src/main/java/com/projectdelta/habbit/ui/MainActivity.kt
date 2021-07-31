@@ -21,7 +21,6 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import com.bumptech.glide.Glide
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
@@ -43,7 +42,7 @@ import com.projectdelta.habbit.ui.navigation.NavigationUtil
 import com.projectdelta.habbit.util.notification.Notifications.DEFAULT_UPDATE_INTERVAL
 import com.projectdelta.habbit.util.notification.UpdateNotificationJob
 import com.projectdelta.habbit.ui.viewModel.MainViewModel
-import com.projectdelta.habbit.util.firebase.FirebaseUtil
+import com.projectdelta.habbit.util.database.firebase.FirebaseUtil
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
@@ -111,6 +110,8 @@ class MainActivity : AppCompatActivity(){
 
 		setTheme( R.style.Theme_Habbit )
 		setContentView( binding.root )
+
+		getUserPermissions()
 
 		setLayout()
 
