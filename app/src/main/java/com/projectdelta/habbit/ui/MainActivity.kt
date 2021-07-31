@@ -6,6 +6,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -21,6 +22,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import com.bumptech.glide.Glide
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
@@ -58,10 +60,12 @@ class MainActivity : AppCompatActivity(){
 	lateinit var adapter : HomeViewPagerAdapter
 	private lateinit var auth: FirebaseAuth
 
-
 	@Inject
 	lateinit var firebaseUtil: FirebaseUtil
 
+	private val sharedPref : SharedPreferences by lazy {
+		this.getSharedPreferences(this.packageName + "_preferences", Context.MODE_PRIVATE)
+	}
 
 	companion object{
 		fun getInstance() = this
@@ -276,7 +280,6 @@ class MainActivity : AppCompatActivity(){
 	 * If notifications enabled and "somehow ended" by system restart job
 	 */
 	private fun checkNotificationPreferences() {
-		val sharedPref = this.getSharedPreferences(this.packageName + "_preferences", Context.MODE_PRIVATE)
 		val interval = when(sharedPref.getString(resources.getString( R.string.id_notification_interval ) , "")){
 			"1 Hour" -> 1L
 			"3 Hours" -> 3L
@@ -309,8 +312,17 @@ class MainActivity : AppCompatActivity(){
 	@SuppressLint("ObsoleteSdkInt")
 	private fun getUserPermissions() {
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-			if (! this.powerManager.isIgnoringBatteryOptimizations( packageName ) ) {
-				startActivity( Intent( Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS ) )
+			if ( (! this.powerManager.isIgnoringBatteryOptimizations( packageName ))
+				&& sharedPref.getBoolean(resources.getString(R.string.id_notification_enabled) , false)
+			) {
+				MaterialAlertDialogBuilder(this).apply {
+					setTitle("Disable battery saver")
+					setMessage("For using notification feature you need t turn off battery optimizations for this app")
+					setPositiveButton("GO"){_ , _ ->
+						startActivity( Intent( Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS ) )
+					}
+					setNeutralButton("CANCEL"){_,_->}
+				}
 			}
 		}
 	}

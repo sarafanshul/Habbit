@@ -112,7 +112,7 @@ object UpdateNotificationUtil {
 	}
 
 	private fun getIcon(): Int {
-		return R.drawable.ic_kanji_gold_notification
+		return R.drawable.ic_kanji_gold_notification_new
 	}
 
 	private fun getNotificationIntent(mContext : Context): PendingIntent {

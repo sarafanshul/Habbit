@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
+import androidx.preference.SwitchPreferenceCompat
 import androidx.work.ExistingPeriodicWorkPolicy
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.ktx.auth
@@ -165,10 +166,13 @@ class SettingsActivity : AppCompatActivity() ,
 			if( Firebase.auth.currentUser == null ){
 				findPreference<CustomTextPreference>(resources.getString(R.string.id_sign_out))?.isEnabled = false
 				findPreference<CustomTextPreference>(resources.getString(R.string.id_delete_all_data_cloud))?.isEnabled = false
+				findPreference<SwitchPreferenceCompat>(resources.getString(R.string.id_sync))?.isChecked = false
 
-			}else{
+			}
+			else{
 				findPreference<CustomTextPreference>(resources.getString(R.string.id_sign_out))?.isEnabled = true
 				findPreference<CustomTextPreference>(resources.getString(R.string.id_delete_all_data_cloud))?.isEnabled = true
+				findPreference<SwitchPreferenceCompat>(resources.getString(R.string.id_sync))?.isChecked = true
 			}
 		}
 	}
