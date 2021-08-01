@@ -24,6 +24,7 @@
     <string name="no_history">Complete this task for a day to unlock this feature.</string>
     <string name="add_a_title">Add a title</string>
 
+
     <!-- Preferences string key resources -->
     <string name="id_sync">Sync</string>
     <string name="id_sync_on_startup">SyncOnStartup</string>
@@ -31,6 +32,8 @@
 
     <string name="id_notification_enabled">NotificationsEnabled</string>
     <string name="id_notification_interval">NotificationInterval</string>
+    <string name="id_app_theme">AppTheme</string>
+    <string name="id_default_app_theme">Light</string>
 
     <!-- button sign in strings -->
     <string name="sign_in">SIGN IN</string>
@@ -40,5 +43,10 @@
     <string name="id_delete_all_data_local">DeleteAllDataLocal</string>
     <string name="id_delete_all_data_cloud">DeleteAllDataCloud</string>
     <string name="id_sign_out">SignOut</string>
+
+    <!-- General -->
+    <string name="theme_light">Default</string>
+    <string name="theme_dark">Dark</string>
+
 
 </resources>

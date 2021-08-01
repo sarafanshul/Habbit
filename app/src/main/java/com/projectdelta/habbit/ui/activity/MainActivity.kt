@@ -1,4 +1,4 @@
-package com.projectdelta.habbit.ui
+package com.projectdelta.habbit.ui.activity
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -36,6 +36,7 @@ import com.projectdelta.habbit.ui.activity.editTask.EditTaskActivity
 import com.projectdelta.habbit.ui.adapter.HomeViewPagerAdapter
 import com.projectdelta.habbit.data.entities.Task
 import com.projectdelta.habbit.databinding.ActivityMainBinding
+import com.projectdelta.habbit.ui.base.BaseViewBindingActivity
 import com.projectdelta.habbit.ui.fragment.DoneFragment
 import com.projectdelta.habbit.ui.fragment.SkipFragment
 import com.projectdelta.habbit.ui.fragment.TodoFragment
@@ -51,21 +52,14 @@ import java.util.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(){
+class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 
-	private var _binding : ActivityMainBinding ?= null
-	private val binding : ActivityMainBinding
-		get() = _binding!!
 	private val viewModel: MainViewModel by viewModels()
 	lateinit var adapter : HomeViewPagerAdapter
 	private lateinit var auth: FirebaseAuth
 
 	@Inject
 	lateinit var firebaseUtil: FirebaseUtil
-
-	private val sharedPref : SharedPreferences by lazy {
-		this.getSharedPreferences(this.packageName + "_preferences", Context.MODE_PRIVATE)
-	}
 
 	companion object{
 		fun getInstance() = this
@@ -134,10 +128,6 @@ class MainActivity : AppCompatActivity(){
 	private fun signIn() {
 		val signInIntent = firebaseUtil.googleSignInClient.signInIntent
 		startForResultSignIn.launch(signInIntent)
-	}
-	private fun signOut() {
-		Firebase.auth.signOut()
-        setupUser(null)
 	}
 
 	private fun firebaseAuthWithGoogle(idToken: String) {
@@ -280,26 +270,19 @@ class MainActivity : AppCompatActivity(){
 	 * If notifications enabled and "somehow ended" by system restart job
 	 */
 	private fun checkNotificationPreferences() {
-		val interval = when(sharedPref.getString(resources.getString( R.string.id_notification_interval ) , "")){
+		val interval = when( preferences.getNotificationInterval() ){
 			"1 Hour" -> 1L
 			"3 Hours" -> 3L
 			"6 Hours" -> 6L
 			"12 Hours" -> 12L
 			else ->  DEFAULT_UPDATE_INTERVAL
 		}
-		if( sharedPref.getBoolean(resources.getString( R.string.id_notification_enabled ) , false) )
+		if( preferences.isNotificationEnabled() )
 			UpdateNotificationJob.setupTask( this , ExistingPeriodicWorkPolicy.KEEP , interval )
 		else
 			UpdateNotificationJob.setupTask( this , ExistingPeriodicWorkPolicy.REPLACE , 0 )
 	}
 
-	private fun syncData() {
-		val sharedPref = this.getSharedPreferences(this.packageName + "_preferences", Context.MODE_PRIVATE)
-		if( sharedPref.getBoolean(resources.getString( R.string.id_sync ) , false) &&
-			sharedPref.getBoolean(resources.getString( R.string.id_sync_on_startup ) , false) ){
-//			SyncUtil().syncNow( this )
-		}
-	}
 
 	/**
 	 * Cancels all notifications on startup because if we click on one item of group notification,
@@ -313,7 +296,7 @@ class MainActivity : AppCompatActivity(){
 	private fun getUserPermissions() {
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 			if ( (! this.powerManager.isIgnoringBatteryOptimizations( packageName ))
-				&& sharedPref.getBoolean(resources.getString(R.string.id_notification_enabled) , false)
+				&& preferences.isNotificationEnabled()
 			) {
 				MaterialAlertDialogBuilder(this).apply {
 					setTitle("Disable battery saver")
@@ -338,10 +321,6 @@ class MainActivity : AppCompatActivity(){
 				)
 			}
 		setupUser(auth?.currentUser)
-	}
-	override fun onDestroy() {
-		super.onDestroy()
-		_binding = null
 	}
 
 }

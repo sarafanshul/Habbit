@@ -19,15 +19,15 @@ import com.projectdelta.habbit.data.entities.Task
 import com.projectdelta.habbit.databinding.ActivityEditTaskBinding
 import com.projectdelta.habbit.ui.activity.editTask.state.CollapsingToolbarState
 import com.projectdelta.habbit.ui.activity.editTask.state.EditTaskInteractionState
+import com.projectdelta.habbit.ui.base.BaseViewBindingActivity
 import com.projectdelta.habbit.ui.viewModel.EditTaskViewModel
 import com.projectdelta.habbit.util.TodoCallback
 import com.projectdelta.habbit.util.lang.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class EditTaskActivity : AppCompatActivity() {
+class EditTaskActivity : BaseViewBindingActivity<ActivityEditTaskBinding>() {
 
-	lateinit var binding : ActivityEditTaskBinding
 	private val viewModel : EditTaskViewModel by viewModels()
 	private var skipTime : Long = -1
 
@@ -42,7 +42,7 @@ class EditTaskActivity : AppCompatActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
-		binding = ActivityEditTaskBinding.inflate( layoutInflater )
+		_binding = ActivityEditTaskBinding.inflate( layoutInflater )
 
 		val task : Task = intent.getSerializableExtra( "TASK" ) as Task
 

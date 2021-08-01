@@ -109,6 +109,9 @@ class SettingsActivity : AppCompatActivity() ,
 				sharedPreferences?.edit()
 					?.putBoolean(resources.getString(R.string.id_sync_on_startup), false)?.apply()
 			}
+			resources.getString(R.string.id_default_app_theme) -> {
+
+			}
 		}
 	}
 

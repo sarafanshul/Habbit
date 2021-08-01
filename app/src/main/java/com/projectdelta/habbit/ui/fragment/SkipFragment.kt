@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
-import com.projectdelta.habbit.ui.MainActivity
+import com.projectdelta.habbit.ui.activity.MainActivity
 import com.projectdelta.habbit.R
 import com.projectdelta.habbit.ui.adapter.RecyclerViewSkipAdapter
 import com.projectdelta.habbit.constant.ICON_SIZE_DP
