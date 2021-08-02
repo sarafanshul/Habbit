@@ -150,6 +150,7 @@ class SyncUtil @Inject constructor(
     }
 
     private fun addDataToLocalDB(response: FirestoreQueryObject?) {
+        Log.i(TAG, "addDataToLocalDB: $response")
         if( response != null && response.Task != null ) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 Log.e(TAG, "addDataToLocalDB: handler", exception)

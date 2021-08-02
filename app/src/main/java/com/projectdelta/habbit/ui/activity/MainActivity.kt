@@ -106,7 +106,7 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 		_binding = ActivityMainBinding.inflate(layoutInflater)
 		auth = Firebase.auth
 
-		setTheme( R.style.Theme_Habbit )
+//		setTheme( R.style.Theme_Habbit )
 		setContentView( binding.root )
 
 		getUserPermissions()

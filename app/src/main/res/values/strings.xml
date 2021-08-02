@@ -33,7 +33,6 @@
     <string name="id_notification_enabled">NotificationsEnabled</string>
     <string name="id_notification_interval">NotificationInterval</string>
     <string name="id_app_theme">AppTheme</string>
-    <string name="id_default_app_theme">Light</string>
 
     <!-- button sign in strings -->
     <string name="sign_in">SIGN IN</string>
@@ -45,7 +44,7 @@
     <string name="id_sign_out">SignOut</string>
 
     <!-- General -->
-    <string name="theme_light">Default</string>
+    <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
 
 

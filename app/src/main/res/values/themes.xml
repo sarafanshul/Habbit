@@ -2,7 +2,7 @@
     <!--============-->
     <!-- Base Theme -->
     <!--============-->
-    <style name="Theme.Habbit" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="Theme.Habbit" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:forceDarkAllowed" tools:targetApi="Q">false</item>
         <item name="colorPrimary">@color/eerie_black</item>
         <item name="colorPrimaryVariant">@color/chinese_black</item>
@@ -18,9 +18,11 @@
         <item name="colorOnColorOnPrimary">@color/asphalt</item>
     </style>
 
-    <style name="Theme.Habbit.Light" parent="Theme.Habbit" />
+    <style name="Theme.Habbit.Light" parent="Theme.Habbit">
+        <item name="colorTertiary">@color/mat_black</item>
+    </style>
 
-    <style name="Theme.Habbit.Dark">
+    <style name="Theme.Habbit.Dark" parent="Theme.Habbit">
         <item name="colorPrimary">@color/accent_midnightdusk</item>
         <item name="colorTertiary">@color/md_blue_A400</item>
         <item name="colorControlHighlight">@color/ripple_colored_midnightdusk</item>

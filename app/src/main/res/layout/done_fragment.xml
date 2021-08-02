@@ -9,7 +9,6 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/done_rv"
-        android:layout_marginHorizontal="@dimen/element_padding"
         android:layout_width="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:overScrollMode="never"

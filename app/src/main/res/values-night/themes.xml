@@ -1,26 +1,34 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Theme.Habbit" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <!-- Disallow 'Force dark theme' -->
+    <!--============-->
+    <!-- Base Theme -->
+    <!--============-->
+    <style name="Theme.Habbit" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:forceDarkAllowed" tools:targetApi="Q">false</item>
-
-        <!-- Primary brand color. -->
         <item name="colorPrimary">@color/eerie_black</item>
         <item name="colorPrimaryVariant">@color/chinese_black</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
+        <item name="colorOnPrimary">@color/surface_midnightdusk</item>
         <item name="colorSecondary">@color/mat_black</item>
         <item name="colorSecondaryVariant">@color/diesel</item>
-        <item name="colorOnSecondary">@color/white</item>
-        <!-- Status bar color. -->
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:statusBarColor" tools:targetApi="l">@color/white</item>
-        <!-- Customize your theme here. -->
+        <item name="colorOnSecondary">@color/background_midnightdusk</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/background_midnightdusk</item>
 
         <item name="fontFamily">@font/product_sans_font_family</item>
+        <item name="theme_text">@color/md_white_1000_70</item>
+        <item name="colorOnColorOnPrimary">@color/md_white_1000</item>
+    </style>
 
-        <item name="theme_text">@color/white</item>
-        <item name="colorOnColorOnPrimary">@color/asphalt</item>
+    <style name="Theme.Habbit.Dark" parent="Theme.Habbit">
+        <!-- Theme Colors -->
+        <item name="colorPrimary">@color/accent_midnightdusk</item>
+        <item name="colorPrimaryVariant">@color/accent_midnightdusk_variant</item>
+        <item name="colorSecondary">@color/md_blue_A400</item>
+        <item name="colorSecondaryVariant">@color/md_blue_A400_75</item>
+        <item name="colorControlHighlight">@color/ripple_colored_midnightdusk</item>
+        <item name="colorSurface">@color/surface_midnightdusk</item>
+        <item name="android:colorBackground">@color/background_midnightdusk</item>
+
+        <item name="android:colorEdgeEffect">?colorSecondary</item>
     </style>
 
     <style name="Theme.Splash" parent="Theme.Habbit">

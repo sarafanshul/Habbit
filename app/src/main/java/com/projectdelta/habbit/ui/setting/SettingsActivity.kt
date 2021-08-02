@@ -13,6 +13,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.projectdelta.habbit.R
 import com.projectdelta.habbit.databinding.SettingsActivityBinding
+import com.projectdelta.habbit.ui.base.BaseViewBindingActivity
 import com.projectdelta.habbit.util.database.SyncUtil
 import com.projectdelta.habbit.util.database.DatabaseUtil
 import com.projectdelta.habbit.util.lang.darkToast
@@ -25,13 +26,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SettingsActivity : AppCompatActivity() ,
+class SettingsActivity : BaseViewBindingActivity<SettingsActivityBinding>() ,
 	SharedPreferences.OnSharedPreferenceChangeListener {
-
-	private var _binding : SettingsActivityBinding ?= null
-	private val binding : SettingsActivityBinding
-		get() = _binding!!
-
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -57,11 +53,6 @@ class SettingsActivity : AppCompatActivity() ,
 	override fun onPause() {
 		super.onPause()
 		PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this)
-	}
-
-	override fun onDestroy() {
-		super.onDestroy()
-		_binding = null
 	}
 
 	override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
@@ -109,7 +100,7 @@ class SettingsActivity : AppCompatActivity() ,
 				sharedPreferences?.edit()
 					?.putBoolean(resources.getString(R.string.id_sync_on_startup), false)?.apply()
 			}
-			resources.getString(R.string.id_default_app_theme) -> {
+			resources.getString(R.string.id_app_theme) -> {
 
 			}
 		}

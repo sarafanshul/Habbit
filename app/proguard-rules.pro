@@ -21,3 +21,4 @@
 #-renamesourcefileattribute SourceFile
 
 -keep class com.projectdelta.habbit.*
+-keep class com.google.firebase.*
