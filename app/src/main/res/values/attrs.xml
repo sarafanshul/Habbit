@@ -29,5 +29,9 @@
 
         <attr name="colorTertiary" format="reference|integer"/>
 
+        <attr name="colorBackgroundDark" format="color"/>
+
+        <attr name="selectedColor" format="color"/>
+
     </declare-styleable>
 </resources>

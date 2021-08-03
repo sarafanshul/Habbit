@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.projectdelta.habbit.R
 import com.projectdelta.habbit.databinding.FragmentInsightsCalendarBinding
 import com.projectdelta.habbit.ui.activity.InsightsActivity
 import com.projectdelta.habbit.util.lang.TimeUtil
@@ -88,6 +89,8 @@ class InsightsCalendarFragment : Fragment() {
 			showYearSelectionView = true,
 		)
 
+		binding.insightsCalV.setDateCellBackgroundRes(R.drawable.custom_calendar_drawable)
+		binding.insightsCalV.setDateCellBackgroundTintRes(R.color.custom_date_cell_background_color)
 
 		viewModel.getAllDays.observe(viewLifecycleOwner , {X ->
 			if( X.isNullOrEmpty() ) return@observe

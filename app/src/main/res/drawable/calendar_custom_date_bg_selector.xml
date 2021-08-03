@@ -2,24 +2,27 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:state_pressed="true">
-        <color android:color="@color/mat_black" />
+        <color android:color="?colorPrimary" />
     </item>
 
     <item app:calendar_state_selected="true">
-        <color android:color="@color/wet_asphalt" />
+        <color android:color="?colorPrimaryVariant" />
     </item>
 
     <item app:calendar_state_today="true">
-        <color android:color="@color/black" />
+        <color android:color="@color/lime_green" />
     </item>
 
     <item app:calendar_state_disabled="true">
-        <color android:color="@color/custom_calendar_date_disabled_background" />
+        <color android:color="@color/md_grey_800" />
     </item>
 
     <item android:state_selected="true">
-        <color android:color="@color/wet_asphalt" />
+        <color android:color="?colorPrimaryVariant" />
     </item>
 
+    <item app:calendar_state_weekend="true">
+        <color android:color="@color/flame_gold"/>
+    </item>
 
 </selector>

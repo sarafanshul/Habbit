@@ -6,7 +6,7 @@
         <item name="android:layout_height">1dp</item>
         <item name="android:layout_marginLeft">20dp</item>
         <item name="android:layout_marginRight">20dp</item>
-        <item name="android:background">@color/mat_black</item>
+        <item name="android:background">@color/light_grey</item>
     </style>
 
     <style name="DividerLight">
@@ -46,11 +46,19 @@
     </style>
 
     <style name="CalendarViewCustomStyle">
-        <item name="calendar_day_bar_weekend_text_color">@color/wet_asphalt</item>
-        <item name="calendar_month_text_color">@color/mat_black</item>
-        <item name="calendar_year_selection_arrows_color">@color/asphalt</item>
+        <item name="android:background">?colorOnPrimary</item>
+        <item name="calendar_day_bar_weekend_text_color">?colorPrimary</item>
+        <item name="calendar_month_text_color">?colorSecondary</item>
+        <item name="calendar_date_background">@drawable/calendar_custom_date_bg_selector</item>
+        <item name="calendar_date_text_color">@color/calendar_custom_date_text_selector</item>
+        <item name="calendar_day_bar_background">?colorOnPrimary</item>
+        <item name="calendar_day_bar_text_color">?colorSecondary</item>
+        <item name="calendar_year_selection_arrows_color">?colorPrimaryVariant</item>
         <item name="calendar_grid_color">@android:color/transparent</item>
+        <item name="calendar_year_selection_background">?colorOnPrimary</item>
+        <item name="calendar_year_selection_text_color">?colorPrimary</item>
         <item name="calendar_grid_on_selected_dates">false</item>
+
     </style>
 
     <style name="roundedImageView">

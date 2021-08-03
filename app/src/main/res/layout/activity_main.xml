@@ -68,7 +68,7 @@
             android:visibility="invisible"
             android:layout_gravity="bottom|end"
             android:elevation="5dp"
-            android:background="@color/asphalt"/>
+            android:background="?colorPrimary"/>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:elevation="3dp"
         android:animateLayoutChanges="true"
+        android:backgroundTint="?colorOnSecondary"
         app:cardCornerRadius="3dp"
         android:clickable="true">
 

@@ -114,8 +114,15 @@ class EditTaskActivity : BaseViewBindingActivity<ActivityEditTaskBinding>() {
 				viewModel.setInteractionBodyState( EditTaskInteractionState.DefaultState() )
 				displayDefaultToolBar()
 			}else {
-				viewModel.delete( task )
-				resultOk()
+				MaterialAlertDialogBuilder(this).apply{
+					setTitle("Delete this task!")
+					setPositiveButton("Delete"){ _ , _ ->
+						viewModel.delete( task )
+						resultOk()
+					}
+					setNeutralButton("Cancel"){_ , _ -> }
+					create()
+				}.show()
 			}
 		}
 

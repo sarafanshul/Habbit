@@ -2,16 +2,14 @@ package com.projectdelta.habbit.ui.setting
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceManager
-import androidx.preference.SwitchPreferenceCompat
+import android.util.Log
+import androidx.preference.*
 import androidx.work.ExistingPeriodicWorkPolicy
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.projectdelta.habbit.R
+import com.projectdelta.habbit.data.preference.PreferencesHelper
 import com.projectdelta.habbit.databinding.SettingsActivityBinding
 import com.projectdelta.habbit.ui.base.BaseViewBindingActivity
 import com.projectdelta.habbit.util.database.SyncUtil
@@ -28,6 +26,10 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SettingsActivity : BaseViewBindingActivity<SettingsActivityBinding>() ,
 	SharedPreferences.OnSharedPreferenceChangeListener {
+
+	companion object{
+		private const val TAG = "SettingsActivity"
+	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -110,12 +112,14 @@ class SettingsActivity : BaseViewBindingActivity<SettingsActivityBinding>() ,
 	class SettingsFragment : PreferenceFragmentCompat() {
 
 		@Inject lateinit var syncUtil : SyncUtil
+		@Inject lateinit var preferencesHelper: PreferencesHelper
 		private val databaseUtil : DatabaseUtil = DatabaseUtil()
 
 		override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
 			setPreferencesFromResource(R.xml.root_preferences, rootKey)
 
 			toggleCloudPreferences()
+			togglePreferences()
 
 			findPreference<Preference>(resources.getString(R.string.id_sync_now))?.setOnPreferenceClickListener { _ ->
 				requireActivity().let { syncUtil.syncNow(it) }
@@ -154,6 +158,22 @@ class SettingsActivity : BaseViewBindingActivity<SettingsActivityBinding>() ,
 				}
 				true
 			}
+
+			findPreference<ListPreference>(getString(R.string.id_app_theme))?.setOnPreferenceChangeListener { preference, newValue ->
+				MaterialAlertDialogBuilder(requireActivity()).apply {
+					setTitle("Restart the app for change!")
+					setPositiveButton("OK"){_ , _ ->}
+					create()
+				}.show()
+				togglePreferences()
+				true
+			}
+		}
+
+		private fun togglePreferences() {
+			Log.d(TAG, "togglePreferences: Fired")
+			findPreference<ListPreference>(getString(R.string.id_app_theme))?.summary =
+				preferencesHelper.getAppTheme()
 		}
 
 		private fun toggleCloudPreferences() {

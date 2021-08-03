@@ -1,5 +1,6 @@
 package com.projectdelta.habbit.data.entities
 
+import androidx.annotation.Keep
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
@@ -16,6 +17,7 @@ import java.io.Serializable
  * Both ID and Title are used for persistence and reduce load on DB , ie:when we want to see tasks done
  * on a day we can use [tasksTitle] instead of querying DB for ID's
  */
+@Keep
 @Entity
 data class Day(
 
