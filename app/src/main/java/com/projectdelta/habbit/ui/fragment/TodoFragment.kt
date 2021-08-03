@@ -21,7 +21,7 @@ import com.projectdelta.habbit.R
 import com.projectdelta.habbit.ui.adapter.RecyclerViewTodoAdapter
 import com.projectdelta.habbit.constant.ICON_SIZE_DP
 import com.projectdelta.habbit.databinding.TodoFragmentBinding
-import com.projectdelta.habbit.ui.MainActivity
+import com.projectdelta.habbit.ui.activity.MainActivity
 import com.projectdelta.habbit.util.*
 import com.projectdelta.habbit.util.lang.convertDrawableToBitmap
 import com.projectdelta.habbit.util.lang.dpToPx

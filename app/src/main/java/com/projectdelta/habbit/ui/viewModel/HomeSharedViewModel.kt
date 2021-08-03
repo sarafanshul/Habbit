@@ -59,4 +59,8 @@ class HomeSharedViewModel @Inject constructor(
 		repository.deleteTask( task )
 	}
 
+	fun insertTask( task: Task ) = viewModelScope.launch(Dispatchers.IO) {
+		repository.insertTask( task )
+	}
+
 }

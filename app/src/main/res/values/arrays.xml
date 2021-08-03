@@ -17,11 +17,22 @@
 
     <array name="calendar_color">
         <item>@color/teal_200</item>
-        <item>@color/wet_asphalt</item>
-        <item>@color/matte_red</item>
-        <item>@color/yellow</item>
-        <item>@color/maroon</item>
+        <item>@color/custom_calendar_date_today_text_color</item>
+        <item>@color/md_black_1000_38</item>
+        <item>@color/light_purple</item>
+        <item>@color/lime</item>
         <item>@color/ocean_blue</item>
-        <item>@color/flame_gold</item>
+        <item>@color/lime_green</item>
     </array>
+
+    <string-array name="theme_entries">
+        <item>@string/theme_light</item>
+        <item>@string/theme_dark</item>
+    </string-array>
+
+    <string-array name="theme_values">
+        <item>@string/theme_light</item>
+        <item>@string/theme_dark</item>
+    </string-array>
+
 </resources>

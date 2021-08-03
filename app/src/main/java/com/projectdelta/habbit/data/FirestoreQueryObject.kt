@@ -1,10 +1,12 @@
 package com.projectdelta.habbit.data
 
+import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
 import com.projectdelta.habbit.data.entities.Day
 import com.projectdelta.habbit.data.entities.Task
 import java.io.Serializable
 
+@Keep
 data class FirestoreQueryObject (
 
     @SerializedName("Day")

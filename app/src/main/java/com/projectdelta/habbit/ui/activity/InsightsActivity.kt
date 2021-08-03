@@ -6,14 +6,14 @@ import androidx.viewpager.widget.ViewPager
 import com.projectdelta.habbit.R
 import com.projectdelta.habbit.ui.adapter.InsightsViewPagerAdapter
 import com.projectdelta.habbit.databinding.ActivityInsightsBinding
+import com.projectdelta.habbit.ui.base.BaseViewBindingActivity
 import com.projectdelta.habbit.ui.fragment.InsightsCalendarFragment
 import com.projectdelta.habbit.ui.fragment.InsightsListFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class InsightsActivity : AppCompatActivity() {
+class InsightsActivity : BaseViewBindingActivity<ActivityInsightsBinding>() {
 
-	lateinit var binding : ActivityInsightsBinding
 	lateinit var adapter : InsightsViewPagerAdapter
 
 	companion object{
@@ -24,7 +24,7 @@ class InsightsActivity : AppCompatActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
-		binding = ActivityInsightsBinding.inflate( layoutInflater )
+		_binding = ActivityInsightsBinding.inflate( layoutInflater )
 
 		setContentView( binding.root )
 

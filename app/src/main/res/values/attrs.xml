@@ -26,5 +26,12 @@
         <attr name="contrast_theme_color" format="color"/>
 
         <attr name="colorOnColorOnPrimary" format="color"/>
+
+        <attr name="colorTertiary" format="reference|integer"/>
+
+        <attr name="colorBackgroundDark" format="color"/>
+
+        <attr name="selectedColor" format="color"/>
+
     </declare-styleable>
 </resources>

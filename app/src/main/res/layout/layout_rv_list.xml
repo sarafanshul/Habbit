@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:layout_margin="@dimen/default_base_margin"
+    android:layout_marginVertical="@dimen/default_base_margin"
+    android:layout_marginHorizontal="@dimen/element_padding"
     android:layout_height="wrap_content">
 
     <com.google.android.material.textview.MaterialTextView
@@ -11,8 +12,7 @@
         android:textSize="@dimen/H3"
         android:layout_marginTop="4dp"
         android:id="@+id/tv_date"
-        android:textColor="@color/wet_asphalt"
-        android:text="data"
+        android:textColor="?colorPrimaryVariant"
         android:textStyle="bold"/>
 
     <View
@@ -24,7 +24,7 @@
         android:layout_marginTop="@dimen/default_base_margin"
         android:layout_height="wrap_content"
         android:textSize="@dimen/H5"
-        android:textColor="@color/wet_asphalt"
+        android:textColor="?theme_text"
         android:layout_marginBottom="@dimen/element_padding"
         android:id="@+id/tv_data"/>
 

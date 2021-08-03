@@ -24,7 +24,7 @@
             android:name=".ui.activity.editTask.EditTaskActivity"
             android:windowSoftInputMode="adjustResize"/>
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/Theme.Splash">

@@ -13,6 +13,8 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_save_black_24dp"
         android:id="@+id/e_task_fab_save"
+        android:backgroundTint="?colorSecondary"
+        app:backgroundTint="?colorSecondary"
         android:layout_margin="@dimen/fab_margin"
         app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
         android:layout_gravity="bottom|right"/>
@@ -20,6 +22,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:overScrollMode="never"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <LinearLayout
@@ -31,7 +34,9 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:backgroundTint="?colorOnSecondary"
                 android:hint="@string/add_a_summary"
+                android:textColor="?colorPrimary"
                 android:id="@+id/e_task_et_summary"
                 android:textSize="@dimen/H3"
                 android:layout_marginTop="@dimen/element_padding"
@@ -50,7 +55,7 @@
                 android:text="Rating"
                 android:textSize="@dimen/H4"
                 android:paddingTop="@dimen/element_padding"
-                android:textColor="@color/wet_asphalt"
+                android:textColor="?colorSecondary"
                 android:layout_marginHorizontal="@dimen/element_padding"/>
 
             <RatingBar
@@ -65,7 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Notify me ?"
-                android:textColor="?colorPrimary"
+                android:textColor="?colorSecondary"
                 android:layout_marginTop="10dp"
                 android:id="@+id/e_task_sw_notification"
                 android:textSize="@dimen/H3"
@@ -82,8 +87,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.8"
                     android:text="Time limited ?"
-                    android:textColor="?colorPrimary"
-                    android:id="@+id/e_task_sw_skip_after"
+                    android:textColor="?colorSecondary"                    android:id="@+id/e_task_sw_skip_after"
                     android:textSize="@dimen/H3"
                     android:layout_gravity="center"
                     android:padding="@dimen/element_padding"/>
@@ -96,7 +100,7 @@
                     android:padding="@dimen/default_base_margin"
                     android:id="@+id/e_task_iv_time"
                     android:src="@drawable/ic_schedule_black_24dp"
-                    app:tint="@color/wet_asphalt" />
+                    app:tint="?theme_text" />
 
             </LinearLayout>
 
@@ -112,18 +116,18 @@
                     android:layout_weight="0.4"
                     android:layout_gravity="center"
                     android:textSize="@dimen/H3"
-                    android:textColor="?colorPrimary"
+                    android:textColor="?colorSecondary"
                     android:layout_margin="@dimen/element_padding"
                     android:text="Skip days?"/>
-                <ImageButton
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="0.15"
-                    android:layout_gravity="center"
-                    android:gravity="center"
+                    android:layout_margin="@dimen/default_base_margin"
+                    android:scaleType="center"
                     android:src="@drawable/ic_baseline_horizontal_rule_24"
-                    android:id="@+id/e_task_btn_skip_sub"
-                    app:tint="@color/black" />
+                    android:id="@+id/e_task_btn_skip_sub" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="0dp"
@@ -137,16 +141,14 @@
                     android:inputType="numberSigned"
                     android:id="@+id/e_task_et_skip" />
 
-                <ImageButton
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="0.15"
-                    android:layout_gravity="center"
-                    android:gravity="center"
+                    android:scaleType="center"
+                    android:layout_margin="@dimen/default_base_margin"
                     android:src="@drawable/ic_baseline_add_24"
-                    android:id="@+id/e_task_btn_skip_add"
-                    app:tint="@color/black" />
-
+                    android:id="@+id/e_task_btn_skip_add" />
 
             </LinearLayout>
 
@@ -164,7 +166,7 @@
                 android:text="History"
                 android:textSize="@dimen/H3"
                 android:paddingTop="@dimen/element_padding"
-                android:textColor="@color/wet_asphalt"
+                android:textColor="?colorSecondary"
                 android:layout_marginHorizontal="@dimen/element_padding"/>
 
             <com.google.android.material.textview.MaterialTextView
@@ -189,7 +191,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="?colorOnSecondary"
         android:id="@+id/app_bar">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -210,6 +212,7 @@
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="?colorOnSecondary"
                     android:minHeight="@dimen/toolbar_height"
                     android:id="@+id/note_title"
                     android:textColor="?colorPrimary"
@@ -243,7 +246,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
                         android:id="@+id/toolbar_primary_icon"
-                        />
+                        app:tint="?colorPrimary" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -254,7 +257,7 @@
                         app:layout_constraintRight_toLeftOf="@id/toolbar_secondary_icon"
                         app:layout_constraintHorizontal_bias="0"
                         android:id="@+id/tool_bar_title"
-                        android:textColor="@color/light_grey"
+                        android:textColor="?colorPrimaryVariant"
                         android:layout_marginStart="@dimen/toolbar_title_margin"
                         android:layout_marginEnd="@dimen/default_view_margin"
                         android:gravity="center_vertical"
@@ -265,6 +268,7 @@
 
 
                     <ImageView
+                        app:tint="?colorPrimary"
                         android:layout_width="@dimen/toolbar_item_margin"
                         android:layout_height="@dimen/toolbar_item_margin"
                         app:layout_constraintTop_toTopOf="parent"

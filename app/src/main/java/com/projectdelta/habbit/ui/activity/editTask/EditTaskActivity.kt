@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
+import android.util.TypedValue
 import android.widget.TextView
 import android.widget.TimePicker
 import androidx.activity.viewModels
@@ -19,15 +20,15 @@ import com.projectdelta.habbit.data.entities.Task
 import com.projectdelta.habbit.databinding.ActivityEditTaskBinding
 import com.projectdelta.habbit.ui.activity.editTask.state.CollapsingToolbarState
 import com.projectdelta.habbit.ui.activity.editTask.state.EditTaskInteractionState
+import com.projectdelta.habbit.ui.base.BaseViewBindingActivity
 import com.projectdelta.habbit.ui.viewModel.EditTaskViewModel
 import com.projectdelta.habbit.util.TodoCallback
 import com.projectdelta.habbit.util.lang.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class EditTaskActivity : AppCompatActivity() {
+class EditTaskActivity : BaseViewBindingActivity<ActivityEditTaskBinding>() {
 
-	lateinit var binding : ActivityEditTaskBinding
 	private val viewModel : EditTaskViewModel by viewModels()
 	private var skipTime : Long = -1
 
@@ -35,14 +36,14 @@ class EditTaskActivity : AppCompatActivity() {
 		private const val REPEAT_DELAY = 50L
 		private const val TAG = "EditTaskActivity"
 		private const val NULL_DISPLAY_ET = "-"
-		private const val DEFAULT_TITLE = "Add a title"
+		private const val DEFAULT_TITLE = "New task!"
 		private const val ERROR_SAVE_WARNING = "Please enter a valid title!"
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
-		binding = ActivityEditTaskBinding.inflate( layoutInflater )
+		_binding = ActivityEditTaskBinding.inflate( layoutInflater )
 
 		val task : Task = intent.getSerializableExtra( "TASK" ) as Task
 
@@ -113,8 +114,15 @@ class EditTaskActivity : AppCompatActivity() {
 				viewModel.setInteractionBodyState( EditTaskInteractionState.DefaultState() )
 				displayDefaultToolBar()
 			}else {
-				viewModel.delete( task )
-				resultOk()
+				MaterialAlertDialogBuilder(this).apply{
+					setTitle("Delete this task!")
+					setPositiveButton("Delete"){ _ , _ ->
+						viewModel.delete( task )
+						resultOk()
+					}
+					setNeutralButton("Cancel"){_ , _ -> }
+					create()
+				}.show()
 			}
 		}
 
@@ -186,12 +194,13 @@ class EditTaskActivity : AppCompatActivity() {
 			true
 		}
 
+
 		binding.eTaskSwSkipAfter.isChecked = task.isSkipAfterEnabled
 		binding.eTaskIvTime.isEnabled = task.isSkipAfterEnabled
-		binding.eTaskIvTime.setTint(if (binding.eTaskSwSkipAfter.isChecked) R.color.wet_asphalt else R.color.light_grey)
+		binding.eTaskIvTime.setTint(if (binding.eTaskSwSkipAfter.isChecked) getColorFromAttr(R.attr.colorSecondary) else R.color.light_grey)
 		binding.eTaskSwSkipAfter.setOnCheckedChangeListener { _, isChecked ->
 			binding.eTaskIvTime.isEnabled = isChecked
-			binding.eTaskIvTime.setTint(if (isChecked) R.color.wet_asphalt else R.color.light_grey)
+			binding.eTaskIvTime.setTint(if (isChecked) getColorFromAttr(R.attr.colorSecondary) else R.color.light_grey)
 		}
 
 		binding.eTaskIvTime.setOnClickListener {

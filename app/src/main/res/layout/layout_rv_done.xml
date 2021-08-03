@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:elevation="3dp"
         app:cardCornerRadius="3dp"
+        android:backgroundTint="?colorOnSecondary"
         android:clickable="true">
 
         <LinearLayout
@@ -39,7 +40,6 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Task name"
                     android:textSize="26sp"
                     android:singleLine="true"
                     android:ellipsize="marquee"
@@ -67,7 +67,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="0.5"
-                    android:text="100 days"
                     android:textColor="?colorOnColorOnPrimary"
                     android:gravity="center"
                     android:id="@+id/tasks_tw_streak"

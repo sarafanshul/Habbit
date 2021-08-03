@@ -2,17 +2,16 @@ package com.projectdelta.habbit.ui.setting
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceManager
-import androidx.preference.SwitchPreferenceCompat
+import android.util.Log
+import androidx.preference.*
 import androidx.work.ExistingPeriodicWorkPolicy
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.projectdelta.habbit.R
+import com.projectdelta.habbit.data.preference.PreferencesHelper
 import com.projectdelta.habbit.databinding.SettingsActivityBinding
+import com.projectdelta.habbit.ui.base.BaseViewBindingActivity
 import com.projectdelta.habbit.util.database.SyncUtil
 import com.projectdelta.habbit.util.database.DatabaseUtil
 import com.projectdelta.habbit.util.lang.darkToast
@@ -25,13 +24,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SettingsActivity : AppCompatActivity() ,
+class SettingsActivity : BaseViewBindingActivity<SettingsActivityBinding>() ,
 	SharedPreferences.OnSharedPreferenceChangeListener {
 
-	private var _binding : SettingsActivityBinding ?= null
-	private val binding : SettingsActivityBinding
-		get() = _binding!!
-
+	companion object{
+		private const val TAG = "SettingsActivity"
+	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -57,11 +55,6 @@ class SettingsActivity : AppCompatActivity() ,
 	override fun onPause() {
 		super.onPause()
 		PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this)
-	}
-
-	override fun onDestroy() {
-		super.onDestroy()
-		_binding = null
 	}
 
 	override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
@@ -109,6 +102,9 @@ class SettingsActivity : AppCompatActivity() ,
 				sharedPreferences?.edit()
 					?.putBoolean(resources.getString(R.string.id_sync_on_startup), false)?.apply()
 			}
+			resources.getString(R.string.id_app_theme) -> {
+
+			}
 		}
 	}
 
@@ -116,12 +112,14 @@ class SettingsActivity : AppCompatActivity() ,
 	class SettingsFragment : PreferenceFragmentCompat() {
 
 		@Inject lateinit var syncUtil : SyncUtil
+		@Inject lateinit var preferencesHelper: PreferencesHelper
 		private val databaseUtil : DatabaseUtil = DatabaseUtil()
 
 		override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
 			setPreferencesFromResource(R.xml.root_preferences, rootKey)
 
 			toggleCloudPreferences()
+			togglePreferences()
 
 			findPreference<Preference>(resources.getString(R.string.id_sync_now))?.setOnPreferenceClickListener { _ ->
 				requireActivity().let { syncUtil.syncNow(it) }
@@ -160,6 +158,22 @@ class SettingsActivity : AppCompatActivity() ,
 				}
 				true
 			}
+
+			findPreference<ListPreference>(getString(R.string.id_app_theme))?.setOnPreferenceChangeListener { preference, newValue ->
+				MaterialAlertDialogBuilder(requireActivity()).apply {
+					setTitle("Restart the app for change!")
+					setPositiveButton("OK"){_ , _ ->}
+					create()
+				}.show()
+				togglePreferences()
+				true
+			}
+		}
+
+		private fun togglePreferences() {
+			Log.d(TAG, "togglePreferences: Fired")
+			findPreference<ListPreference>(getString(R.string.id_app_theme))?.summary =
+				preferencesHelper.getAppTheme()
 		}
 
 		private fun toggleCloudPreferences() {

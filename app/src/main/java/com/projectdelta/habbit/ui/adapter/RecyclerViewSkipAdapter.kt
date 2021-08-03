@@ -60,4 +60,15 @@ class RecyclerViewSkipAdapter():
 
 	fun dataIsInitialized() = this::data.isInitialized
 
+	fun insertData( task: Task , position: Int ){
+		data.add(position , task)
+		notifyItemInserted(position)
+	}
+
+	fun deleteData( position: Int ) : Task {
+		val x = data.removeAt( position )
+		notifyItemRemoved( position )
+		return x
+	}
+
 }

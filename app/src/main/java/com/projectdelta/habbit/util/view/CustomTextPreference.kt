@@ -26,7 +26,7 @@ class CustomTextPreference: Preference {
             (holder?.findViewById(android.R.id.title) as? TextView)?.setTextColor(
                 ContextCompat.getColor(
                     it,
-                    R.color.matte_red
+                    R.color.danger
                 )
             )
         }

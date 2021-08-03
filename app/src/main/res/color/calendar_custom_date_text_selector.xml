@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:color="@color/light_grey" android:state_pressed="true" />
+    <item android:color="?colorPrimary" android:state_pressed="true" />
 
-    <item android:color="@color/wet_asphalt" app:calendar_state_selected="true" />
+    <item android:color="?colorPrimaryVariant" app:calendar_state_selected="true" />
 
-    <item android:color="@color/ocean_blue" app:calendar_state_today="true" />
+    <item android:color="@color/white" app:calendar_state_today="true" />
 
-    <item android:color="@color/wet_asphalt" android:state_selected="true" />
+    <item android:color="@color/lime_green" app:calendar_state_disabled="true" />
 
+    <item android:color="?colorPrimaryVariant" android:state_selected="true" />
+
+    <item android:color="?colorPrimaryVariant" app:calendar_state_weekend="true" />
+
+    <item android:color="?theme_text" />
 
 </selector>

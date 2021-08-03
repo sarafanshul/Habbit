@@ -17,9 +17,12 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.PowerManager
+import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
@@ -234,4 +237,17 @@ fun Context.isOnline(): Boolean {
 		val netInfo = cm.activeNetworkInfo
 		return netInfo != null && netInfo.isConnectedOrConnecting
 	}
+}
+
+/**
+ * Returns the theme resources
+ */
+
+fun Context.getColorFromAttr(
+	@AttrRes attrColor : Int ,
+	typedValue: TypedValue = TypedValue(),
+	resolveRefs: Boolean = true
+) : Int{
+	theme.resolveAttribute(attrColor , typedValue , resolveRefs)
+	return typedValue.resourceId
 }

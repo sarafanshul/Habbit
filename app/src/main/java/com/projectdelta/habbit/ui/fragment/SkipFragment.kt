@@ -15,8 +15,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
-import com.projectdelta.habbit.ui.MainActivity
+import com.projectdelta.habbit.ui.activity.MainActivity
 import com.projectdelta.habbit.R
 import com.projectdelta.habbit.ui.adapter.RecyclerViewSkipAdapter
 import com.projectdelta.habbit.constant.ICON_SIZE_DP
@@ -143,9 +144,18 @@ class SkipFragment : Fragment() {
 				override fun onSwipeLeftToRight(vh: RecyclerView.ViewHolder?) { object : RecyclerViewSkipAdapter.OnSwipeRight{
 					override fun doWork(viewHolder: RecyclerView.ViewHolder) {
 						val position = viewHolder.adapterPosition
-						val T = adapter.data.removeAt( position )
-						adapter.notifyItemRemoved( position )
+						val T = adapter.deleteData( position )
 						viewModel.delete( T )
+						/**
+						 * show SnackBar for undo!
+						 */
+						Snackbar.make(requireActivity().findViewById(R.id.main_cl) , "A task deleted!" , Snackbar.LENGTH_LONG).apply {
+							anchorView = requireActivity().findViewById(R.id.main_fab_create)
+							setAction("Undo"){
+								adapter.insertData(T , position)
+								viewModel.insertTask(T)
+							}
+						}.show()
 					}
 				}.doWork(vh!!) }
 
