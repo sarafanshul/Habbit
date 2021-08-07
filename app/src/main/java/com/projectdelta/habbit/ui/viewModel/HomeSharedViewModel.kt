@@ -1,11 +1,10 @@
 package com.projectdelta.habbit.ui.viewModel
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.projectdelta.habbit.data.entities.Task
-import com.projectdelta.habbit.repository.TasksRepository
 import com.projectdelta.habbit.repository.TasksRepositoryImpl
+import com.projectdelta.habbit.ui.base.BaseViewModel
 import com.projectdelta.habbit.util.lang.TimeUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeSharedViewModel @Inject constructor(
 	private val repository: TasksRepositoryImpl
-) : ViewModel() {
+) : BaseViewModel() {
 
 	private var _data : LiveData<List<Task>> ?= null
 	val data
@@ -30,17 +29,13 @@ class HomeSharedViewModel @Inject constructor(
 		_data = repository.getAllTasks()
 	}
 
-	fun getToday() = TimeUtil.getTodayFromEpoch()
-
-	fun getMSFromMidnight() = TimeUtil.getMSfromMidnight()
-
 	fun notifyTaskDone(task : Task) {
 		viewModelScope.launch(Dispatchers.IO) {
 			// get fresh instance of task
 			val curTask = withContext(Dispatchers.IO) {
 				repository.getTaskById(task.id)
 			}
-			curTask.lastDayCompleted.add( getToday() )
+			curTask.lastDayCompleted.add(getTodayFromEpoch())
 			repository.markTaskCompleted( curTask )
 		}
 	}
@@ -50,7 +45,7 @@ class HomeSharedViewModel @Inject constructor(
 			val cur = withContext(Dispatchers.IO) {
 				repository.getTaskById(task.id)
 			}
-			cur.skipTill = getToday()
+			cur.skipTill = getTodayFromEpoch()
 			repository.updateTask(cur)
 		}
 	}

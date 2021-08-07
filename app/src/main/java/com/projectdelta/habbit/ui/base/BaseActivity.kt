@@ -16,23 +16,33 @@ import dagger.hilt.android.EntryPointAccessors
 import javax.inject.Inject
 
 
-abstract class BaseThemedActivity : AppCompatActivity() {
+abstract class BaseActivity : AppCompatActivity() {
 
-    val preferences : PreferencesHelper by lazy {
-        PreferencesHelper(
+    /**
+     * Injects dependencies in classes not supported by Hilt
+     * [Refer](https://developer.android.com/training/dependency-injection/hilt-android#not-supported)
+     */
+    private val hiltEntryPoint : PreferenceModule.PreferenceHelperProviderEntryPoint by lazy {
+        EntryPointAccessors.fromApplication(
             applicationContext,
-            getSharedPreferences(application.packageName + "_preferences", Context.MODE_PRIVATE)
+            PreferenceModule.PreferenceHelperProviderEntryPoint::class.java
         )
     }
-        override fun onCreate(savedInstanceState: Bundle?) {
-            applyAppTheme( preferences )
-            Log.d("BaseThemedActivity", "onCreate: $preferences")
-            super.onCreate(savedInstanceState)
-        }
 
-        companion object{
+    protected lateinit var preferences: PreferencesHelper
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+
+        preferences = hiltEntryPoint.preferenceHelper()
+
+        applyAppTheme( preferences )
+        Log.d("BaseActivity", "onCreate: $preferences")
+        super.onCreate(savedInstanceState)
+    }
+
+    companion object{
         fun AppCompatActivity.applyAppTheme( preferences: PreferencesHelper ){
-            Log.d("BaseThemedActivity", "applyAppTheme get: ${preferences.getAppTheme()}")
+            Log.d("BaseActivity", "applyAppTheme get: ${preferences.getAppTheme()}")
             when( preferences.getAppTheme() ){
                 resources.getString(R.string.theme_light) -> {
                     AppCompatDelegate.setDefaultNightMode( AppCompatDelegate.MODE_NIGHT_NO )

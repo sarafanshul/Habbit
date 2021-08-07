@@ -15,6 +15,12 @@
         <item name="android:background">@color/focused_color</item>
     </style>
 
+    <style name="DividerLightAlpha">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1px</item>
+        <item name="android:background">#66C2BDE3</item>
+    </style>
+
     <style name="NewAlertDialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
         <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
         <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>

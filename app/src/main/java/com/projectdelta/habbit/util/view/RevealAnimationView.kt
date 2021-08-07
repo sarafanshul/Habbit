@@ -19,7 +19,7 @@ class RevealAnimationView @JvmOverloads constructor(context: Context, attrs: Att
      * @param centerY y starting point
      * @param initialRadius size of radius of animation
      */
-    fun hideRevealEffect(centerX: Int, centerY: Int, initialRadius: Int) {
+    fun hideRevealEffect(centerX: Int, centerY: Int, initialRadius: Int , animationDuration : Long = 250 ) {
         // Make the view visible.
         this.isVisible = true
 
@@ -33,7 +33,7 @@ class RevealAnimationView @JvmOverloads constructor(context: Context, attrs: Att
         )
 
         // Set duration of animation.
-        anim.duration = 500
+        anim.duration = animationDuration
 
         // make the view invisible when the animation is done
         anim.doOnEnd {
@@ -50,7 +50,7 @@ class RevealAnimationView @JvmOverloads constructor(context: Context, attrs: Att
      * @param centerY y starting point
      * @param listener animation listener
      */
-    fun showRevealEffect(centerX: Int, centerY: Int, listener: Animator.AnimatorListener) {
+    fun showRevealEffect(centerX: Int, centerY: Int, listener: Animator.AnimatorListener , animationDuration: Long = 250) {
         this.isVisible = true
 
         val height = this.height
@@ -65,7 +65,7 @@ class RevealAnimationView @JvmOverloads constructor(context: Context, attrs: Att
         )
 
         // Set duration of animation
-        anim.duration = 350
+        anim.duration = animationDuration
 
         anim.addListener(listener)
         anim.start()

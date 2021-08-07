@@ -30,6 +30,7 @@ object PreferenceModule {
     }
 
     @EntryPoint
+    @Singleton
     @InstallIn(SingletonComponent::class)
     interface PreferenceHelperProviderEntryPoint{
         fun preferenceHelper() : PreferencesHelper

@@ -4,7 +4,6 @@ import android.app.Activity
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,19 +28,17 @@ import com.projectdelta.habbit.ui.adapter.RecyclerItemClickListenr
 import com.projectdelta.habbit.ui.adapter.StatesRecyclerViewAdapter
 import com.projectdelta.habbit.util.lang.skippedTill
 import com.projectdelta.habbit.ui.adapter.CustomItemTouchHelperCallback
+import com.projectdelta.habbit.ui.base.BaseViewBindingFragment
 import com.projectdelta.habbit.ui.viewModel.HomeSharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SkipFragment : Fragment() {
+class SkipFragment : BaseViewBindingFragment<SkipFragmentBinding>() {
 
 	companion object {
 		fun newInstance() = SkipFragment()
+		private const val TAG = "SkipFragment"
 	}
-
-	private var _binding : SkipFragmentBinding ?= null
-	private val binding
-		get() = _binding!!
 
 	private val viewModel: HomeSharedViewModel by activityViewModels()
 	lateinit var adapter : RecyclerViewSkipAdapter
@@ -52,8 +49,6 @@ class SkipFragment : Fragment() {
 		this.activity = activity as MainActivity
 	}
 
-	private val TAG = "SkipFragment"
-
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
 		savedInstanceState: Bundle?
@@ -63,11 +58,6 @@ class SkipFragment : Fragment() {
 		Log.d(TAG, "onCreateView: $viewModel")
 
 		return binding.root
-	}
-
-	override fun onDestroy() {
-		_binding = null
-		super.onDestroy()
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -170,7 +160,7 @@ class SkipFragment : Fragment() {
 				return@observe
 			}
 
-			val undoneData = data.skippedTill( viewModel.getToday() , viewModel.getMSFromMidnight() )
+			val undoneData = data.skippedTill( viewModel.getTodayFromEpoch() , viewModel.getMSFromMidnight() )
 
 			Log.d("DATA" , undoneData.toMutableList().toString())
 
@@ -184,7 +174,7 @@ class SkipFragment : Fragment() {
 				binding.skipRv.addItemDecoration( divider )
 				adapter.set(
 					undoneData.toMutableList(),
-					viewModel.getToday()
+					viewModel.getTodayFromEpoch()
 				)
 			}
 		})

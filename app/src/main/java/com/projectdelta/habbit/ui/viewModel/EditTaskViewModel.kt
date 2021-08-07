@@ -9,6 +9,7 @@ import com.projectdelta.habbit.repository.TasksRepositoryImpl
 import com.projectdelta.habbit.ui.activity.editTask.state.CollapsingToolbarState
 import com.projectdelta.habbit.ui.activity.editTask.state.EditTaskInteractionManager
 import com.projectdelta.habbit.ui.activity.editTask.state.EditTaskInteractionState
+import com.projectdelta.habbit.ui.base.BaseViewModel
 import com.projectdelta.habbit.util.lang.TimeUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class EditTaskViewModel @Inject constructor(
 	private val repository: TasksRepositoryImpl
-) : ViewModel() {
+) : BaseViewModel(){
 
 	private val editTaskInteractionManager : EditTaskInteractionManager = EditTaskInteractionManager()
 
@@ -39,8 +40,6 @@ class EditTaskViewModel @Inject constructor(
 	fun updateTask( task: Task ) = viewModelScope.launch(Dispatchers.IO) {
 		repository.insertTask( task )
 	}
-
-	fun getTodayFromEpoch( ) = TimeUtil.getTodayFromEpoch()
 
 	fun delete( task: Task ) = viewModelScope.launch (Dispatchers.IO){
 		repository.deleteTask( task )

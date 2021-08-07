@@ -3,7 +3,6 @@ package com.projectdelta.habbit.ui.fragment
 import android.app.Activity
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,13 +18,14 @@ import com.projectdelta.habbit.databinding.DoneFragmentBinding
 import com.projectdelta.habbit.util.NotFound
 import com.projectdelta.habbit.ui.adapter.RecyclerItemClickListenr
 import com.projectdelta.habbit.ui.adapter.StatesRecyclerViewAdapter
+import com.projectdelta.habbit.ui.base.BaseViewBindingFragment
 import com.projectdelta.habbit.util.lang.completedTill
 import com.projectdelta.habbit.ui.viewModel.HomeSharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class DoneFragment : Fragment() {
+class DoneFragment : BaseViewBindingFragment<DoneFragmentBinding>() {
 
 	companion object {
 		fun newInstance() = DoneFragment()
@@ -33,9 +33,6 @@ class DoneFragment : Fragment() {
 	}
 
 	private val viewModel: HomeSharedViewModel by activityViewModels()
-	private var _binding : DoneFragmentBinding ?= null
-	private val binding
-		get() = _binding!!
 
 	private lateinit var adapter : RecyclerViewDoneAdapter
 
@@ -54,12 +51,6 @@ class DoneFragment : Fragment() {
 
 		return binding.root
 	}
-
-	override fun onDestroyView() {
-		super.onDestroyView()
-		_binding = null
-	}
-
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
@@ -130,7 +121,7 @@ class DoneFragment : Fragment() {
 				return@observe
 			}
 
-			val doneData = data.completedTill( viewModel.getToday() )
+			val doneData = data.completedTill( viewModel.getTodayFromEpoch() )
 
 			Log.d("DATA" , doneData.toMutableList().toString())
 
@@ -142,7 +133,7 @@ class DoneFragment : Fragment() {
 				statesAdapter.state = StatesRecyclerViewAdapter.STATE_NORMAL
 				adapter.set(
 					doneData,
-					viewModel.getToday()
+					viewModel.getTodayFromEpoch()
 				)
 			}
 		})

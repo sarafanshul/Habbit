@@ -1,5 +1,7 @@
 package com.projectdelta.habbit.ui.activity.editTask
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
@@ -133,11 +135,12 @@ class EditTaskActivity : BaseViewBindingActivity<ActivityEditTaskBinding>() {
 					anchorView = binding.eTaskFabSave
 				}.show()
 			}else {
-				viewModel.updateTask(newTask)
-				resultOk()
+				animateAndDoStuff {
+					viewModel.updateTask(newTask)
+					resultOk()
+				}
 			}
 		}
-
 
 		binding.noteTitle.setOnClickListener {
 			if (!viewModel.isEditingTitle()) {
@@ -162,6 +165,7 @@ class EditTaskActivity : BaseViewBindingActivity<ActivityEditTaskBinding>() {
 		setValueTV((if (task.skipTill - viewModel.getTodayFromEpoch() < 0L) -1 else task.skipTill - viewModel.getTodayFromEpoch()).toInt())
 
 		binding.eTaskSwNotification.isChecked = task.isNotificationEnabled
+		skipTime = if( task.skipAfter > 0 ) task.skipAfter else -1
 
 		binding.eTaskBtnSkipAdd.setOnClickListener { increment() }
 		binding.eTaskBtnSkipAdd.setOnLongClickListener {
@@ -222,6 +226,21 @@ class EditTaskActivity : BaseViewBindingActivity<ActivityEditTaskBinding>() {
 				.setNegativeButton("Cancel") { _, _ -> }
 				.create()
 				.show()
+		}
+
+	}
+
+	private fun animateAndDoStuff( stuff : () -> Unit ) {
+		binding.eTaskFabSave.getCoordinates().let { coordinates ->
+			binding.editReveal.showRevealEffect(
+				coordinates.x,
+				coordinates.y,
+				object : AnimatorListenerAdapter() {
+					override fun onAnimationStart(animation: Animator?) {
+						stuff()
+					}
+				}
+			)
 		}
 	}
 

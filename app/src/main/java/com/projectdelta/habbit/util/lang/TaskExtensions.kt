@@ -1,6 +1,7 @@
 package com.projectdelta.habbit.util.lang
 
 import android.text.Html
+import com.projectdelta.habbit.constant.INDENT
 import com.projectdelta.habbit.data.entities.Task
 
 /**
@@ -63,5 +64,5 @@ fun Task.hash() = (this.id%((1L shl 31) - 1)).toInt()
 
 
 fun Task.toDateBulletList(delimiter: String = "\n" , maxLine : Int = 20) = lastDayCompleted.asReversed().joinToString (delimiter) {
-	"${Html.fromHtml(bullet)} ${TimeUtil.getDayFromEpochToDateString(it)}"
+	"$INDENT${Html.fromHtml(bullet)} ${TimeUtil.getDayFromEpochToDateString(it)}"
 } + if( lastDayCompleted.size > maxLine ) "and ${lastDayCompleted - maxLine} more!" else ""

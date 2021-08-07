@@ -12,6 +12,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.projectdelta.habbit.R
 import com.projectdelta.habbit.databinding.FragmentInsightsCalendarBinding
 import com.projectdelta.habbit.ui.activity.InsightsActivity
+import com.projectdelta.habbit.ui.base.BaseViewBindingFragment
 import com.projectdelta.habbit.util.lang.TimeUtil
 import com.projectdelta.habbit.util.lang.titlesToBulletList
 import com.projectdelta.habbit.ui.viewModel.InsightsSharedViewModel
@@ -25,17 +26,13 @@ import javax.inject.Named
 import kotlin.random.Random
 
 @AndroidEntryPoint
-class InsightsCalendarFragment : Fragment() {
+class InsightsCalendarFragment : BaseViewBindingFragment<FragmentInsightsCalendarBinding>() {
 
 	companion object{
 		fun newInstance() = InsightsCalendarFragment()
 		private const val TAG = "InsightsCalendarFragment"
 		private const val MAX_CALENDAR_DOTS = 7
 	}
-
-	private var _binding : FragmentInsightsCalendarBinding ?= null
-	private val binding
-		get() = _binding!!
 
 	private val viewModel : InsightsSharedViewModel by activityViewModels()
 
@@ -49,7 +46,6 @@ class InsightsCalendarFragment : Fragment() {
 	@field:[Inject Named("COLORS_ARRAY")]
 	lateinit var COLORS : IntArray
 
-
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
 		savedInstanceState: Bundle?
@@ -58,11 +54,6 @@ class InsightsCalendarFragment : Fragment() {
 		_binding = FragmentInsightsCalendarBinding.inflate(inflater , container , false )
 
 		return binding.root
-	}
-
-	override fun onDestroy() {
-		_binding = null
-		super.onDestroy()
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

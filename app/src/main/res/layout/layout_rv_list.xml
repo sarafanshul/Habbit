@@ -17,7 +17,7 @@
 
     <View
         android:layout_marginTop="4dp"
-        style="@style/Divider"/>
+        style="@style/DividerLightAlpha"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"

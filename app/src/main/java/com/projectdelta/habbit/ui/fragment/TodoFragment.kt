@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -30,19 +29,17 @@ import com.projectdelta.habbit.util.lang.unfinishedTill
 import com.projectdelta.habbit.ui.adapter.CustomItemTouchHelperCallback
 import com.projectdelta.habbit.ui.adapter.RecyclerItemClickListenr
 import com.projectdelta.habbit.ui.adapter.StatesRecyclerViewAdapter
+import com.projectdelta.habbit.ui.base.BaseViewBindingFragment
 import com.projectdelta.habbit.ui.viewModel.HomeSharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class TodoFragment : Fragment() {
+class TodoFragment : BaseViewBindingFragment<TodoFragmentBinding>() {
 
 	companion object {
 		fun newInstance() = TodoFragment()
+		private const val TAG = "TodoFragment"
 	}
-
-	private var _binding : TodoFragmentBinding ?= null
-	private val binding
-		get() = _binding!!
 
 	private val viewModel: HomeSharedViewModel by activityViewModels()
 	lateinit var adapter : RecyclerViewTodoAdapter
@@ -54,7 +51,7 @@ class TodoFragment : Fragment() {
 		this.activity = activity as MainActivity
 	}
 
-	private val TAG = "TodoFragment"
+
 
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
@@ -73,11 +70,6 @@ class TodoFragment : Fragment() {
 		setRv()
 
 	}
-	override fun onDestroy() {
-		_binding = null
-		super.onDestroy()
-	}
-
 
 	private fun setRv() {
 		binding.todoRv.layoutManager = LinearLayoutManager(activity)
@@ -173,9 +165,9 @@ class TodoFragment : Fragment() {
 				binding.todoRv.removeItemDecoration( divider )
 				return@observe
 			}
-			Log.d("DATA" , "${viewModel.getToday()}")
+			Log.d("DATA" , "${viewModel.getTodayFromEpoch()}")
 
-			val undoneData = data.tasksBeforeSkipTime(viewModel.getMSFromMidnight()).unfinishedTill( viewModel.getToday() )
+			val undoneData = data.tasksBeforeSkipTime(viewModel.getMSFromMidnight()).unfinishedTill( viewModel.getTodayFromEpoch() )
 
 			Log.d("DATA" , undoneData.toMutableList().toString())
 
@@ -189,7 +181,7 @@ class TodoFragment : Fragment() {
 				itemTouchHelper.attachToRecyclerView( binding.todoRv )
 				adapter.set(
 					undoneData.toMutableList(),
-					viewModel.getToday()
+					viewModel.getTodayFromEpoch()
 				)
 			}
 		})

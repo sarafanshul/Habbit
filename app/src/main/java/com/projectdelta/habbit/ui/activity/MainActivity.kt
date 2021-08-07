@@ -106,7 +106,6 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 		_binding = ActivityMainBinding.inflate(layoutInflater)
 		auth = Firebase.auth
 
-//		setTheme( R.style.Theme_Habbit )
 		setContentView( binding.root )
 
 		getUserPermissions()
@@ -299,8 +298,8 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 				&& preferences.isNotificationEnabled()
 			) {
 				MaterialAlertDialogBuilder(this).apply {
-					setTitle("Disable battery saver")
-					setMessage("For using notification feature you need t turn off battery optimizations for this app")
+					setTitle("Enable app features")
+					setMessage("For using notification feature you need to turn off battery optimizations for this app , if you are using a Chinese ROM you need to enable Autostart feature too!")
 					setPositiveButton("GO"){_ , _ ->
 						startActivity( Intent( Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS ) )
 					}

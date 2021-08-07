@@ -25,12 +25,13 @@ import com.projectdelta.habbit.util.lang.titlesToBulletList
 import com.projectdelta.habbit.ui.adapter.EndlessRecyclerViewScrollListener
 import com.projectdelta.habbit.ui.adapter.RecyclerItemClickListenr
 import com.projectdelta.habbit.ui.adapter.StatesRecyclerViewAdapter
+import com.projectdelta.habbit.ui.base.BaseViewBindingFragment
 import com.projectdelta.habbit.ui.viewModel.InsightsSharedViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 
-class InsightsListFragment : Fragment() {
+class InsightsListFragment : BaseViewBindingFragment<FragmentInsightsListBinding>() {
 	companion object{
 		fun newInstance() = InsightsListFragment()
 		private const val TAG = "InsightsListFragment"
@@ -38,9 +39,7 @@ class InsightsListFragment : Fragment() {
 
 	private lateinit var activity : InsightsActivity
 	private lateinit var adapter : RecyclerViewListAdapter
-	private var _binding : FragmentInsightsListBinding?= null
-	private val binding
-		get() = _binding!!
+
 	private var today = TimeUtil.getTodayFromEpoch()
 
 	private var job : Job?= null
@@ -52,6 +51,12 @@ class InsightsListFragment : Fragment() {
 	override fun onAttach(activity: Activity) {
 		super.onAttach(activity)
 		this.activity = activity as InsightsActivity
+	}
+
+	override fun onStart() {
+		super.onStart()
+		// bug (empty layout because today is not changed and view is refreshed)
+		today = TimeUtil.getTodayFromEpoch()
 	}
 
 	override fun onCreateView(
@@ -159,7 +164,6 @@ class InsightsListFragment : Fragment() {
 
 	override fun onDestroy() {
 		job?.cancel()
-		_binding = null
 		super.onDestroy()
 	}
 }
