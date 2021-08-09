@@ -25,6 +25,7 @@
         <item name="android:windowLightStatusBar">true</item>
         <item name="colorBackgroundDark">@color/md_grey_50_75</item>
         <item name="selectedColor">@color/md_grey_800</item>
+        <item name="colorSurface">@color/white</item>
     </style>
 
     <style name="Theme.Habbit.Dark" parent="Theme.Habbit">

@@ -4,11 +4,8 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -32,20 +29,21 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.projectdelta.habbit.R
-import com.projectdelta.habbit.ui.activity.editTask.EditTaskActivity
-import com.projectdelta.habbit.ui.adapter.HomeViewPagerAdapter
 import com.projectdelta.habbit.data.entities.Task
 import com.projectdelta.habbit.databinding.ActivityMainBinding
+import com.projectdelta.habbit.ui.activity.editTask.EditTaskActivity
+import com.projectdelta.habbit.ui.adapter.HomeViewPagerAdapter
 import com.projectdelta.habbit.ui.base.BaseViewBindingActivity
 import com.projectdelta.habbit.ui.fragment.DoneFragment
+import com.projectdelta.habbit.ui.fragment.MenuFragment
 import com.projectdelta.habbit.ui.fragment.SkipFragment
 import com.projectdelta.habbit.ui.fragment.TodoFragment
-import com.projectdelta.habbit.util.lang.*
 import com.projectdelta.habbit.ui.navigation.NavigationUtil
-import com.projectdelta.habbit.util.notification.Notifications.DEFAULT_UPDATE_INTERVAL
-import com.projectdelta.habbit.util.notification.UpdateNotificationJob
 import com.projectdelta.habbit.ui.viewModel.MainViewModel
 import com.projectdelta.habbit.util.database.firebase.FirebaseUtil
+import com.projectdelta.habbit.util.lang.*
+import com.projectdelta.habbit.util.notification.Notifications.DEFAULT_UPDATE_INTERVAL
+import com.projectdelta.habbit.util.notification.UpdateNotificationJob
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
@@ -177,10 +175,10 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 		adapter.addFragment( TodoFragment() , "TODO" )
 		adapter.addFragment( SkipFragment() , "SKIPPED" )
 		adapter.addFragment( DoneFragment() , "DONE" )
+		adapter.addFragment( MenuFragment() , "MENU" )
 		binding.mainVp.adapter = adapter
 
-		binding.mainTabs.setupWithViewPager(binding.mainVp)
-		setTabIcons()
+		syncNavigationWithViewPager()
 
 		viewModel.getAllTasks().observe(this , {data ->
 			var undone = 0
@@ -189,48 +187,15 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 				undone = data.tasksBeforeSkipTime(viewModel.getMSFromMidnight()).unfinishedTill( viewModel.getTodayFromEpoch() ).size
 			}
 			if( undone > 0 )
-				binding.mainTabs.getTabAt(0)?.orCreateBadge?.number = undone
+				binding.mainBottomAppBar.getOrCreateBadge(R.id.todo).number = undone
 			else
-				binding.mainTabs.getTabAt(0)?.removeBadge()
+				binding.mainBottomAppBar.removeBadge(R.id.todo)
 		})
-
-		binding.mainVp.addOnPageChangeListener( object : ViewPager.OnPageChangeListener{
-			override fun onPageScrolled(
-				position: Int,
-				positionOffset: Float,
-				positionOffsetPixels: Int
-			) {}
-
-			override fun onPageSelected(position: Int) {
-				for( i in 0 until binding.mainTabs.tabCount ){
-					if( i == position )
-						binding.mainTabs.getTabAt( i )!!.text = ""
-					else
-						binding.mainTabs.getTabAt( i )!!.text = adapter.mFragmentTitleList[i]
-				}
-			}
-
-			override fun onPageScrollStateChanged(state: Int) {}
-		} )
 
 		binding.mainFabCreate.setOnClickListener {
 			animateAndDoStuff {
 				launchEditActivity( Task( viewModel.getMSfromEpoch() , "" , mutableListOf<Long>() , 0f ) , false )
 			}
-		}
-	}
-
-	private fun animateAndDoStuff( stuff : () -> Unit ){
-		binding.mainFabCreate.getCoordinates().let { coordinates ->
-			binding.mainCircle.showRevealEffect(
-				coordinates.x ,
-				coordinates.y ,
-				object : AnimatorListenerAdapter() {
-					override fun onAnimationStart(animation: Animator?) {
-						stuff()
-					}
-				}
-			)
 		}
 	}
 
@@ -247,12 +212,56 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 		}
 	}
 
-	private fun setTabIcons() {
-		binding.mainTabs.getTabAt(0)!!.setIcon( R.drawable.ic_adjust_black_24dp )
-		binding.mainTabs.getTabAt(1)!!.setIcon( R.drawable.ic_skip_next_black_24dp )
-		binding.mainTabs.getTabAt(2)!!.setIcon( R.drawable.ic_done_all_black_24dp )
+	private fun syncNavigationWithViewPager() {
+		// Empty menu item for fab
+		binding.mainBottomAppBar.menu.findItem(R.id.empty).isEnabled = false
 
-		binding.mainTabs.getTabAt(0)!!.text = ""
+		binding.mainVp.addOnPageChangeListener( object : ViewPager.OnPageChangeListener{
+			override fun onPageScrolled(
+				position: Int,
+				positionOffset: Float,
+				positionOffsetPixels: Int
+			) {}
+
+			override fun onPageSelected(position: Int) {
+				binding.mainBottomAppBar.menu.let{
+					when(position){
+						0 -> it.findItem(R.id.todo).isChecked = true
+						1 -> it.findItem(R.id.skip).isChecked = true
+						2 -> it.findItem(R.id.done).isChecked = true
+						4 -> it.findItem(R.id.more).isChecked = true
+						else -> Throwable("$TAG , Unknown Item Clicked ${position}")
+					}
+				}
+			}
+
+			override fun onPageScrollStateChanged(state: Int) {}
+		} )
+
+		binding.mainBottomAppBar.setOnNavigationItemSelectedListener {
+			when( it.itemId ){
+				R.id.todo -> binding.mainVp.currentItem = 0
+				R.id.skip -> binding.mainVp.currentItem = 1
+				R.id.done -> binding.mainVp.currentItem = 2
+				R.id.more -> binding.mainVp.currentItem = 3
+				else -> Throwable("$TAG , Unknown Item Clicked ${it.itemId}")
+			}
+			true
+		}
+	}
+
+	private fun animateAndDoStuff( stuff : () -> Unit ){
+		binding.mainFabCreate.getCoordinates().let { coordinates ->
+			binding.mainCircle.showRevealEffect(
+				coordinates.x ,
+				coordinates.y ,
+				object : AnimatorListenerAdapter() {
+					override fun onAnimationStart(animation: Animator?) {
+						stuff()
+					}
+				}
+			)
+		}
 	}
 
 	fun launchEditActivity(task: Task , anim : Boolean = true) {

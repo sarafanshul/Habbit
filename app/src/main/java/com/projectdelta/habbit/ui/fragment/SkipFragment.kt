@@ -55,8 +55,6 @@ class SkipFragment : BaseViewBindingFragment<SkipFragmentBinding>() {
 	): View? {
 		_binding = SkipFragmentBinding.inflate(inflater , container , false)
 
-		Log.d(TAG, "onCreateView: $viewModel")
-
 		return binding.root
 	}
 
