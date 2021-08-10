@@ -12,13 +12,13 @@ import com.projectdelta.habbit.R
 import com.projectdelta.habbit.data.preference.PreferencesHelper
 import com.projectdelta.habbit.databinding.SettingsActivityBinding
 import com.projectdelta.habbit.ui.base.BaseViewBindingActivity
-import com.projectdelta.habbit.util.database.SyncUtil
 import com.projectdelta.habbit.util.database.DatabaseUtil
+import com.projectdelta.habbit.util.database.SyncUtil
 import com.projectdelta.habbit.util.lang.darkToast
 import com.projectdelta.habbit.util.lang.isOnline
 import com.projectdelta.habbit.util.lang.toast
-import com.projectdelta.habbit.util.notification.UpdateNotificationJob
 import com.projectdelta.habbit.util.notification.Notifications.DEFAULT_UPDATE_INTERVAL
+import com.projectdelta.habbit.util.notification.UpdateNotificationJob
 import com.projectdelta.habbit.util.view.CustomTextPreference
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

@@ -2,8 +2,9 @@ package com.projectdelta.habbit.ui.activity.editTask.state
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.projectdelta.habbit.ui.activity.editTask.state.EditTaskInteractionState.*
-import com.projectdelta.habbit.ui.activity.editTask.state.CollapsingToolbarState.*
+import com.projectdelta.habbit.ui.activity.editTask.state.CollapsingToolbarState.Expanded
+import com.projectdelta.habbit.ui.activity.editTask.state.EditTaskInteractionState.DefaultState
+import com.projectdelta.habbit.ui.activity.editTask.state.EditTaskInteractionState.EditState
 
 
 class EditTaskInteractionManager {

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@drawable/two_tone_background"/>
+    <item android:drawable="@color/md_white_1000"/>
     <item
         android:gravity="center"
-        android:drawable="@drawable/ic_kanji_gold_new_dark"/>
+        android:drawable="@drawable/ic_kanji_gold_new"/>
 
 </layer-list>

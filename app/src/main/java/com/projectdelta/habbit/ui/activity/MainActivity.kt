@@ -4,48 +4,36 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
-import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.viewpager.widget.ViewPager
 import androidx.work.ExistingPeriodicWorkPolicy
-import com.bumptech.glide.Glide
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.common.api.ApiException
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.textview.MaterialTextView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.projectdelta.habbit.R
-import com.projectdelta.habbit.ui.activity.editTask.EditTaskActivity
-import com.projectdelta.habbit.ui.adapter.HomeViewPagerAdapter
 import com.projectdelta.habbit.data.entities.Task
 import com.projectdelta.habbit.databinding.ActivityMainBinding
+import com.projectdelta.habbit.ui.activity.editTask.EditTaskActivity
+import com.projectdelta.habbit.ui.adapter.HomeViewPagerAdapter
 import com.projectdelta.habbit.ui.base.BaseViewBindingActivity
 import com.projectdelta.habbit.ui.fragment.DoneFragment
+import com.projectdelta.habbit.ui.fragment.MenuFragment
 import com.projectdelta.habbit.ui.fragment.SkipFragment
 import com.projectdelta.habbit.ui.fragment.TodoFragment
-import com.projectdelta.habbit.util.lang.*
-import com.projectdelta.habbit.ui.navigation.NavigationUtil
-import com.projectdelta.habbit.util.notification.Notifications.DEFAULT_UPDATE_INTERVAL
-import com.projectdelta.habbit.util.notification.UpdateNotificationJob
 import com.projectdelta.habbit.ui.viewModel.MainViewModel
 import com.projectdelta.habbit.util.database.firebase.FirebaseUtil
+import com.projectdelta.habbit.util.lang.*
+import com.projectdelta.habbit.util.notification.Notifications.DEFAULT_UPDATE_INTERVAL
+import com.projectdelta.habbit.util.notification.UpdateNotificationJob
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
@@ -63,9 +51,6 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 
 	companion object{
 		fun getInstance() = this
-		private const val APPBAR_ANIMATION_DURATION = 100L
-		private const val ANIMATION_RESET_DELAY = 700L
-		private const val EXPLODE_ANIMATION_DURATION = 150L
 		private const val TAG = "MainActivity"
 	}
 
@@ -82,23 +67,6 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 		}
 	}
 
-	private val startForResultSignIn = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-			result: ActivityResult ->
-		if (result.resultCode == Activity.RESULT_OK) {
-			val task = GoogleSignIn.getSignedInAccountFromIntent( result.data )
-			if(task.isSuccessful) {
-				// Google Sign In was successful, authenticate with Firebase
-				val account = task.getResult(ApiException::class.java)!!
-				Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
-				this.toast("Sign In successful!")
-				firebaseAuthWithGoogle(account.idToken!!)
-			} else {
-				// Google Sign In failed, update UI appropriately
-				this.toast("Unable to sign in.")
-			}
-		}
-	}
-
 	@SuppressLint("SimpleDateFormat")
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -112,8 +80,6 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 
 		setLayout()
 
-		initMenu()
-
 		checkNotificationPreferences()
 
 		cancelAllNotifications()
@@ -121,50 +87,6 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 		// TODO (add feature for sync data on startup)
 		// syncData()
 
-		setupUser(auth.currentUser)
-	}
-
-	private fun signIn() {
-		val signInIntent = firebaseUtil.googleSignInClient.signInIntent
-		startForResultSignIn.launch(signInIntent)
-	}
-
-	private fun firebaseAuthWithGoogle(idToken: String) {
-		val credential = GoogleAuthProvider.getCredential(idToken, null)
-		auth.signInWithCredential(credential)
-			.addOnCompleteListener(this) { task ->
-				if (task.isSuccessful) {
-					// Sign in success, update UI with the signed-in user's information
-					Log.d(TAG, "signInWithCredential:success")
-					val user = auth.currentUser
-					setupUser(user)
-				} else {
-					// If sign in fails, display a message to the user.
-					Log.w(TAG, "signInWithCredential:failure", task.exception)
-					setupUser(null)
-				}
-			}
-	}
-
-	private fun setupUser(user: FirebaseUser?) {
-		val headerView : View = binding.mainNavigation.getHeaderView(0)
-		if( user == null ) {
-			binding.mainBtnSignIn.text = resources.getString(R.string.sign_in)
-			binding.mainBtnSignIn.setOnClickListener {
-				signIn()
-			}
-			headerView.findViewById<MaterialTextView>(R.id.header_name).text = getString(R.string.guest)
-			headerView.findViewById<MaterialTextView>(R.id.header_email).text = ""
-			headerView.findViewById<ShapeableImageView>(R.id.header_image).setImageDrawable(getDrawable(R.drawable.ic_guest_user))
-		}else {
-			Log.d(TAG, "setupUser: ${user.displayName} @ ${user.email}")
-			binding.mainBtnSignIn.text = ""
-			headerView.findViewById<MaterialTextView>(R.id.header_name).text = user.displayName?.split(" ")?.joinToString(" ") { it.capitalized() }
-			headerView.findViewById<MaterialTextView>(R.id.header_email).text = user.email
-			Glide.with(this)
-				.load( user.photoUrl )
-				.into(headerView.findViewById<ShapeableImageView>(R.id.header_image))
-		}
 	}
 
 	@SuppressLint("SimpleDateFormat")
@@ -177,10 +99,10 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 		adapter.addFragment( TodoFragment() , "TODO" )
 		adapter.addFragment( SkipFragment() , "SKIPPED" )
 		adapter.addFragment( DoneFragment() , "DONE" )
+		adapter.addFragment( MenuFragment() , "MENU" )
 		binding.mainVp.adapter = adapter
 
-		binding.mainTabs.setupWithViewPager(binding.mainVp)
-		setTabIcons()
+		syncNavigationWithViewPager()
 
 		viewModel.getAllTasks().observe(this , {data ->
 			var undone = 0
@@ -189,10 +111,21 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 				undone = data.tasksBeforeSkipTime(viewModel.getMSFromMidnight()).unfinishedTill( viewModel.getTodayFromEpoch() ).size
 			}
 			if( undone > 0 )
-				binding.mainTabs.getTabAt(0)?.orCreateBadge?.number = undone
+				binding.mainBottomAppBar.getOrCreateBadge(R.id.todo).number = undone
 			else
-				binding.mainTabs.getTabAt(0)?.removeBadge()
+				binding.mainBottomAppBar.removeBadge(R.id.todo)
 		})
+
+		binding.mainFabCreate.setOnClickListener {
+			animateAndDoStuff {
+				launchEditActivity( Task( viewModel.getMSfromEpoch() , "" , mutableListOf() , 0f ) , false )
+			}
+		}
+	}
+
+	private fun syncNavigationWithViewPager() {
+		// Empty menu item for fab
+		binding.mainBottomAppBar.menu.findItem(R.id.empty).isEnabled = false
 
 		binding.mainVp.addOnPageChangeListener( object : ViewPager.OnPageChangeListener{
 			override fun onPageScrolled(
@@ -202,21 +135,29 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 			) {}
 
 			override fun onPageSelected(position: Int) {
-				for( i in 0 until binding.mainTabs.tabCount ){
-					if( i == position )
-						binding.mainTabs.getTabAt( i )!!.text = ""
-					else
-						binding.mainTabs.getTabAt( i )!!.text = adapter.mFragmentTitleList[i]
+				binding.mainBottomAppBar.menu.let{
+					when(position){
+						0 -> it.findItem(R.id.todo).isChecked = true
+						1 -> it.findItem(R.id.skip).isChecked = true
+						2 -> it.findItem(R.id.done).isChecked = true
+						3 -> it.findItem(R.id.more).isChecked = true
+						else -> Throwable("$TAG , Unknown Item Clicked $position")
+					}
 				}
 			}
 
 			override fun onPageScrollStateChanged(state: Int) {}
 		} )
 
-		binding.mainFabCreate.setOnClickListener {
-			animateAndDoStuff {
-				launchEditActivity( Task( viewModel.getMSfromEpoch() , "" , mutableListOf<Long>() , 0f ) , false )
+		binding.mainBottomAppBar.setOnNavigationItemSelectedListener {
+			when( it.itemId ){
+				R.id.todo -> binding.mainVp.currentItem = 0
+				R.id.skip -> binding.mainVp.currentItem = 1
+				R.id.done -> binding.mainVp.currentItem = 2
+				R.id.more -> binding.mainVp.currentItem = 3
+				else -> Throwable("$TAG , Unknown Item Clicked ${it.itemId}")
 			}
+			true
 		}
 	}
 
@@ -232,27 +173,6 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 				}
 			)
 		}
-	}
-
-	private fun initMenu() {
-
-		binding.mainNavigation.setNavigationItemSelectedListener {
-			when( it.itemId ){
-				R.id.menu_insights -> NavigationUtil.insights(this)
-				R.id.menu_settings -> NavigationUtil.settings(this)
-				R.id.menu_about    -> NavigationUtil.about(this)
-				else -> Throwable("404 Not found")
-			}
-			true
-		}
-	}
-
-	private fun setTabIcons() {
-		binding.mainTabs.getTabAt(0)!!.setIcon( R.drawable.ic_adjust_black_24dp )
-		binding.mainTabs.getTabAt(1)!!.setIcon( R.drawable.ic_skip_next_black_24dp )
-		binding.mainTabs.getTabAt(2)!!.setIcon( R.drawable.ic_done_all_black_24dp )
-
-		binding.mainTabs.getTabAt(0)!!.text = ""
 	}
 
 	fun launchEditActivity(task: Task , anim : Boolean = true) {
@@ -281,7 +201,6 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 		else
 			UpdateNotificationJob.setupTask( this , ExistingPeriodicWorkPolicy.REPLACE , 0 )
 	}
-
 
 	/**
 	 * Cancels all notifications on startup because if we click on one item of group notification,
@@ -319,7 +238,6 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 					1929
 				)
 			}
-		setupUser(auth?.currentUser)
 	}
 
 }

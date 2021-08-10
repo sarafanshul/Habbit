@@ -3,7 +3,6 @@ package com.projectdelta.habbit.ui.fragment
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,17 +12,16 @@ import com.projectdelta.habbit.R
 import com.projectdelta.habbit.databinding.FragmentInsightsCalendarBinding
 import com.projectdelta.habbit.ui.activity.InsightsActivity
 import com.projectdelta.habbit.ui.base.BaseViewBindingFragment
-import com.projectdelta.habbit.util.lang.TimeUtil
-import com.projectdelta.habbit.util.lang.titlesToBulletList
 import com.projectdelta.habbit.ui.viewModel.InsightsSharedViewModel
 import com.projectdelta.habbit.util.NotFound
+import com.projectdelta.habbit.util.lang.TimeUtil
+import com.projectdelta.habbit.util.lang.titlesToBulletList
 import dagger.hilt.android.AndroidEntryPoint
 import ru.cleverpumpkin.calendar.CalendarDate
 import ru.cleverpumpkin.calendar.CalendarView
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.random.Random
 
 @AndroidEntryPoint
 class InsightsCalendarFragment : BaseViewBindingFragment<FragmentInsightsCalendarBinding>() {

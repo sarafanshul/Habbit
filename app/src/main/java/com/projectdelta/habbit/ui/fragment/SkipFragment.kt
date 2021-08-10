@@ -16,20 +16,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
-import com.projectdelta.habbit.ui.activity.MainActivity
 import com.projectdelta.habbit.R
-import com.projectdelta.habbit.ui.adapter.RecyclerViewSkipAdapter
 import com.projectdelta.habbit.constant.ICON_SIZE_DP
 import com.projectdelta.habbit.databinding.SkipFragmentBinding
+import com.projectdelta.habbit.ui.activity.MainActivity
+import com.projectdelta.habbit.ui.adapter.CustomItemTouchHelperCallback
+import com.projectdelta.habbit.ui.adapter.RecyclerItemClickListenr
+import com.projectdelta.habbit.ui.adapter.RecyclerViewSkipAdapter
+import com.projectdelta.habbit.ui.adapter.StatesRecyclerViewAdapter
+import com.projectdelta.habbit.ui.base.BaseViewBindingFragment
+import com.projectdelta.habbit.ui.viewModel.HomeSharedViewModel
 import com.projectdelta.habbit.util.NotFound
 import com.projectdelta.habbit.util.lang.convertDrawableToBitmap
 import com.projectdelta.habbit.util.lang.dpToPx
-import com.projectdelta.habbit.ui.adapter.RecyclerItemClickListenr
-import com.projectdelta.habbit.ui.adapter.StatesRecyclerViewAdapter
 import com.projectdelta.habbit.util.lang.skippedTill
-import com.projectdelta.habbit.ui.adapter.CustomItemTouchHelperCallback
-import com.projectdelta.habbit.ui.base.BaseViewBindingFragment
-import com.projectdelta.habbit.ui.viewModel.HomeSharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -54,8 +54,6 @@ class SkipFragment : BaseViewBindingFragment<SkipFragmentBinding>() {
 		savedInstanceState: Bundle?
 	): View? {
 		_binding = SkipFragmentBinding.inflate(inflater , container , false)
-
-		Log.d(TAG, "onCreateView: $viewModel")
 
 		return binding.root
 	}

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/todo"
+        android:icon="@drawable/ic_adjust_black_24dp"
+        android:title="TODO"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/skip"
+        android:icon="@drawable/ic_skip_next_black_24dp"
+        android:title="SKIP"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/empty"
+        app:showAsAction="always"
+        android:title="" />
+
+    <item
+        android:id="@+id/done"
+        android:icon="@drawable/ic_done_all_black_24dp"
+        android:title="DONE"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/more"
+        android:icon="@drawable/ic_baseline_more_horiz_24"
+        android:title="MORE"
+        app:showAsAction="always"/>
+</menu>

@@ -46,10 +46,7 @@
     <style name="NewTabStyle" parent="Widget.MaterialComponents.TabLayout">
         <item name="android:textSize">16sp</item>
     </style>
-    
-    <style name="AsphaltButton" parent="ThemeOverlay.AppCompat">
-        <item name="android:iconTint">@drawable/btn_selector_wet_asphalt</item>
-    </style>
+
 
     <style name="CalendarViewCustomStyle">
         <item name="android:background">?colorOnPrimary</item>

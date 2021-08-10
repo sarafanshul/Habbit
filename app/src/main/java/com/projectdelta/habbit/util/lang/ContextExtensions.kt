@@ -22,13 +22,11 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.AttrRes
-import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.projectdelta.habbit.R
 
 /**
  * Display a toast in this context.

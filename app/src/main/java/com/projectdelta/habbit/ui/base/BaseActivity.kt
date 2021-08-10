@@ -1,19 +1,13 @@
 package com.projectdelta.habbit.ui.base
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.projectdelta.habbit.R
 import com.projectdelta.habbit.data.preference.PreferencesHelper
 import com.projectdelta.habbit.di.PreferenceModule
-import dagger.Component
-import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
-import javax.inject.Inject
 
 
 abstract class BaseActivity : AppCompatActivity() {

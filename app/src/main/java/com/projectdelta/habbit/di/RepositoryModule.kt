@@ -1,7 +1,6 @@
 package com.projectdelta.habbit.di
 
 import com.projectdelta.habbit.data.TasksDao
-import com.projectdelta.habbit.repository.TasksRepository
 import com.projectdelta.habbit.repository.TasksRepositoryImpl
 import dagger.Module
 import dagger.Provides
