@@ -1,6 +1,5 @@
 package com.projectdelta.habbit.util.lang
 
-import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Canvas

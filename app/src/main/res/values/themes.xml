@@ -26,19 +26,15 @@
         <item name="colorBackgroundDark">@color/md_grey_50_75</item>
         <item name="selectedColor">@color/md_grey_800</item>
         <item name="colorSurface">@color/white</item>
-    </style>
 
-    <style name="Theme.Habbit.Dark" parent="Theme.Habbit">
-        <item name="colorPrimary">@color/accent_midnightdusk</item>
-        <item name="colorTertiary">@color/md_blue_A400</item>
-        <item name="colorControlHighlight">@color/ripple_colored_midnightdusk</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/white</item>
     </style>
 
     <style name="Theme.Splash" parent="Theme.Habbit">
 
         <item name="android:windowBackground">@drawable/splash_screen</item>
-        <item name="android:statusBarColor">@color/black</item>
-        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:statusBarColor">@color/md_white_1000</item>
+        <item name="android:navigationBarColor">@color/md_white_1000</item>
 
     </style>
 </resources>

@@ -11,16 +11,16 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.textview.MaterialTextView
-import com.projectdelta.habbit.ui.activity.MainActivity
 import com.projectdelta.habbit.R
-import com.projectdelta.habbit.ui.adapter.RecyclerViewDoneAdapter
 import com.projectdelta.habbit.databinding.DoneFragmentBinding
-import com.projectdelta.habbit.util.NotFound
+import com.projectdelta.habbit.ui.activity.MainActivity
 import com.projectdelta.habbit.ui.adapter.RecyclerItemClickListenr
+import com.projectdelta.habbit.ui.adapter.RecyclerViewDoneAdapter
 import com.projectdelta.habbit.ui.adapter.StatesRecyclerViewAdapter
 import com.projectdelta.habbit.ui.base.BaseViewBindingFragment
-import com.projectdelta.habbit.util.lang.completedTill
 import com.projectdelta.habbit.ui.viewModel.HomeSharedViewModel
+import com.projectdelta.habbit.util.NotFound
+import com.projectdelta.habbit.util.lang.completedTill
 import dagger.hilt.android.AndroidEntryPoint
 
 

@@ -59,8 +59,8 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:src="@drawable/ic_flame"
-                    android:layout_marginVertical="3dp"
+                    android:src="@drawable/ic_local_fire_department_black_24dp"
+                    app:tint="@color/flame_red"
                     android:layout_weight="0.9"/>
 
                 <com.google.android.material.textview.MaterialTextView

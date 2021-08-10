@@ -74,26 +74,5 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <com.google.android.material.navigation.NavigationView
-        android:layout_width="wrap_content"
-        android:id="@+id/main_navigation"
-        android:layout_height="match_parent"
-        android:maxWidth="200dp"
-        android:layout_gravity="start"
-        app:headerLayout="@layout/nav_header"
-        app:menu="@menu/nav_menu"
-        android:fitsSystemWindows="true">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/main_btn_sign_in"
-            android:background="@android:color/transparent"
-            android:textColor="?colorPrimary"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="Sign In"
-            android:visibility="visible"
-            android:layout_gravity="bottom"/>
-
-    </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>

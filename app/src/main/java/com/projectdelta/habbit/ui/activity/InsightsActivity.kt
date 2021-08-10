@@ -1,11 +1,10 @@
 package com.projectdelta.habbit.ui.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.viewpager.widget.ViewPager
 import com.projectdelta.habbit.R
-import com.projectdelta.habbit.ui.adapter.InsightsViewPagerAdapter
 import com.projectdelta.habbit.databinding.ActivityInsightsBinding
+import com.projectdelta.habbit.ui.adapter.InsightsViewPagerAdapter
 import com.projectdelta.habbit.ui.base.BaseViewBindingActivity
 import com.projectdelta.habbit.ui.fragment.InsightsCalendarFragment
 import com.projectdelta.habbit.ui.fragment.InsightsListFragment

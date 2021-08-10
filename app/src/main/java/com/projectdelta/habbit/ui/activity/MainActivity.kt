@@ -8,24 +8,15 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
-import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.viewpager.widget.ViewPager
 import androidx.work.ExistingPeriodicWorkPolicy
-import com.bumptech.glide.Glide
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.common.api.ApiException
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.textview.MaterialTextView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.projectdelta.habbit.R
@@ -38,7 +29,6 @@ import com.projectdelta.habbit.ui.fragment.DoneFragment
 import com.projectdelta.habbit.ui.fragment.MenuFragment
 import com.projectdelta.habbit.ui.fragment.SkipFragment
 import com.projectdelta.habbit.ui.fragment.TodoFragment
-import com.projectdelta.habbit.ui.navigation.NavigationUtil
 import com.projectdelta.habbit.ui.viewModel.MainViewModel
 import com.projectdelta.habbit.util.database.firebase.FirebaseUtil
 import com.projectdelta.habbit.util.lang.*
@@ -61,9 +51,6 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 
 	companion object{
 		fun getInstance() = this
-		private const val APPBAR_ANIMATION_DURATION = 100L
-		private const val ANIMATION_RESET_DELAY = 700L
-		private const val EXPLODE_ANIMATION_DURATION = 150L
 		private const val TAG = "MainActivity"
 	}
 
@@ -80,23 +67,6 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 		}
 	}
 
-	private val startForResultSignIn = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-			result: ActivityResult ->
-		if (result.resultCode == Activity.RESULT_OK) {
-			val task = GoogleSignIn.getSignedInAccountFromIntent( result.data )
-			if(task.isSuccessful) {
-				// Google Sign In was successful, authenticate with Firebase
-				val account = task.getResult(ApiException::class.java)!!
-				Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
-				this.toast("Sign In successful!")
-				firebaseAuthWithGoogle(account.idToken!!)
-			} else {
-				// Google Sign In failed, update UI appropriately
-				this.toast("Unable to sign in.")
-			}
-		}
-	}
-
 	@SuppressLint("SimpleDateFormat")
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -110,8 +80,6 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 
 		setLayout()
 
-		initMenu()
-
 		checkNotificationPreferences()
 
 		cancelAllNotifications()
@@ -119,50 +87,6 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 		// TODO (add feature for sync data on startup)
 		// syncData()
 
-		setupUser(auth.currentUser)
-	}
-
-	private fun signIn() {
-		val signInIntent = firebaseUtil.googleSignInClient.signInIntent
-		startForResultSignIn.launch(signInIntent)
-	}
-
-	private fun firebaseAuthWithGoogle(idToken: String) {
-		val credential = GoogleAuthProvider.getCredential(idToken, null)
-		auth.signInWithCredential(credential)
-			.addOnCompleteListener(this) { task ->
-				if (task.isSuccessful) {
-					// Sign in success, update UI with the signed-in user's information
-					Log.d(TAG, "signInWithCredential:success")
-					val user = auth.currentUser
-					setupUser(user)
-				} else {
-					// If sign in fails, display a message to the user.
-					Log.w(TAG, "signInWithCredential:failure", task.exception)
-					setupUser(null)
-				}
-			}
-	}
-
-	private fun setupUser(user: FirebaseUser?) {
-		val headerView : View = binding.mainNavigation.getHeaderView(0)
-		if( user == null ) {
-			binding.mainBtnSignIn.text = resources.getString(R.string.sign_in)
-			binding.mainBtnSignIn.setOnClickListener {
-				signIn()
-			}
-			headerView.findViewById<MaterialTextView>(R.id.header_name).text = getString(R.string.guest)
-			headerView.findViewById<MaterialTextView>(R.id.header_email).text = ""
-			headerView.findViewById<ShapeableImageView>(R.id.header_image).setImageDrawable(getDrawable(R.drawable.ic_guest_user))
-		}else {
-			Log.d(TAG, "setupUser: ${user.displayName} @ ${user.email}")
-			binding.mainBtnSignIn.text = ""
-			headerView.findViewById<MaterialTextView>(R.id.header_name).text = user.displayName?.split(" ")?.joinToString(" ") { it.capitalized() }
-			headerView.findViewById<MaterialTextView>(R.id.header_email).text = user.email
-			Glide.with(this)
-				.load( user.photoUrl )
-				.into(headerView.findViewById<ShapeableImageView>(R.id.header_image))
-		}
 	}
 
 	@SuppressLint("SimpleDateFormat")
@@ -194,21 +118,8 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 
 		binding.mainFabCreate.setOnClickListener {
 			animateAndDoStuff {
-				launchEditActivity( Task( viewModel.getMSfromEpoch() , "" , mutableListOf<Long>() , 0f ) , false )
+				launchEditActivity( Task( viewModel.getMSfromEpoch() , "" , mutableListOf() , 0f ) , false )
 			}
-		}
-	}
-
-	private fun initMenu() {
-
-		binding.mainNavigation.setNavigationItemSelectedListener {
-			when( it.itemId ){
-				R.id.menu_insights -> NavigationUtil.insights(this)
-				R.id.menu_settings -> NavigationUtil.settings(this)
-				R.id.menu_about    -> NavigationUtil.about(this)
-				else -> Throwable("404 Not found")
-			}
-			true
 		}
 	}
 
@@ -229,8 +140,8 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 						0 -> it.findItem(R.id.todo).isChecked = true
 						1 -> it.findItem(R.id.skip).isChecked = true
 						2 -> it.findItem(R.id.done).isChecked = true
-						4 -> it.findItem(R.id.more).isChecked = true
-						else -> Throwable("$TAG , Unknown Item Clicked ${position}")
+						3 -> it.findItem(R.id.more).isChecked = true
+						else -> Throwable("$TAG , Unknown Item Clicked $position")
 					}
 				}
 			}
@@ -291,7 +202,6 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 			UpdateNotificationJob.setupTask( this , ExistingPeriodicWorkPolicy.REPLACE , 0 )
 	}
 
-
 	/**
 	 * Cancels all notifications on startup because if we click on one item of group notification,
 	 * Manager only removes clicked item from group.
@@ -328,7 +238,6 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 					1929
 				)
 			}
-		setupUser(auth?.currentUser)
 	}
 
 }

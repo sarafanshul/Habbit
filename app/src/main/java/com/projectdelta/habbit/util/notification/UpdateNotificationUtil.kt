@@ -11,8 +11,8 @@ import com.projectdelta.habbit.R
 import com.projectdelta.habbit.data.entities.Task
 import com.projectdelta.habbit.receiver.NotificationReceiver
 import com.projectdelta.habbit.ui.activity.MainActivity
-import com.projectdelta.habbit.util.lang.hash
 import com.projectdelta.habbit.util.lang.chop
+import com.projectdelta.habbit.util.lang.hash
 import com.projectdelta.habbit.util.notification.Notifications.CHANNEL_UPDATE
 import com.projectdelta.habbit.util.notification.Notifications.GROUP_KEY
 import com.projectdelta.habbit.util.notification.Notifications.ID_UPDATES
