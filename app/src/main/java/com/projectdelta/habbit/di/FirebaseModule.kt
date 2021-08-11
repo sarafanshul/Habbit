@@ -3,6 +3,7 @@ package com.projectdelta.habbit.di
 import android.app.Application
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.projectdelta.habbit.R
+import com.projectdelta.habbit.util.database.firebase.FirebaseUtil
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,5 +23,10 @@ object FirebaseModule {
         }.build()
     }
 
+    @Singleton
+    @Provides
+    fun provideFirebaseUtil(application: Application) : FirebaseUtil {
+        return FirebaseUtil(application)
+    }
 
 }

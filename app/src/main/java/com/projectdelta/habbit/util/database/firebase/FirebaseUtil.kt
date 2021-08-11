@@ -11,11 +11,10 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.projectdelta.habbit.R
 import dagger.hilt.android.qualifiers.ActivityContext
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class FirebaseUtil @Inject constructor(
-    @ActivityContext context: Context
-) {
+class FirebaseUtil (context: Context) {
 
     companion object{
 

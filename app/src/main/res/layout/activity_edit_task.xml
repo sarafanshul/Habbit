@@ -20,15 +20,6 @@
         app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
         android:layout_gravity="bottom|right"/>
 
-    <com.projectdelta.habbit.util.view.RevealAnimationView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="invisible"
-        android:layout_gravity="bottom|end"
-        android:id="@+id/edit_reveal"
-        android:elevation="5dp"
-        android:background="?colorPrimary"/>
-
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

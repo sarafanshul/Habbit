@@ -133,10 +133,8 @@ class EditTaskActivity : BaseViewBindingActivity<ActivityEditTaskBinding>() {
 					anchorView = binding.eTaskFabSave
 				}.show()
 			}else {
-				animateAndDoStuff {
-					viewModel.updateTask(newTask)
-					resultOk()
-				}
+				viewModel.updateTask(newTask)
+				resultOk()
 			}
 		}
 
@@ -228,19 +226,6 @@ class EditTaskActivity : BaseViewBindingActivity<ActivityEditTaskBinding>() {
 
 	}
 
-	private fun animateAndDoStuff( stuff : () -> Unit ) {
-		binding.eTaskFabSave.getCoordinates().let { coordinates ->
-			binding.editReveal.showRevealEffect(
-				coordinates.x,
-				coordinates.y,
-				object : AnimatorListenerAdapter() {
-					override fun onAnimationStart(animation: Animator?) {
-						stuff()
-					}
-				}
-			)
-		}
-	}
 
 	private fun addHistory( task: Task ) {
 		viewModel.getTaskByIdLive( task.id ).observe( this , observeLive@{ data ->

@@ -27,6 +27,7 @@ import com.projectdelta.habbit.ui.navigation.NavigationUtil
 import com.projectdelta.habbit.ui.viewModel.HomeSharedViewModel
 import com.projectdelta.habbit.util.database.firebase.FirebaseUtil
 import com.projectdelta.habbit.util.lang.capitalized
+import com.projectdelta.habbit.util.lang.darkToast
 import com.projectdelta.habbit.util.lang.toast
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -55,6 +56,7 @@ class MenuFragment : BaseViewBindingFragment<FragmentMenuBinding>() {
 				requireActivity().toast("Sign In successful!")
 				firebaseAuthWithGoogle(account.idToken!!)
 			} else {
+				Log.d(TAG, "firebaseAuthWithGoogle:" + "Failed")
 				// Google Sign In failed, update UI appropriately
 				requireActivity().toast("Unable to sign in.")
 			}
@@ -108,7 +110,7 @@ class MenuFragment : BaseViewBindingFragment<FragmentMenuBinding>() {
 		}
 
 		binding.menuBtnUser.setOnClickListener {
-			// TODO(DO SOMETHING)
+			requireActivity().let{ it.darkToast("Coming soon...") }
 		}
 
 		binding.menuBtnUserData.setOnClickListener {
