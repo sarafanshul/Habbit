@@ -84,6 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="?colorOnSecondary"
+            app:cardElevation="0dp"
             android:clickable="true">
 
             <LinearLayout
@@ -121,6 +122,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="?colorOnSecondary"
+            app:cardElevation="0dp"
             android:clickable="true">
 
             <LinearLayout
@@ -161,6 +163,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="?colorOnSecondary"
+            app:cardElevation="0dp"
             android:clickable="true">
 
             <LinearLayout
@@ -197,6 +200,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="?colorOnSecondary"
+            app:cardElevation="0dp"
             android:clickable="true">
 
             <LinearLayout
@@ -233,6 +237,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="?colorOnSecondary"
+            app:cardElevation="0dp"
             android:clickable="true">
 
             <LinearLayout
@@ -273,6 +278,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="?colorOnSecondary"
+            app:cardElevation="0dp"
             android:clickable="true">
 
             <LinearLayout

@@ -92,8 +92,8 @@ class MenuFragment : BaseViewBindingFragment<FragmentMenuBinding>() {
 						signOut()
 					}
 					setNeutralButton("CANCEL"){_ , _ -> }
-				}
-
+					create()
+				}.show()
 			}
 		}
 
@@ -110,7 +110,7 @@ class MenuFragment : BaseViewBindingFragment<FragmentMenuBinding>() {
 		}
 
 		binding.menuBtnUser.setOnClickListener {
-			requireActivity().let{ it.darkToast("Coming soon...") }
+			requireActivity().darkToast("Coming soon...")
 		}
 
 		binding.menuBtnUserData.setOnClickListener {

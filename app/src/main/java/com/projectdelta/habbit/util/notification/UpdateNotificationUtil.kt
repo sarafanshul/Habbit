@@ -49,7 +49,7 @@ object UpdateNotificationUtil {
 					setContentTitle( "Incomplete tasks" )
 					setContentText("${data.size} pending tasks for today!")
 					setSmallIcon(getIcon())
-					setLargeIcon(BitmapFactory.decodeResource( mContext.resources , R.mipmap.ic_launcher ))
+					setLargeIcon(BitmapFactory.decodeResource( mContext.resources , getIcon() ))
 					setStyle(
 						NotificationCompat.BigTextStyle().bigText(
 							data.joinToString("\n") {
@@ -85,7 +85,7 @@ object UpdateNotificationUtil {
 			setStyle( NotificationCompat.BigTextStyle().bigText( task.summary.chop(NOTIF_TITLE_MAX_LEN) ) )
 
 			setSmallIcon( getIcon() )
-
+			setLargeIcon(BitmapFactory.decodeResource( mContext.resources , getIcon() ))
 			setGroup( GROUP_KEY )
 			setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
 			setContentIntent( getNotificationIntent( mContext ) )

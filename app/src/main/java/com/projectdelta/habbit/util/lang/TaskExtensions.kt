@@ -46,7 +46,7 @@ fun List<Task>.completedTill( X : Long ) = filter {
  */
 fun List<Task>.unfinishedNotifyTill( X : Long ) = filter {
 	( it.skipTill < X && it.isNotificationEnabled && (it.lastDayCompleted.isEmpty() || it.lastDayCompleted.last() < X) )
-}
+	}.sortedBy { -it.importance }
 
 /**
  * Returns List of unfinished Tasks before [Task.skipAfter]
@@ -65,4 +65,4 @@ fun Task.hash() = (this.id%((1L shl 31) - 1)).toInt()
 
 fun Task.toDateBulletList(delimiter: String = "\n" , maxLine : Int = 20) = lastDayCompleted.asReversed().joinToString (delimiter) {
 	"$INDENT${Html.fromHtml(bullet)} ${TimeUtil.getDayFromEpochToDateString(it)}"
-} + if( lastDayCompleted.size > maxLine ) "and ${lastDayCompleted - maxLine} more!" else ""
+} + if( lastDayCompleted.size > maxLine ) "${INDENT}and ${lastDayCompleted - maxLine} more!" else ""

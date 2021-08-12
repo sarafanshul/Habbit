@@ -23,7 +23,7 @@
     <style name="Theme.Habbit.Light" parent="Theme.Habbit">
         <item name="colorTertiary">@color/mat_black</item>
         <item name="android:windowLightStatusBar">true</item>
-        <item name="colorBackgroundDark">@color/md_grey_50_75</item>
+        <item name="colorBackgroundDark">@color/white</item>
         <item name="selectedColor">@color/md_grey_800</item>
         <item name="colorSurface">@color/white</item>
 
@@ -35,6 +35,14 @@
         <item name="android:windowBackground">@drawable/splash_screen</item>
         <item name="android:statusBarColor">@color/md_white_1000</item>
         <item name="android:navigationBarColor">@color/md_white_1000</item>
+
+    </style>
+
+    <style name="Theme.Splash.Gradient" parent="Theme.Habbit">
+
+        <item name="android:windowBackground">@drawable/gradient_splash_screen</item>
+        <item name="android:statusBarColor">@color/accent_midnightdusk_variant</item>
+        <item name="android:navigationBarColor">@color/accent_midnightdusk_variant</item>
 
     </style>
 </resources>
