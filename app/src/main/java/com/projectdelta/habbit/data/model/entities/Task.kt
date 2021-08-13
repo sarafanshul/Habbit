@@ -1,4 +1,4 @@
-package com.projectdelta.habbit.data.entities
+package com.projectdelta.habbit.data.model.entities
 
 import androidx.annotation.Keep
 import androidx.room.Entity
@@ -43,4 +43,13 @@ data class Task(
 	@SerializedName("skipAfter")
 	var skipAfter : Long = -1 ,
 
-):Serializable
+):Serializable{
+	override fun equals(other: Any?): Boolean {
+		if( javaClass != other?.javaClass ) return false
+
+		other as Task
+		if( id != other.id ) return false
+
+		return true
+	}
+}

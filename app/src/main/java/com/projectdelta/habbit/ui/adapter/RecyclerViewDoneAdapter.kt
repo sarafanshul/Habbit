@@ -2,17 +2,34 @@ package com.projectdelta.habbit.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.projectdelta.habbit.data.entities.Task
+import com.projectdelta.habbit.data.model.entities.Task
 import com.projectdelta.habbit.databinding.LayoutRvDoneBinding
 
 
 class RecyclerViewDoneAdapter():
-	RecyclerView.Adapter< RecyclerViewDoneAdapter.LayoutViewHolder >( ) {
-	lateinit var data : List<Task>
+	ListAdapter< Task , RecyclerViewDoneAdapter.LayoutViewHolder >( DIFF_CALLBACK ) {
+
 	var today = 0L
 
+	companion object{
+		val DIFF_CALLBACK : DiffUtil.ItemCallback<Task> = object :DiffUtil.ItemCallback<Task>(){
+			override fun areItemsTheSame(oldItem: Task, newItem: Task): Boolean {
+				return oldItem.equals( newItem )
+			}
+
+			override fun areContentsTheSame(oldItem: Task, newItem: Task): Boolean {
+				return oldItem.taskName == newItem.taskName &&
+						oldItem.summary == newItem.summary &&
+						oldItem.importance == newItem.importance
+			}
+		}
+	}
+
 	inner class LayoutViewHolder( private val binding: LayoutRvDoneBinding) : RecyclerView.ViewHolder( binding.root ) {
+
 		fun bind(T: Task, streakString: String) {
 			with(binding) {
 				tasksTwId.text = T.taskName
@@ -31,32 +48,24 @@ class RecyclerViewDoneAdapter():
 	override fun onBindViewHolder(holder: LayoutViewHolder, position: Int) {
 		var streak = 0
 		var cur = today
-		if( ! data[position].lastDayCompleted.isNullOrEmpty() ){
-			for( i in data[position].lastDayCompleted.size - 1 downTo 0 )
-				if(data[position].lastDayCompleted[i] == cur) {
+		if( ! getItem(position).lastDayCompleted.isNullOrEmpty() ){
+			for( i in getItem(position).lastDayCompleted.size - 1 downTo 0 )
+				if(getItem(position).lastDayCompleted[i] == cur) {
 					cur-- ;streak++
 				}
 		}
 		val streakString = when( streak ){
 			0 -> "No streak"
-			1 -> "${streak} day"
-			else -> "${streak} days"
+			1 -> "$streak day"
+			else -> "$streak days"
 		}
-		holder.bind(data[position] , streakString)
+		holder.bind(getItem(position) , streakString)
 	}
 
-	override fun getItemCount(): Int {
-		if( this::data.isInitialized ) return data.size
-		return 0
-	}
-
-	fun set(_data : List<Task>, _today : Long){
-		data = emptyList()
+	fun set( _today : Long){
 		today = _today
-		data = _data
-		notifyDataSetChanged()
 	}
 
-	fun dataIsInitialized() = this::data.isInitialized
+	fun getItemAt( position: Int ) : Task = getItem(position)
 
 }

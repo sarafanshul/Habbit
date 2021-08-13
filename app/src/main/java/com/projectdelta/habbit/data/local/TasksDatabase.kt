@@ -1,4 +1,4 @@
-package com.projectdelta.habbit.data
+package com.projectdelta.habbit.data.local
 
 import android.content.Context
 import androidx.room.Database
@@ -6,9 +6,9 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.projectdelta.habbit.constant.DatabaseConstants
-import com.projectdelta.habbit.data.entities.Day
-import com.projectdelta.habbit.data.entities.Task
+import com.projectdelta.habbit.data.model.entities.Day
+import com.projectdelta.habbit.data.model.entities.Task
+import com.projectdelta.habbit.util.constant.DatabaseConstants
 import com.projectdelta.habbit.util.lang.Converters
 import java.util.concurrent.Executors
 
@@ -18,7 +18,7 @@ import java.util.concurrent.Executors
 		Day::class
 	],
 	version = 11,
-	exportSchema = false
+	exportSchema = true
 )
 @TypeConverters( Converters::class )
 abstract class TasksDatabase: RoomDatabase() {

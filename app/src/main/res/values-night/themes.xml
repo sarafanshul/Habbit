@@ -30,7 +30,7 @@
         <item name="colorSurface">@color/surface_midnightdusk</item>
         <item name="android:colorBackground">@color/background_midnightdusk</item>
 
-        <item name="colorBackgroundDark">@color/surface_midnightdusk</item>
+        <item name="colorBackgroundDark">#1B1A23</item>
         <item name="selectedColor">@color/md_black_1000_38</item>
 
         <item name="android:statusBarColor" tools:targetApi="l">@color/background_midnightdusk</item>

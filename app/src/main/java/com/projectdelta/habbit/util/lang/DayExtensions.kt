@@ -1,8 +1,8 @@
 package com.projectdelta.habbit.util.lang
 
 import android.text.Html
-import com.projectdelta.habbit.constant.INDENT
-import com.projectdelta.habbit.data.entities.Day
+import com.projectdelta.habbit.data.model.entities.Day
+import com.projectdelta.habbit.util.constant.INDENT
 
 const val bullet = "&#8226"
 

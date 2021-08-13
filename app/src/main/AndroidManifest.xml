@@ -36,11 +36,11 @@
         </activity>
 
         <receiver
-            android:name=".receiver.NotificationReceiver"
+            android:name="com.projectdelta.habbit.data.receiver.NotificationReceiver"
             android:exported="false" />
 
         <service
-            android:name=".service.UpdateNotificationService"
+            android:name="com.projectdelta.habbit.data.service.UpdateNotificationService"
             android:enabled="true"
             android:exported="false">
             <intent-filter>

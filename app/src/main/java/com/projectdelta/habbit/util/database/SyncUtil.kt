@@ -8,8 +8,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.projectdelta.habbit.data.FirestoreQueryObject
-import com.projectdelta.habbit.repository.TasksRepositoryImpl
+import com.projectdelta.habbit.data.model.FirestoreQueryObject
+import com.projectdelta.habbit.data.repository.TasksRepositoryImpl
 import com.projectdelta.habbit.util.database.firebase.FirebaseUtil.Companion.USERS
 import com.projectdelta.habbit.util.database.firebase.FirebaseUtil.Companion.getAuth
 import com.projectdelta.habbit.util.database.firebase.FirebaseUtil.Companion.getDocumentUser
@@ -111,7 +111,7 @@ class SyncUtil @Inject constructor(
     /**
      * Warning instance of context is used inside a co-routine please fucking take care of memory leak
      */
-    private suspend fun addNewDocument( mContext: Context , doc: CollectionReference , id : String , firestoreQueryObject: FirestoreQueryObject ) {
+    private suspend fun addNewDocument( mContext: Context , doc: CollectionReference , id : String , firestoreQueryObject: FirestoreQueryObject) {
         doc
             .document( id )
             .set(firestoreQueryObject)
@@ -173,7 +173,7 @@ class SyncUtil @Inject constructor(
     /**
      * Testing functions to move to Test later
      */
-    private fun getTestDataLocalAndCompare( compareTo : FirestoreQueryObject ){
+    private fun getTestDataLocalAndCompare( compareTo : FirestoreQueryObject){
         val x = FirestoreQueryObject()
         GlobalScope.launch(Dispatchers.IO) {
             val taskData = async { repositoryImpl.getAllTasksOffline() }
@@ -185,7 +185,7 @@ class SyncUtil @Inject constructor(
         }
     }
 
-    private fun testData( from : FirestoreQueryObject , to : FirestoreQueryObject ){
+    private fun testData(from : FirestoreQueryObject, to : FirestoreQueryObject){
         if(from != to){
             Log.e(TAG, "testData: $from")
             Log.e(TAG, "testData: $to")

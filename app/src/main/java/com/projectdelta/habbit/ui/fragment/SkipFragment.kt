@@ -3,7 +3,6 @@ package com.projectdelta.habbit.ui.fragment
 import android.app.Activity
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
 import com.projectdelta.habbit.R
-import com.projectdelta.habbit.constant.ICON_SIZE_DP
 import com.projectdelta.habbit.databinding.SkipFragmentBinding
 import com.projectdelta.habbit.ui.activity.MainActivity
 import com.projectdelta.habbit.ui.adapter.CustomItemTouchHelperCallback
@@ -27,8 +25,10 @@ import com.projectdelta.habbit.ui.adapter.StatesRecyclerViewAdapter
 import com.projectdelta.habbit.ui.base.BaseViewBindingFragment
 import com.projectdelta.habbit.ui.viewModel.HomeSharedViewModel
 import com.projectdelta.habbit.util.NotFound
+import com.projectdelta.habbit.util.constant.ICON_SIZE_DP
 import com.projectdelta.habbit.util.lang.convertDrawableToBitmap
 import com.projectdelta.habbit.util.lang.dpToPx
+import com.projectdelta.habbit.util.lang.removeItemDecorations
 import com.projectdelta.habbit.util.lang.skippedTill
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -84,8 +84,6 @@ class SkipFragment : BaseViewBindingFragment<SkipFragmentBinding>() {
 
 		val divider = DividerItemDecoration( binding.skipRv.context , DividerItemDecoration.VERTICAL)
 
-		binding.skipRv.addItemDecoration( divider )
-
 		// https://stackoverflow.com/a/38909958
 		binding.skipRv.viewTreeObserver.addOnPreDrawListener (
 			object : ViewTreeObserver.OnPreDrawListener {
@@ -111,8 +109,7 @@ class SkipFragment : BaseViewBindingFragment<SkipFragmentBinding>() {
 			binding.skipRv ,
 			object : RecyclerItemClickListenr.OnItemClickListener{
 				override fun onItemClick(view: View, position: Int) {
-					if( adapter.dataIsInitialized() )
-						activity.launchEditActivity( adapter.data[position] )
+						activity.launchEditActivity( adapter.getItemAt(position) )
 				}
 
 				override fun onItemLongClick(view: View?, position: Int) {
@@ -131,17 +128,12 @@ class SkipFragment : BaseViewBindingFragment<SkipFragmentBinding>() {
 			onSwipeListener( object : CustomItemTouchHelperCallback.OnSwipeListener{
 				override fun onSwipeLeftToRight(vh: RecyclerView.ViewHolder?) { object : RecyclerViewSkipAdapter.OnSwipeRight{
 					override fun doWork(viewHolder: RecyclerView.ViewHolder) {
-						val position = viewHolder.adapterPosition
-						val T = adapter.deleteData( position )
-						viewModel.delete( T )
-						/**
-						 * show SnackBar for undo!
-						 */
+						val x = adapter.getItemAt( viewHolder.bindingAdapterPosition )
+						viewModel.delete( x )
 						Snackbar.make(requireActivity().findViewById(R.id.main_cl) , "A task deleted!" , Snackbar.LENGTH_LONG).apply {
 							anchorView = requireActivity().findViewById(R.id.main_fab_create)
 							setAction("Undo"){
-								adapter.insertData(T , position)
-								viewModel.insertTask(T)
+								viewModel.insertTask(x)
 							}
 						}.show()
 					}
@@ -154,28 +146,23 @@ class SkipFragment : BaseViewBindingFragment<SkipFragmentBinding>() {
 		viewModel.data.observe(viewLifecycleOwner , {data ->
 			if( data.isNullOrEmpty() ) {
 				statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
-				binding.skipRv.removeItemDecoration( divider )
+				binding.skipRv.removeItemDecorations()
 				return@observe
 			}
-
 			val undoneData = data.skippedTill( viewModel.getTodayFromEpoch() , viewModel.getMSFromMidnight() )
-
-			Log.d("DATA" , undoneData.toMutableList().toString())
-
 			if( undoneData.isNullOrEmpty() ) {
 				statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
-				binding.skipRv.removeItemDecoration( divider )
+				binding.skipRv.removeItemDecorations()
 				itemTouchHelper.attachToRecyclerView( null )
 			}else {
 				statesAdapter.state = StatesRecyclerViewAdapter.STATE_NORMAL
 				itemTouchHelper.attachToRecyclerView( binding.skipRv )
 				binding.skipRv.addItemDecoration( divider )
 				adapter.set(
-					undoneData.toMutableList(),
 					viewModel.getTodayFromEpoch()
 				)
+				adapter.submitList(undoneData)
 			}
 		})
 	}
-
 }

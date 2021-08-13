@@ -1,4 +1,4 @@
-package com.projectdelta.habbit.service
+package com.projectdelta.habbit.data.service
 
 import android.app.Service
 import android.content.Context
@@ -7,7 +7,7 @@ import android.os.IBinder
 import android.os.PowerManager
 import android.util.Log
 import androidx.core.content.ContextCompat
-import com.projectdelta.habbit.data.TasksDatabase
+import com.projectdelta.habbit.data.local.TasksDatabase
 import com.projectdelta.habbit.util.*
 import com.projectdelta.habbit.util.lang.*
 import com.projectdelta.habbit.util.notification.Notifications

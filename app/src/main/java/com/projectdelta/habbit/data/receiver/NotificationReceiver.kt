@@ -1,12 +1,12 @@
-package com.projectdelta.habbit.receiver
+package com.projectdelta.habbit.data.receiver
 
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.projectdelta.habbit.data.TasksDatabase
-import com.projectdelta.habbit.data.entities.Task
-import com.projectdelta.habbit.repository.TasksRepositoryImpl
+import com.projectdelta.habbit.data.local.TasksDatabase
+import com.projectdelta.habbit.data.model.entities.Task
+import com.projectdelta.habbit.data.repository.TasksRepositoryImpl
 import com.projectdelta.habbit.util.lang.TimeUtil
 import com.projectdelta.habbit.util.lang.hash
 import com.projectdelta.habbit.util.lang.notificationManager

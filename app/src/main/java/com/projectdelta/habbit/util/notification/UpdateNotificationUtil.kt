@@ -8,8 +8,8 @@ import android.graphics.BitmapFactory
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.projectdelta.habbit.R
-import com.projectdelta.habbit.data.entities.Task
-import com.projectdelta.habbit.receiver.NotificationReceiver
+import com.projectdelta.habbit.data.model.entities.Task
+import com.projectdelta.habbit.data.receiver.NotificationReceiver
 import com.projectdelta.habbit.ui.activity.MainActivity
 import com.projectdelta.habbit.util.lang.chop
 import com.projectdelta.habbit.util.lang.hash

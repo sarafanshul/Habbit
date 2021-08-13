@@ -3,10 +3,10 @@ package com.projectdelta.habbit.ui.navigation
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import com.projectdelta.habbit.constant.HELP_AND_FEEDBACK
-import com.projectdelta.habbit.constant.URL_PORTFOLIO
 import com.projectdelta.habbit.ui.activity.InsightsActivity
 import com.projectdelta.habbit.ui.setting.SettingsActivity
+import com.projectdelta.habbit.util.constant.HELP_AND_FEEDBACK
+import com.projectdelta.habbit.util.constant.URL_PORTFOLIO
 
 object NavigationUtil {
 

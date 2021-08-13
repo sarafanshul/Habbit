@@ -18,7 +18,7 @@ open class App : Application() {
 		super.onCreate()
 		setupNotificationChannels()
 		configureFirebase()
-		configureThemeMode()
+//		configureThemeMode()
 	}
 
 	/**

@@ -1,9 +1,9 @@
-package com.projectdelta.habbit.repository
+package com.projectdelta.habbit.data.repository
 
 import androidx.lifecycle.LiveData
-import com.projectdelta.habbit.data.TasksDao
-import com.projectdelta.habbit.data.entities.Day
-import com.projectdelta.habbit.data.entities.Task
+import com.projectdelta.habbit.data.local.TasksDao
+import com.projectdelta.habbit.data.model.entities.Day
+import com.projectdelta.habbit.data.model.entities.Task
 import com.projectdelta.habbit.util.lang.TimeUtil
 
 class TasksRepositoryImpl( private val tasksDao: TasksDao) : TasksRepository{

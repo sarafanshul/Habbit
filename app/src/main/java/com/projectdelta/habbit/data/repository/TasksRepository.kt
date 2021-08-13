@@ -1,8 +1,8 @@
-package com.projectdelta.habbit.repository
+package com.projectdelta.habbit.data.repository
 
 import androidx.lifecycle.LiveData
-import com.projectdelta.habbit.data.entities.Day
-import com.projectdelta.habbit.data.entities.Task
+import com.projectdelta.habbit.data.model.entities.Day
+import com.projectdelta.habbit.data.model.entities.Task
 
 interface TasksRepository {
 

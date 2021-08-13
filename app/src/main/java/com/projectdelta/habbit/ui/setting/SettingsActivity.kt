@@ -1,5 +1,6 @@
 package com.projectdelta.habbit.ui.setting
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -22,6 +23,7 @@ import com.projectdelta.habbit.util.notification.UpdateNotificationJob
 import com.projectdelta.habbit.util.view.CustomTextPreference
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class SettingsActivity : BaseViewBindingActivity<SettingsActivityBinding>() ,
@@ -54,6 +56,11 @@ class SettingsActivity : BaseViewBindingActivity<SettingsActivityBinding>() ,
 
 	override fun onPause() {
 		super.onPause()
+		PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this)
+	}
+
+	override fun onDestroy() {
+		super.onDestroy()
 		PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this)
 	}
 
@@ -103,9 +110,20 @@ class SettingsActivity : BaseViewBindingActivity<SettingsActivityBinding>() ,
 					?.putBoolean(resources.getString(R.string.id_sync_on_startup), false)?.apply()
 			}
 			resources.getString(R.string.id_app_theme) -> {
-
+				recreateAndChangeTheme()
 			}
 		}
+	}
+
+	/**
+	 * Creates a smooth transition between themes , replacement of [Activity.recreate()]
+	 *
+	 * [See More](https://stackoverflow.com/a/57023051/11718077)
+	 */
+	private fun recreateAndChangeTheme() {
+		finish()
+		startActivity(Intent(this, javaClass))
+		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
 	}
 
 	@AndroidEntryPoint
@@ -128,8 +146,15 @@ class SettingsActivity : BaseViewBindingActivity<SettingsActivityBinding>() ,
 
 			findPreference<CustomTextPreference>(resources.getString(R.string.id_sign_out))?.setOnPreferenceClickListener { _ ->
 				if( Firebase.auth.currentUser != null )
-					Firebase.auth.signOut()
-				toggleCloudPreferences()
+					MaterialAlertDialogBuilder(requireActivity()).apply {
+						setTitle("Sign out of Habbit?")
+						setPositiveButton("BYE!"){_ , _ ->
+							Firebase.auth.signOut()
+							toggleCloudPreferences()
+						}
+						setNeutralButton("CANCEL"){_ , _ ->}
+						create()
+					}.show()
 				true
 			}
 
@@ -159,15 +184,10 @@ class SettingsActivity : BaseViewBindingActivity<SettingsActivityBinding>() ,
 				true
 			}
 
-			findPreference<ListPreference>(getString(R.string.id_app_theme))?.setOnPreferenceChangeListener { preference, newValue ->
-				MaterialAlertDialogBuilder(requireActivity()).apply {
-					setTitle("Restart the app for change!")
-					setPositiveButton("OK"){_ , _ ->}
-					create()
-				}.show()
-				togglePreferences()
-				true
-			}
+//			findPreference<ListPreference>(getString(R.string.id_app_theme))?.setOnPreferenceChangeListener { preference, newValue ->
+//				togglePreferences()
+//				true
+//			}
 		}
 
 		private fun togglePreferences() {

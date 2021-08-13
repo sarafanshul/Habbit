@@ -1,4 +1,4 @@
-package com.projectdelta.habbit.constant
+package com.projectdelta.habbit.util.constant
 
 const val UNMETERED_NETWORK = "wifi"
 const val CHARGING = "ac"

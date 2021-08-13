@@ -2,7 +2,6 @@ package com.projectdelta.habbit.ui.fragment
 
 import android.app.Activity
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +20,7 @@ import com.projectdelta.habbit.ui.base.BaseViewBindingFragment
 import com.projectdelta.habbit.ui.viewModel.HomeSharedViewModel
 import com.projectdelta.habbit.util.NotFound
 import com.projectdelta.habbit.util.lang.completedTill
+import com.projectdelta.habbit.util.lang.removeItemDecorations
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -76,7 +76,6 @@ class DoneFragment : BaseViewBindingFragment<DoneFragmentBinding>() {
 		statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
 
 		val divider = DividerItemDecoration( binding.doneRv.context , DividerItemDecoration.VERTICAL)
-		binding.doneRv.addItemDecoration( divider )
 
 		// https://stackoverflow.com/a/38909958
 		binding.doneRv.viewTreeObserver.addOnPreDrawListener (
@@ -103,8 +102,7 @@ class DoneFragment : BaseViewBindingFragment<DoneFragmentBinding>() {
 			binding.doneRv ,
 			object : RecyclerItemClickListenr.OnItemClickListener{
 				override fun onItemClick(view: View, position: Int) {
-					if( adapter.dataIsInitialized() )
-						activity.launchEditActivity( adapter.data[position] )
+					activity.launchEditActivity( adapter.getItemAt(position) )
 				}
 
 				override fun onItemLongClick(view: View?, position: Int) {
@@ -113,30 +111,24 @@ class DoneFragment : BaseViewBindingFragment<DoneFragmentBinding>() {
 			}
 		))
 
-
 		viewModel.data.observe(viewLifecycleOwner , {data ->
 			if( data.isNullOrEmpty() ) {
 				statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
-				binding.doneRv.removeItemDecoration( divider )
+				binding.doneRv.removeItemDecorations()
 				return@observe
 			}
-
 			val doneData = data.completedTill( viewModel.getTodayFromEpoch() )
-
-			Log.d("DATA" , doneData.toMutableList().toString())
-
 			if( doneData.isNullOrEmpty() ){
 				statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
-				binding.doneRv.removeItemDecoration( divider )
+				binding.doneRv.removeItemDecorations()
 			}else {
 				binding.doneRv.addItemDecoration( divider )
 				statesAdapter.state = StatesRecyclerViewAdapter.STATE_NORMAL
 				adapter.set(
-					doneData,
 					viewModel.getTodayFromEpoch()
 				)
+				adapter.submitList(doneData)
 			}
 		})
 	}
-
 }

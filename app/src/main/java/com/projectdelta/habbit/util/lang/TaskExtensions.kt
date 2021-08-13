@@ -1,8 +1,8 @@
 package com.projectdelta.habbit.util.lang
 
 import android.text.Html
-import com.projectdelta.habbit.constant.INDENT
-import com.projectdelta.habbit.data.entities.Task
+import com.projectdelta.habbit.data.model.entities.Task
+import com.projectdelta.habbit.util.constant.INDENT
 
 /**
  * Returns all unfinished tasks till X -> [0 , X).

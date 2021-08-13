@@ -1,6 +1,6 @@
 package com.projectdelta.habbit.ui.viewModel
 
-import com.projectdelta.habbit.repository.TasksRepositoryImpl
+import com.projectdelta.habbit.data.repository.TasksRepositoryImpl
 import com.projectdelta.habbit.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.projectdelta.habbit.R
-import com.projectdelta.habbit.data.entities.Task
+import com.projectdelta.habbit.data.model.entities.Task
 import com.projectdelta.habbit.databinding.ActivityMainBinding
 import com.projectdelta.habbit.ui.activity.editTask.EditTaskActivity
 import com.projectdelta.habbit.ui.adapter.HomeViewPagerAdapter
@@ -239,5 +239,6 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 				)
 			}
 	}
+
 
 }

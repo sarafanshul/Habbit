@@ -1,8 +1,8 @@
 package com.projectdelta.habbit.di
 
 import android.app.Application
-import com.projectdelta.habbit.data.TasksDao
-import com.projectdelta.habbit.data.TasksDatabase
+import com.projectdelta.habbit.data.local.TasksDao
+import com.projectdelta.habbit.data.local.TasksDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +15,7 @@ object DaoModule {
 
 	@Singleton
 	@Provides
-	fun provideTaskDao( application: Application ) : TasksDao{
+	fun provideTaskDao( application: Application ) : TasksDao {
 		return TasksDatabase.getInstance( application ).tasksDao()
 	}
 }

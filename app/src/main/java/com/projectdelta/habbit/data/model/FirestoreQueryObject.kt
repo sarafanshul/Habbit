@@ -1,9 +1,9 @@
-package com.projectdelta.habbit.data
+package com.projectdelta.habbit.data.model
 
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
-import com.projectdelta.habbit.data.entities.Day
-import com.projectdelta.habbit.data.entities.Task
+import com.projectdelta.habbit.data.model.entities.Day
+import com.projectdelta.habbit.data.model.entities.Task
 import java.io.Serializable
 
 @Keep

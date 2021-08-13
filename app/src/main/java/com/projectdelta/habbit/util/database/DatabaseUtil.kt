@@ -2,7 +2,7 @@ package com.projectdelta.habbit.util.database
 
 import android.content.Context
 import android.util.Log
-import com.projectdelta.habbit.data.TasksDatabase
+import com.projectdelta.habbit.data.local.TasksDatabase
 import com.projectdelta.habbit.util.database.firebase.FirebaseUtil.Companion.getAuth
 import com.projectdelta.habbit.util.database.firebase.FirebaseUtil.Companion.getDocumentUser
 import com.projectdelta.habbit.util.lang.darkToast

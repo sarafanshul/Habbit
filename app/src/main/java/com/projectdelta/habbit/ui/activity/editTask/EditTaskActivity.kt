@@ -1,7 +1,5 @@
 package com.projectdelta.habbit.ui.activity.editTask
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
@@ -15,14 +13,14 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.projectdelta.habbit.R
-import com.projectdelta.habbit.constant.COLLAPSING_TOOLBAR_VISIBILITY_THRESHOLD
-import com.projectdelta.habbit.data.entities.Task
+import com.projectdelta.habbit.data.model.entities.Task
 import com.projectdelta.habbit.databinding.ActivityEditTaskBinding
 import com.projectdelta.habbit.ui.activity.editTask.state.CollapsingToolbarState
 import com.projectdelta.habbit.ui.activity.editTask.state.EditTaskInteractionState
 import com.projectdelta.habbit.ui.base.BaseViewBindingActivity
 import com.projectdelta.habbit.ui.viewModel.EditTaskViewModel
 import com.projectdelta.habbit.util.TodoCallback
+import com.projectdelta.habbit.util.constant.COLLAPSING_TOOLBAR_VISIBILITY_THRESHOLD
 import com.projectdelta.habbit.util.lang.*
 import dagger.hilt.android.AndroidEntryPoint
 

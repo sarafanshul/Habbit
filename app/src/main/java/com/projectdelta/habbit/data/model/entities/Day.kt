@@ -1,4 +1,4 @@
-package com.projectdelta.habbit.data.entities
+package com.projectdelta.habbit.data.model.entities
 
 import androidx.annotation.Keep
 import androidx.room.Entity

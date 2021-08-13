@@ -11,8 +11,9 @@ import android.view.animation.Animation
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.core.content.ContextCompat
-import com.projectdelta.habbit.constant.CLICK_COLOR_CHANGE_TIME
+import androidx.recyclerview.widget.RecyclerView
 import com.projectdelta.habbit.util.TodoCallback
+import com.projectdelta.habbit.util.constant.CLICK_COLOR_CHANGE_TIME
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -161,4 +162,15 @@ fun View.showKeyboard() {
 fun View.hideKeyboard() {
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.hideSoftInputFromWindow(windowToken, 0)
+}
+
+/**
+ * Removes all item decorations from [RecyclerView]
+ *
+ * [See More](https://stackoverflow.com/a/59092408/11718077)
+ */
+fun <T : RecyclerView> T.removeItemDecorations() {
+    while (itemDecorationCount > 0) {
+        removeItemDecorationAt(0)
+    }
 }

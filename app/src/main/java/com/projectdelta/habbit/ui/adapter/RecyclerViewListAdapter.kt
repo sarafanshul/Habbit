@@ -3,7 +3,7 @@ package com.projectdelta.habbit.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.projectdelta.habbit.data.entities.Day
+import com.projectdelta.habbit.data.model.entities.Day
 import com.projectdelta.habbit.databinding.LayoutRvListBinding
 import com.projectdelta.habbit.util.lang.TimeUtil
 import com.projectdelta.habbit.util.lang.titlesToBulletList

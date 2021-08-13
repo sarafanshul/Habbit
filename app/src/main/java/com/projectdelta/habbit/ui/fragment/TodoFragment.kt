@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.textview.MaterialTextView
 import com.projectdelta.habbit.R
-import com.projectdelta.habbit.constant.ICON_SIZE_DP
 import com.projectdelta.habbit.databinding.TodoFragmentBinding
 import com.projectdelta.habbit.ui.activity.MainActivity
 import com.projectdelta.habbit.ui.adapter.CustomItemTouchHelperCallback
@@ -27,10 +26,8 @@ import com.projectdelta.habbit.ui.adapter.StatesRecyclerViewAdapter
 import com.projectdelta.habbit.ui.base.BaseViewBindingFragment
 import com.projectdelta.habbit.ui.viewModel.HomeSharedViewModel
 import com.projectdelta.habbit.util.*
-import com.projectdelta.habbit.util.lang.convertDrawableToBitmap
-import com.projectdelta.habbit.util.lang.dpToPx
-import com.projectdelta.habbit.util.lang.tasksBeforeSkipTime
-import com.projectdelta.habbit.util.lang.unfinishedTill
+import com.projectdelta.habbit.util.constant.ICON_SIZE_DP
+import com.projectdelta.habbit.util.lang.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -50,8 +47,6 @@ class TodoFragment : BaseViewBindingFragment<TodoFragmentBinding>() {
 		super.onAttach(activity)
 		this.activity = activity as MainActivity
 	}
-
-
 
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
@@ -89,8 +84,6 @@ class TodoFragment : BaseViewBindingFragment<TodoFragmentBinding>() {
 		statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
 
 		val divider = DividerItemDecoration( binding.todoRv.context , DividerItemDecoration.VERTICAL)
-		binding.todoRv.addItemDecoration( divider )
-
 
 		// https://stackoverflow.com/a/38909958
 		binding.todoRv.viewTreeObserver.addOnPreDrawListener (
@@ -117,8 +110,7 @@ class TodoFragment : BaseViewBindingFragment<TodoFragmentBinding>() {
 			binding.todoRv ,
 			object : RecyclerItemClickListenr.OnItemClickListener{
 				override fun onItemClick(view: View, position: Int) {
-					if( adapter.dataIsInitialized() )
-						activity.launchEditActivity( adapter.data[position] )
+					activity.launchEditActivity( adapter.getItemAt(position) )
 				}
 
 				override fun onItemLongClick(view: View?, position: Int) {
@@ -141,19 +133,13 @@ class TodoFragment : BaseViewBindingFragment<TodoFragmentBinding>() {
 			onSwipeListener( object : CustomItemTouchHelperCallback.OnSwipeListener{
 				override fun onSwipeLeftToRight(vh: RecyclerView.ViewHolder?) {object : RecyclerViewTodoAdapter.OnSwipeRight{
 					override fun doWork(viewHolder: RecyclerView.ViewHolder) {
-						val position = viewHolder.adapterPosition
-						val T = adapter.data.removeAt(position)
-						adapter.notifyItemRemoved(position)
-						viewModel.notifyTaskSkipped(T)
+						viewModel.notifyTaskSkipped( adapter.getItemAt( viewHolder.bindingAdapterPosition ) )
 					}
 				}.doWork(vh!!) }
 
 				override fun onSwipeRightToLeft(vh: RecyclerView.ViewHolder?) {object :RecyclerViewTodoAdapter.OnSwipeLeft{
 					override fun doWork(viewHolder: RecyclerView.ViewHolder) {
-						val position = viewHolder.adapterPosition
-						val T = adapter.data.removeAt(position)
-						adapter.notifyItemRemoved(position)
-						viewModel.notifyTaskDone(T)
+						viewModel.notifyTaskDone( adapter.getItemAt( viewHolder.bindingAdapterPosition ) )
 					}
 				}.doWork(vh!!) }
 			})
@@ -162,27 +148,22 @@ class TodoFragment : BaseViewBindingFragment<TodoFragmentBinding>() {
 		viewModel.data.observe(viewLifecycleOwner , {data ->
 			if( data.isNullOrEmpty() ) {
 				statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
-				binding.todoRv.removeItemDecoration( divider )
+				binding.todoRv.removeItemDecorations()
 				return@observe
 			}
-			Log.d("DATA" , "${viewModel.getTodayFromEpoch()}")
-
 			val undoneData = data.tasksBeforeSkipTime(viewModel.getMSFromMidnight()).unfinishedTill( viewModel.getTodayFromEpoch() )
-
-			Log.d("DATA" , undoneData.toMutableList().toString())
-
 			if( undoneData.isNullOrEmpty() ) {
 				statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
-				binding.todoRv.removeItemDecoration( divider )
+				binding.todoRv.removeItemDecorations()
 				itemTouchHelper.attachToRecyclerView(null)
 			}else {
 				statesAdapter.state = StatesRecyclerViewAdapter.STATE_NORMAL
 				binding.todoRv.addItemDecoration( divider )
 				itemTouchHelper.attachToRecyclerView( binding.todoRv )
 				adapter.set(
-					undoneData.toMutableList(),
 					viewModel.getTodayFromEpoch()
 				)
+				adapter.submitList(	undoneData )
 			}
 		})
 	}

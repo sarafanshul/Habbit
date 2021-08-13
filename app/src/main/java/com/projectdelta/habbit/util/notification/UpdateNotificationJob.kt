@@ -3,7 +3,7 @@ package com.projectdelta.habbit.util.notification
 import android.content.Context
 import android.util.Log
 import androidx.work.*
-import com.projectdelta.habbit.service.UpdateNotificationService
+import com.projectdelta.habbit.data.service.UpdateNotificationService
 import com.projectdelta.habbit.util.notification.Notifications.DEFAULT_UPDATE_INTERVAL
 import java.util.concurrent.TimeUnit
 
