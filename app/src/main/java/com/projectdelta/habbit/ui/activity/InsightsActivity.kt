@@ -1,14 +1,21 @@
 package com.projectdelta.habbit.ui.activity
 
 import android.os.Bundle
+import android.os.Handler
 import androidx.viewpager.widget.ViewPager
 import com.projectdelta.habbit.R
+import com.projectdelta.habbit.data.local.TasksDatabase
+import com.projectdelta.habbit.data.model.entities.Day
 import com.projectdelta.habbit.databinding.ActivityInsightsBinding
 import com.projectdelta.habbit.ui.adapter.InsightsViewPagerAdapter
 import com.projectdelta.habbit.ui.base.BaseViewBindingActivity
 import com.projectdelta.habbit.ui.fragment.InsightsCalendarFragment
 import com.projectdelta.habbit.ui.fragment.InsightsListFragment
+import com.projectdelta.habbit.util.lang.TimeUtil
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class InsightsActivity : BaseViewBindingActivity<ActivityInsightsBinding>() {
@@ -26,12 +33,6 @@ class InsightsActivity : BaseViewBindingActivity<ActivityInsightsBinding>() {
 		_binding = ActivityInsightsBinding.inflate( layoutInflater )
 
 		setContentView( binding.root )
-
-		/**
-		 * set viewpager here with two tabs
-		 * 1) recent -> infinite loading loading RecyclerView
-		 * 2) Calender with markings
-		 */
 
 		setLayout()
 

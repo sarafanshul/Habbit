@@ -2,18 +2,33 @@ package com.projectdelta.habbit.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.projectdelta.habbit.data.model.entities.Day
+import com.projectdelta.habbit.data.model.entities.Task
 import com.projectdelta.habbit.databinding.LayoutRvListBinding
 import com.projectdelta.habbit.util.lang.TimeUtil
 import com.projectdelta.habbit.util.lang.titlesToBulletList
 
-class RecyclerViewListAdapter():
-	RecyclerView.Adapter<RecyclerViewListAdapter.LayoutViewHolder> ( ){
+class RecyclerViewListAdapter:
+	PagingDataAdapter< Day , RecyclerViewListAdapter.LayoutViewHolder> ( DIFF_CALLBACK ){
 
-	lateinit var data : MutableList<Day>
+	companion object{
+		val DIFF_CALLBACK : DiffUtil.ItemCallback<Day> = object : DiffUtil.ItemCallback<Day>(){
+			override fun areItemsTheSame(oldItem: Day, newItem: Day): Boolean {
+				return oldItem.equals( newItem )
+			}
+
+			override fun areContentsTheSame(oldItem: Day, newItem: Day): Boolean {
+				return oldItem.tasksID.size == newItem.tasksID.size &&
+						oldItem.tasksTitle.size == newItem.tasksTitle.size
+			}
+		}
+	}
 
 	inner class LayoutViewHolder( private val binding: LayoutRvListBinding) : RecyclerView.ViewHolder(binding.root){
+
 		fun bind( D : Day ){
 			with(binding){
 				tvDate.text = TimeUtil.getPastDateFromOffset((TimeUtil.getTodayFromEpoch() - D.id).toInt())
@@ -28,26 +43,8 @@ class RecyclerViewListAdapter():
 	}
 
 	override fun onBindViewHolder(holder: LayoutViewHolder, position: Int) {
-		holder.bind( data[position] )
+		getItem(position)?.let { holder.bind(it) }
 	}
 
-	override fun getItemCount(): Int {
-		if( this::data.isInitialized ) return data.size
-		return 0
-	}
-
-
-	fun addAll( addData : MutableList<Day> ) {
-		if (this::data.isInitialized) {
-			val curSize = itemCount
-			data.addAll(addData)
-			notifyItemRangeInserted(curSize, data.size - 1)
-		}
-		else {
-			data = addData
-			notifyDataSetChanged()
-		}
-	}
-
-	fun dataIsInitialized() = this::data.isInitialized
+	fun getItemAt(position: Int) = getItem(position)
 }

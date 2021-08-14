@@ -1,6 +1,8 @@
 package com.projectdelta.habbit.data.local
 
 import androidx.lifecycle.LiveData
+import androidx.paging.DataSource
+import androidx.paging.PagingSource
 import androidx.room.*
 import com.projectdelta.habbit.data.model.entities.Day
 import com.projectdelta.habbit.data.model.entities.Task
@@ -22,6 +24,9 @@ interface TasksDao {
 
 	@Query("SELECT * FROM day")
 	fun getAllDays() : LiveData<List<Day>>
+
+	@Query("SELECT * FROM day ORDER BY id DESC")
+	fun getAllDaysPaged() : PagingSource<Int , Day>
 
 	@Query("SELECT * FROM day")
 	fun getAllDaysOffline() : List<Day>

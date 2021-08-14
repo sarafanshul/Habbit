@@ -11,6 +11,6 @@ const val bullet = "&#8226"
  * @param delimiter default set to "\n"
  * @param maxLength maximum character length to add to single line of string
  */
-fun Day.titlesToBulletList(delimiter: String = "\n" , maxLength : Int = 30 , maxLine : Int = 320) = tasksTitle.take(maxLine).joinToString(delimiter) {
+fun Day.titlesToBulletList(delimiter: String = "\n" , maxLength : Int = 20 , maxLine : Int = 320) = tasksTitle.take(maxLine).joinToString(delimiter) {
     "$INDENT${Html.fromHtml(bullet)} ${it.chop(maxLength).capitalized()}"
 } + if( tasksTitle.size > maxLine ) "\n${INDENT}and ${tasksTitle.size - maxLine} more!" else ""

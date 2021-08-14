@@ -64,10 +64,10 @@ class InsightsCalendarFragment : BaseViewBindingFragment<FragmentInsightsCalenda
 		val calendar = Calendar.getInstance()
 		val initialDate = CalendarDate( calendar.time )
 
-		calendar.set(2021 , Calendar.JANUARY , 1)
+		calendar.add(Calendar.YEAR,  - 1)
 		val minDate = CalendarDate( calendar.time )
 
-		calendar.set( Calendar.getInstance().get(Calendar.YEAR) + 1 , Calendar.JANUARY , 1 )
+		calendar.add(Calendar.YEAR , 2)
 		val maxDate = CalendarDate( calendar.time )
 
 

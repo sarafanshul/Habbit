@@ -7,7 +7,7 @@
 
     <item android:color="@color/white" app:calendar_state_today="true" />
 
-    <item android:color="@color/lime_green" app:calendar_state_disabled="true" />
+    <item android:color="@color/md_grey_50_75" app:calendar_state_disabled="true" />
 
     <item android:color="?colorPrimaryVariant" android:state_selected="true" />
 

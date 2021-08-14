@@ -11,6 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+/**
+ * A State managing adapter for [RecyclerView] with support for states
+ * *DOES NOT WORK WITH [PagingDataAdapter]*
+ */
+@SuppressWarnings("all")
 public class StatesRecyclerViewAdapter extends RecyclerViewAdapterWrapper {
     private final View vLoadingView;
     private final View vEmptyView;

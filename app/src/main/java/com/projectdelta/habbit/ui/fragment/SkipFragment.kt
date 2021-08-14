@@ -132,6 +132,9 @@ class SkipFragment : BaseViewBindingFragment<SkipFragmentBinding>() {
 						viewModel.delete( x )
 						Snackbar.make(requireActivity().findViewById(R.id.main_cl) , "A task deleted!" , Snackbar.LENGTH_LONG).apply {
 							anchorView = requireActivity().findViewById(R.id.main_fab_create)
+							setActionTextColor(requireActivity().getColor(R.color.md_blue_A400))
+							setBackgroundTint(requireActivity().getColor(R.color.md_grey_900))
+							setTextColor(requireActivity().getColor(R.color.md_white_1000_54))
 							setAction("Undo"){
 								viewModel.insertTask(x)
 							}

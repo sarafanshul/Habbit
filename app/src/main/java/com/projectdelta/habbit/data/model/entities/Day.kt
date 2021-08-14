@@ -33,4 +33,14 @@ data class Day(
 	@SerializedName("tasksTitle")
 	var tasksTitle : MutableList<String> = mutableListOf(),
 
-	):Serializable
+):Serializable{
+
+	override fun equals(other: Any?): Boolean {
+		if( javaClass != other?.javaClass ) return false
+
+		other as Day
+		if( id != other.id ) return false
+
+		return true
+	}
+}

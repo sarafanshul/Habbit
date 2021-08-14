@@ -1,6 +1,7 @@
 package com.projectdelta.habbit.data.repository
 
 import androidx.lifecycle.LiveData
+import androidx.paging.*
 import com.projectdelta.habbit.data.local.TasksDao
 import com.projectdelta.habbit.data.model.entities.Day
 import com.projectdelta.habbit.data.model.entities.Task
@@ -17,6 +18,8 @@ class TasksRepositoryImpl( private val tasksDao: TasksDao) : TasksRepository{
     fun getAllTasksOffline() : List<Task> = tasksDao.getAllTasksOffline()
 
     override fun getAllDays() : LiveData<List<Day>> = tasksDao.getAllDays()
+
+    fun getAllDaysPaged() : PagingSource<Int , Day> = tasksDao.getAllDaysPaged()
 
     override fun getTaskById(id: Long): Task = tasksDao.getTaskById( id )
 
@@ -50,4 +53,13 @@ class TasksRepositoryImpl( private val tasksDao: TasksDao) : TasksRepository{
         tasksDao.updateTask(task)
         tasksDao.insertDay(day)
     }
+
+    fun getAllDaysDataPaged() = Pager(
+        config = PagingConfig(
+            pageSize = 20,
+            maxSize = 100,
+            enablePlaceholders = false
+        ),
+        pagingSourceFactory = { getAllDaysPaged() }
+    ).liveData
 }

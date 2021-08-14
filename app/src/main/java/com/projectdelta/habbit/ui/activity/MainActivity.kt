@@ -61,8 +61,11 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 	private val startForResultTask = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
 			result: ActivityResult ->
 		if (result.resultCode == Activity.RESULT_OK) {
-			Snackbar.make(binding.root , "Changes saved" , Snackbar.LENGTH_LONG).apply {
+			Snackbar.make(binding.root , "Changes saved" , Snackbar.LENGTH_SHORT).apply {
 				anchorView = binding.mainFabCreate
+				setActionTextColor(getColor(R.color.md_blue_A400))
+				setBackgroundTint(getColor(R.color.md_grey_900))
+				setTextColor(getColor(R.color.md_white_1000_54))
 			}.show()
 		}
 	}
