@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.google.gson.annotations.SerializedName
-import com.projectdelta.habbit.util.lang.Converters
+import com.projectdelta.habbit.util.system.lang.Converters
 import java.io.Serializable
 
 @Keep

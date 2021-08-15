@@ -9,7 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.projectdelta.habbit.data.model.entities.Day
 import com.projectdelta.habbit.data.model.entities.Task
 import com.projectdelta.habbit.util.constant.DatabaseConstants
-import com.projectdelta.habbit.util.lang.Converters
+import com.projectdelta.habbit.util.system.lang.Converters
 import java.util.concurrent.Executors
 
 @Database(

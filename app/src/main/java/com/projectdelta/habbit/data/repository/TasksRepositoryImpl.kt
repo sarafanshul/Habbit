@@ -5,9 +5,12 @@ import androidx.paging.*
 import com.projectdelta.habbit.data.local.TasksDao
 import com.projectdelta.habbit.data.model.entities.Day
 import com.projectdelta.habbit.data.model.entities.Task
-import com.projectdelta.habbit.util.lang.TimeUtil
+import com.projectdelta.habbit.util.system.lang.TimeUtil
+import kotlinx.coroutines.flow.Flow
 
 class TasksRepositoryImpl( private val tasksDao: TasksDao) : TasksRepository{
+
+    // ============ Task Table functions ===========
 
     override fun insertTask(task : Task) = tasksDao.insertTask( task )
 
@@ -17,15 +20,21 @@ class TasksRepositoryImpl( private val tasksDao: TasksDao) : TasksRepository{
 
     fun getAllTasksOffline() : List<Task> = tasksDao.getAllTasksOffline()
 
-    override fun getAllDays() : LiveData<List<Day>> = tasksDao.getAllDays()
-
-    fun getAllDaysPaged() : PagingSource<Int , Day> = tasksDao.getAllDaysPaged()
-
     override fun getTaskById(id: Long): Task = tasksDao.getTaskById( id )
 
     fun getTaskByIdLive(id : Long ) = tasksDao.getTaskByIdLive( id )
 
     override suspend fun getTask(taskName : String ) : List<Task> = tasksDao.getTask( taskName )
+
+    override fun updateTask(task : Task) = tasksDao.updateTask( task )
+
+    override fun deleteTask(task : Task) = tasksDao.deleteTask( task )
+
+    // ============ Day Table functions ===========
+
+    override fun getAllDays() : Flow<List<Day>> = tasksDao.getAllDays()
+
+    fun getAllDaysPaged() : PagingSource<Int , Day> = tasksDao.getAllDaysPaged()
 
     override suspend fun getDay(id : Long) = tasksDao.getDay(id)
 
@@ -33,11 +42,7 @@ class TasksRepositoryImpl( private val tasksDao: TasksDao) : TasksRepository{
 
     override suspend fun getDayRange(start : Long, end : Long ) = tasksDao.getDayRange(start , end)
 
-    override fun updateTask(task : Task) = tasksDao.updateTask( task )
-
     override fun updateDay(day : Day) = tasksDao.updateDay(day)
-
-    override fun deleteTask(task : Task) = tasksDao.deleteTask( task )
 
     /**
      * Updates a task in task-database and add corresponding task id to day object and updates day-database
@@ -62,4 +67,6 @@ class TasksRepositoryImpl( private val tasksDao: TasksDao) : TasksRepository{
         ),
         pagingSourceFactory = { getAllDaysPaged() }
     ).liveData
+
+
 }

@@ -17,6 +17,7 @@
         <item name="fontFamily">@font/product_sans_font_family</item>
         <item name="theme_text">@color/md_black_1000_54</item>
         <item name="colorOnColorOnPrimary">@color/asphalt</item>
+        <item name="colorOnToolbar">@color/white</item>
 
         <item name="materialAlertDialogTheme">@style/NewAlertDialogTheme</item>
     </style>
@@ -24,9 +25,11 @@
     <style name="Theme.Habbit.Light" parent="Theme.Habbit">
         <item name="colorTertiary">@color/mat_black</item>
         <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
         <item name="colorBackgroundDark">@color/white</item>
         <item name="selectedColor">@color/md_grey_800</item>
         <item name="colorSurface">@color/white</item>
+        <item name="colorOnToolbar">@color/md_black_1000_38</item>
 
         <item name="android:statusBarColor" tools:targetApi="l">@color/white</item>
     </style>

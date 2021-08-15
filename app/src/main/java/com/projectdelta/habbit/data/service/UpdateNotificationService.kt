@@ -9,7 +9,7 @@ import android.util.Log
 import androidx.core.content.ContextCompat
 import com.projectdelta.habbit.data.local.TasksDatabase
 import com.projectdelta.habbit.util.*
-import com.projectdelta.habbit.util.lang.*
+import com.projectdelta.habbit.util.system.lang.*
 import com.projectdelta.habbit.util.notification.Notifications
 import com.projectdelta.habbit.util.notification.UpdateNotificationUtil
 import kotlinx.coroutines.*

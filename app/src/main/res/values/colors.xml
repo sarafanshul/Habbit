@@ -109,4 +109,6 @@
     <color name="md_blue_grey_900">#263238</color>
     <color name="md_blue_grey_800">#37474F</color>
 
+    <color name="web_view_title_bar_background">#e53935</color>
+
 </resources>

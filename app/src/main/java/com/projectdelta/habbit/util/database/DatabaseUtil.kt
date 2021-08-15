@@ -5,7 +5,7 @@ import android.util.Log
 import com.projectdelta.habbit.data.local.TasksDatabase
 import com.projectdelta.habbit.util.database.firebase.FirebaseUtil.Companion.getAuth
 import com.projectdelta.habbit.util.database.firebase.FirebaseUtil.Companion.getDocumentUser
-import com.projectdelta.habbit.util.lang.darkToast
+import com.projectdelta.habbit.util.system.lang.darkToast
 import kotlinx.coroutines.*
 
 class DatabaseUtil () {

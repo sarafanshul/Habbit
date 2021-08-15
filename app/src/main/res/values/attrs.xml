@@ -33,5 +33,7 @@
 
         <attr name="selectedColor" format="color"/>
 
+        <attr name="colorOnToolbar" format="color"/>
+
     </declare-styleable>
 </resources>

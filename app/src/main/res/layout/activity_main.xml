@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    tools:context=".ui.activity.MainActivity">
+    tools:context=".ui.main.MainActivity">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -65,7 +65,7 @@
             app:layout_constraintEnd_toEndOf="@+id/main_rv_tasks"
             android:contentDescription="Create new" />
 
-        <com.projectdelta.habbit.util.view.RevealAnimationView
+        <com.projectdelta.habbit.widget.RevealAnimationView
             android:id="@+id/main_circle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -7,9 +7,9 @@ import android.content.Intent
 import com.projectdelta.habbit.data.local.TasksDatabase
 import com.projectdelta.habbit.data.model.entities.Task
 import com.projectdelta.habbit.data.repository.TasksRepositoryImpl
-import com.projectdelta.habbit.util.lang.TimeUtil
-import com.projectdelta.habbit.util.lang.hash
-import com.projectdelta.habbit.util.lang.notificationManager
+import com.projectdelta.habbit.util.system.lang.TimeUtil
+import com.projectdelta.habbit.util.system.lang.hash
+import com.projectdelta.habbit.util.system.lang.notificationManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

@@ -3,6 +3,7 @@ package com.projectdelta.habbit.data.repository
 import androidx.lifecycle.LiveData
 import com.projectdelta.habbit.data.model.entities.Day
 import com.projectdelta.habbit.data.model.entities.Task
+import kotlinx.coroutines.flow.Flow
 
 interface TasksRepository {
 
@@ -12,7 +13,7 @@ interface TasksRepository {
 
 	fun getAllTasks( ): LiveData<List<Task>>
 
-	fun getAllDays(): LiveData<List<Day>>
+	fun getAllDays(): Flow<List<Day>>
 
 	fun getTaskById(id: Long): Task
 

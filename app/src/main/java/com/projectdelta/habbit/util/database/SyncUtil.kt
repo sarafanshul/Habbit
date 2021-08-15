@@ -13,8 +13,8 @@ import com.projectdelta.habbit.data.repository.TasksRepositoryImpl
 import com.projectdelta.habbit.util.database.firebase.FirebaseUtil.Companion.USERS
 import com.projectdelta.habbit.util.database.firebase.FirebaseUtil.Companion.getAuth
 import com.projectdelta.habbit.util.database.firebase.FirebaseUtil.Companion.getDocumentUser
-import com.projectdelta.habbit.util.lang.darkToast
-import com.projectdelta.habbit.util.lang.isOnline
+import com.projectdelta.habbit.util.system.lang.darkToast
+import com.projectdelta.habbit.util.system.lang.isOnline
 import kotlinx.coroutines.*
 import javax.inject.Inject
 import javax.inject.Singleton

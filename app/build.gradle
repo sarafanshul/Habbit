@@ -117,5 +117,7 @@ dependencies {
     def paging_version = "3.0.1"
     implementation "androidx.paging:paging-runtime:$paging_version"
 
+    implementation "androidx.browser:browser:1.3.0"
+
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
 }

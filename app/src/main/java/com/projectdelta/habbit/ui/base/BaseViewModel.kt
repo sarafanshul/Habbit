@@ -1,7 +1,7 @@
 package com.projectdelta.habbit.ui.base
 
 import androidx.lifecycle.ViewModel
-import com.projectdelta.habbit.util.lang.TimeUtil
+import com.projectdelta.habbit.util.system.lang.TimeUtil
 
 abstract class BaseViewModel : ViewModel() {
 

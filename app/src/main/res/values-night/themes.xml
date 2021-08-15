@@ -16,6 +16,7 @@
         <item name="fontFamily">@font/product_sans_font_family</item>
         <item name="theme_text">@color/md_white_1000_70</item>
         <item name="colorOnColorOnPrimary">@color/md_white_1000</item>
+        <item name="colorOnToolbar">@color/md_black_1000_38</item>
 
         <item name="materialAlertDialogTheme">@style/NewAlertDialogTheme</item>
     </style>
@@ -32,6 +33,7 @@
 
         <item name="colorBackgroundDark">#1B1A23</item>
         <item name="selectedColor">@color/md_black_1000_38</item>
+        <item name="colorOnToolbar">@color/md_black_1000_38</item>
 
         <item name="android:statusBarColor" tools:targetApi="l">@color/background_midnightdusk</item>
         <item name="android:navigationBarColor">@color/background_midnightdusk</item>

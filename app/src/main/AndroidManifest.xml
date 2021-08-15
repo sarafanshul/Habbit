@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".App"
@@ -16,15 +16,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Habbit">
-        <activity android:name=".ui.activity.InsightsActivity" />
+        <activity android:name=".ui.web.WebViewActivity"></activity>
+        <activity android:name=".ui.insight.InsightsActivity" />
         <activity
             android:name=".ui.setting.SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity
-            android:name=".ui.activity.editTask.EditTaskActivity"
-            android:windowSoftInputMode="adjustResize"/>
+            android:name="com.projectdelta.habbit.ui.edit.activity.EditTaskActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.activity.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/Theme.Splash.Gradient">
@@ -36,11 +37,11 @@
         </activity>
 
         <receiver
-            android:name="com.projectdelta.habbit.data.receiver.NotificationReceiver"
+            android:name=".data.receiver.NotificationReceiver"
             android:exported="false" />
 
         <service
-            android:name="com.projectdelta.habbit.data.service.UpdateNotificationService"
+            android:name=".data.service.UpdateNotificationService"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
