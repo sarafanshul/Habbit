@@ -9,13 +9,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.projectdelta.habbit.databinding.FragmentInsightsListBinding
 import com.projectdelta.habbit.widget.adapter.RecyclerItemClickListenr
-import com.projectdelta.habbit.ui.main.adapter.RecyclerViewListAdapter
+import com.projectdelta.habbit.ui.insight.adapter.RecyclerViewListAdapter
 import com.projectdelta.habbit.ui.base.BaseViewBindingFragment
-import com.projectdelta.habbit.ui.insight.adapter.InsightsSharedViewModel
+import com.projectdelta.habbit.ui.insight.InsightsSharedViewModel
 import com.projectdelta.habbit.util.system.lang.TimeUtil
 import com.projectdelta.habbit.util.system.lang.titlesToBulletList
 
 class InsightsListFragment : BaseViewBindingFragment<FragmentInsightsListBinding>() {
+
+	@Suppress("unused")
 	companion object{
 		fun newInstance() = InsightsListFragment()
 		private const val TAG = "InsightsListFragment"

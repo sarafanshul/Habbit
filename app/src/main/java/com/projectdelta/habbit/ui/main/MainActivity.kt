@@ -12,7 +12,8 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
-import androidx.viewpager.widget.ViewPager
+import androidx.lifecycle.lifecycleScope
+import androidx.viewpager2.widget.ViewPager2
 import androidx.work.ExistingPeriodicWorkPolicy
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -22,22 +23,23 @@ import com.google.firebase.ktx.Firebase
 import com.projectdelta.habbit.R
 import com.projectdelta.habbit.data.model.entities.Task
 import com.projectdelta.habbit.databinding.ActivityMainBinding
-import com.projectdelta.habbit.ui.edit.activity.EditTaskActivity
 import com.projectdelta.habbit.ui.base.BaseViewBindingActivity
+import com.projectdelta.habbit.ui.edit.activity.EditTaskActivity
 import com.projectdelta.habbit.ui.main.adapter.HomeViewPagerAdapter
 import com.projectdelta.habbit.ui.main.fragment.DoneFragment
 import com.projectdelta.habbit.ui.main.fragment.MenuFragment
 import com.projectdelta.habbit.ui.main.fragment.SkipFragment
 import com.projectdelta.habbit.ui.main.fragment.TodoFragment
 import com.projectdelta.habbit.ui.main.viewModel.MainViewModel
-import com.projectdelta.habbit.util.database.firebase.FirebaseUtil
-import com.projectdelta.habbit.util.system.lang.*
 import com.projectdelta.habbit.util.notification.Notifications.DEFAULT_UPDATE_INTERVAL
 import com.projectdelta.habbit.util.notification.UpdateNotificationJob
+import com.projectdelta.habbit.util.system.lang.*
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
@@ -46,16 +48,13 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 	lateinit var adapter : HomeViewPagerAdapter
 	private lateinit var auth: FirebaseAuth
 
-	@Inject
-	lateinit var firebaseUtil: FirebaseUtil
-
 	companion object{
 		fun getInstance() = this
 		private const val TAG = "MainActivity"
 	}
 
 	/**
-	 * Alternative activity specific lambda for OnActivityResult .
+	 * Activity specific lambda for [onActivityResult] since it is now deprecated .
 	 * [For more](https://stackoverflow.com/questions/62671106/onactivityresult-method-is-deprecated-what-is-the-alternative)
 	 * */
 	private val startForResultTask = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -67,6 +66,26 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 				setBackgroundTint(getColor(R.color.md_grey_900))
 				setTextColor(getColor(R.color.md_white_1000_54))
 			}.show()
+		}
+	}
+
+	/**
+	 * Callback for [ViewPager2.registerOnPageChangeCallback] , for syncing with bottom-AppBar
+	 *
+	 * **Unregister after use**
+	 */
+	private val onPageChangeCallback = object : ViewPager2.OnPageChangeCallback(){
+		override fun onPageSelected(position: Int) {
+			super.onPageSelected(position)
+			binding.mainBottomAppBar.menu.let{
+				when(position){
+					0 -> it.findItem(R.id.todo).isChecked = true
+					1 -> it.findItem(R.id.skip).isChecked = true
+					2 -> it.findItem(R.id.done).isChecked = true
+					3 -> it.findItem(R.id.more).isChecked = true
+					else -> Throwable("$TAG , Unknown Item Clicked $position")
+				}
+			}
 		}
 	}
 
@@ -98,7 +117,7 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 		binding.mainToolbar.title = SimpleDateFormat("EEEE").format( Date() )
 		binding.mainToolbar.subtitle = TimeUtil.getPastDateFromOffset(0)
 
-		adapter = HomeViewPagerAdapter(supportFragmentManager)
+		adapter = HomeViewPagerAdapter(this)
 		adapter.addFragment( TodoFragment() , "TODO" )
 		adapter.addFragment( SkipFragment() , "SKIPPED" )
 		adapter.addFragment( DoneFragment() , "DONE" )
@@ -107,17 +126,19 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 
 		syncNavigationWithViewPager()
 
-		viewModel.getAllTasks().observe(this , {data ->
-			var undone = 0
-
-			if( ! data.isNullOrEmpty() ){
-				undone = data.tasksBeforeSkipTime(viewModel.getMSFromMidnight()).unfinishedTill( viewModel.getTodayFromEpoch() ).size
+		lifecycleScope.launch {
+			viewModel.getAllTasksSorted().map { data ->
+				data
+					.unfinishedTill(viewModel.getTodayFromEpoch())
+					.tasksBeforeSkipTime(viewModel.getMSFromMidnight())
+					.size
+			}.collect { undone ->
+				if( undone > 0 )
+					binding.mainBottomAppBar.getOrCreateBadge(R.id.todo).number = undone
+				else
+					binding.mainBottomAppBar.removeBadge(R.id.todo)
 			}
-			if( undone > 0 )
-				binding.mainBottomAppBar.getOrCreateBadge(R.id.todo).number = undone
-			else
-				binding.mainBottomAppBar.removeBadge(R.id.todo)
-		})
+		}
 
 		binding.mainFabCreate.setOnClickListener {
 			animateAndDoStuff {
@@ -130,27 +151,7 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 		// Empty menu item for fab
 		binding.mainBottomAppBar.menu.findItem(R.id.empty).isEnabled = false
 
-		binding.mainVp.addOnPageChangeListener( object : ViewPager.OnPageChangeListener{
-			override fun onPageScrolled(
-				position: Int,
-				positionOffset: Float,
-				positionOffsetPixels: Int
-			) {}
-
-			override fun onPageSelected(position: Int) {
-				binding.mainBottomAppBar.menu.let{
-					when(position){
-						0 -> it.findItem(R.id.todo).isChecked = true
-						1 -> it.findItem(R.id.skip).isChecked = true
-						2 -> it.findItem(R.id.done).isChecked = true
-						3 -> it.findItem(R.id.more).isChecked = true
-						else -> Throwable("$TAG , Unknown Item Clicked $position")
-					}
-				}
-			}
-
-			override fun onPageScrollStateChanged(state: Int) {}
-		} )
+		binding.mainVp.registerOnPageChangeCallback(onPageChangeCallback)
 
 		binding.mainBottomAppBar.setOnNavigationItemSelectedListener {
 			when( it.itemId ){
@@ -243,5 +244,10 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 			}
 	}
 
+	override fun onDestroy() {
+		binding.mainVp.unregisterOnPageChangeCallback(onPageChangeCallback)
+		binding.mainVp.adapter
+		super.onDestroy()
+	}
 
 }

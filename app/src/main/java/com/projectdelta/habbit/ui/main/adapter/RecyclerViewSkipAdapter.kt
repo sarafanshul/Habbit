@@ -22,7 +22,8 @@ class RecyclerViewSkipAdapter():
 			override fun areContentsTheSame(oldItem: Task, newItem: Task): Boolean {
 				return oldItem.taskName == newItem.taskName &&
 						oldItem.summary == newItem.summary &&
-						oldItem.importance == newItem.importance
+						oldItem.importance == newItem.importance &&
+						oldItem.skipAfter == newItem.skipAfter
 			}
 		}
 	}

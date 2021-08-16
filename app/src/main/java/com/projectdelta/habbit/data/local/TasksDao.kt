@@ -19,6 +19,9 @@ interface TasksDao {
 	@Query("SELECT * FROM task")
 	fun getAllTasks( ) : LiveData<List<Task>>
 
+	@Query("SELECT * FROM task ORDER BY importance DESC")
+	fun getAllTasksSorted() : Flow<List<Task>>
+
 	@Query("SELECT * FROM task")
 	fun getAllTasksOffline( ) : List<Task>
 

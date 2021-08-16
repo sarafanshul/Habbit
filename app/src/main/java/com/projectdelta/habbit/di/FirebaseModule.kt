@@ -25,8 +25,8 @@ object FirebaseModule {
 
     @Singleton
     @Provides
-    fun provideFirebaseUtil(application: Application) : FirebaseUtil {
-        return FirebaseUtil(application)
+    fun provideFirebaseUtil() : FirebaseUtil {
+        return FirebaseUtil()
     }
 
 }

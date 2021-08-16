@@ -24,7 +24,6 @@ import com.projectdelta.habbit.widget.CustomTextPreference
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-
 @AndroidEntryPoint
 class SettingsActivity : BaseViewBindingActivity<SettingsActivityBinding>() ,
 	SharedPreferences.OnSharedPreferenceChangeListener {
@@ -55,13 +54,13 @@ class SettingsActivity : BaseViewBindingActivity<SettingsActivityBinding>() ,
 	}
 
 	override fun onPause() {
-		super.onPause()
 		PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this)
+		super.onPause()
 	}
 
 	override fun onDestroy() {
-		super.onDestroy()
 		PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this)
+		super.onDestroy()
 	}
 
 	override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {

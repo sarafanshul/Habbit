@@ -28,6 +28,8 @@ class HomeSharedViewModel @Inject constructor(
 		_data = repository.getAllTasks()
 	}
 
+	fun getAllTasksSorted() = repository.getAllTasksSorted()
+
 	fun notifyTaskDone(task : Task) {
 		viewModelScope.launch(Dispatchers.IO) {
 			// get fresh instance of task

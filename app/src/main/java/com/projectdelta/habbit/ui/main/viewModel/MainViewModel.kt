@@ -15,4 +15,6 @@ class MainViewModel @Inject constructor(
 
 	fun getAllTasks( ) : LiveData<List<Task>> = repository.getAllTasks()
 
+	fun getAllTasksSorted() = repository.getAllTasksSorted()
+
 }

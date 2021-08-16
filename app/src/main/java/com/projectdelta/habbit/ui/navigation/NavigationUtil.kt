@@ -2,10 +2,9 @@ package com.projectdelta.habbit.ui.navigation
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import com.projectdelta.habbit.ui.insight.InsightsActivity
-import com.projectdelta.habbit.ui.web.WebViewActivity
 import com.projectdelta.habbit.ui.setting.SettingsActivity
+import com.projectdelta.habbit.ui.web.WebViewActivity
 import com.projectdelta.habbit.util.constant.HELP_AND_FEEDBACK
 import com.projectdelta.habbit.util.constant.URL_PORTFOLIO
 
@@ -34,6 +33,8 @@ object NavigationUtil {
 	 * Opens help
 	 */
 	fun helpAndFeedback( context: Context ){
-		context.startActivity(Intent( Intent.ACTION_VIEW , Uri.parse(HELP_AND_FEEDBACK) ))
+		WebViewActivity.newIntent(context , HELP_AND_FEEDBACK , 101 , "About Habbit").also {
+			context.startActivity(it)
+		}
 	}
 }

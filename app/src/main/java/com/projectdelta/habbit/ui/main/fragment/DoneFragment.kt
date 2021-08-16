@@ -1,32 +1,37 @@
 package com.projectdelta.habbit.ui.main.fragment
 
-import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.textview.MaterialTextView
 import com.projectdelta.habbit.R
-import com.projectdelta.habbit.databinding.DoneFragmentBinding
-import com.projectdelta.habbit.ui.main.MainActivity
-import com.projectdelta.habbit.widget.adapter.RecyclerItemClickListenr
-import com.projectdelta.habbit.ui.main.adapter.RecyclerViewDoneAdapter
-import com.projectdelta.habbit.widget.adapter.StatesRecyclerViewAdapter
-import com.projectdelta.habbit.ui.base.BaseViewBindingFragment
-import com.projectdelta.habbit.ui.main.viewModel.HomeSharedViewModel
 import com.projectdelta.habbit.data.NotFound
+import com.projectdelta.habbit.databinding.DoneFragmentBinding
+import com.projectdelta.habbit.ui.base.BaseViewBindingFragment
+import com.projectdelta.habbit.ui.main.MainActivity
+import com.projectdelta.habbit.ui.main.adapter.RecyclerViewDoneAdapter
+import com.projectdelta.habbit.ui.main.viewModel.HomeSharedViewModel
 import com.projectdelta.habbit.util.system.lang.completedTill
 import com.projectdelta.habbit.util.system.lang.removeItemDecorations
+import com.projectdelta.habbit.widget.adapter.RecyclerItemClickListenr
+import com.projectdelta.habbit.widget.adapter.StatesRecyclerViewAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
 class DoneFragment : BaseViewBindingFragment<DoneFragmentBinding>() {
 
+	@Suppress("unused")
 	companion object {
 		fun newInstance() = DoneFragment()
 		private const val TAG = "DoneFragment"
@@ -38,15 +43,15 @@ class DoneFragment : BaseViewBindingFragment<DoneFragmentBinding>() {
 
 	private lateinit var activity: MainActivity
 
-	override fun onAttach(activity : Activity) {
-		super.onAttach(activity)
-		this.activity = activity as MainActivity
+	override fun onAttach(context: Context ) {
+		super.onAttach(context)
+		this.activity = context as MainActivity
 	}
 
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
 		savedInstanceState: Bundle?
-	): View? {
+	): View {
 		_binding = DoneFragmentBinding.inflate(inflater , container , false)
 
 		return binding.root
@@ -87,8 +92,8 @@ class DoneFragment : BaseViewBindingFragment<DoneFragmentBinding>() {
 							alpha = 0.0f
 							animate().apply {
 								alpha(1.0f)
-								setDuration(300)
-								setStartDelay(i*50L)
+								duration = 300
+								startDelay = i*50L
 								start()
 							}
 						}
@@ -111,24 +116,29 @@ class DoneFragment : BaseViewBindingFragment<DoneFragmentBinding>() {
 			}
 		))
 
-		viewModel.data.observe(viewLifecycleOwner , {data ->
-			if( data.isNullOrEmpty() ) {
-				statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
-				binding.doneRv.removeItemDecorations()
-				return@observe
+		lifecycleScope.launch {
+			viewModel.getAllTasksSorted().map { data ->
+				data.completedTill(viewModel.getTodayFromEpoch())
+			}.collect { data ->
+				if( data.isNullOrEmpty() ){
+					// remove decorations
+					statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
+					binding.doneRv.removeItemDecorations()
+				}
+				else{
+					// add decoration
+					statesAdapter.state = StatesRecyclerViewAdapter.STATE_NORMAL
+					binding.doneRv.addItemDecoration(divider)
+					// update adapter
+					adapter.set(viewModel.getTodayFromEpoch())
+					adapter.submitList(data)
+				}
 			}
-			val doneData = data.completedTill( viewModel.getTodayFromEpoch() )
-			if( doneData.isNullOrEmpty() ){
-				statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
-				binding.doneRv.removeItemDecorations()
-			}else {
-				binding.doneRv.addItemDecoration( divider )
-				statesAdapter.state = StatesRecyclerViewAdapter.STATE_NORMAL
-				adapter.set(
-					viewModel.getTodayFromEpoch()
-				)
-				adapter.submitList(doneData)
-			}
-		})
+		}
+	}
+
+	override fun onDestroyView() {
+		binding.doneRv.adapter = null
+		super.onDestroyView()
 	}
 }

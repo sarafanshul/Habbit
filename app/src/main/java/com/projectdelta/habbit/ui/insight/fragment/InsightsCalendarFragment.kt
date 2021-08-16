@@ -1,7 +1,6 @@
 package com.projectdelta.habbit.ui.insight.fragment
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,17 +10,17 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.projectdelta.habbit.R
+import com.projectdelta.habbit.data.NotFound
 import com.projectdelta.habbit.data.model.entities.Day
 import com.projectdelta.habbit.databinding.FragmentInsightsCalendarBinding
 import com.projectdelta.habbit.ui.base.BaseViewBindingFragment
-import com.projectdelta.habbit.ui.insight.InsightsActivity
-import com.projectdelta.habbit.ui.insight.adapter.InsightsSharedViewModel
-import com.projectdelta.habbit.data.NotFound
+import com.projectdelta.habbit.ui.insight.InsightsSharedViewModel
 import com.projectdelta.habbit.util.system.lang.TimeUtil
 import com.projectdelta.habbit.util.system.lang.darkToast
 import com.projectdelta.habbit.util.system.lang.titlesToBulletList
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.cleverpumpkin.calendar.CalendarDate
 import ru.cleverpumpkin.calendar.CalendarView
@@ -40,12 +39,6 @@ class InsightsCalendarFragment : BaseViewBindingFragment<FragmentInsightsCalenda
 
 	private val viewModel : InsightsSharedViewModel by activityViewModels()
 
-	private lateinit var activity : InsightsActivity
-	override fun onAttach(activity: Activity) {
-		super.onAttach(activity)
-		this.activity = activity as InsightsActivity
-	}
-
 	@SuppressLint("FieldSiteTargetOnQualifierAnnotation")
 	@field:[Inject Named("COLORS_ARRAY")]
 	lateinit var COLORS : IntArray
@@ -53,7 +46,7 @@ class InsightsCalendarFragment : BaseViewBindingFragment<FragmentInsightsCalenda
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
 		savedInstanceState: Bundle?
-	): View? {
+	): View {
 
 		_binding = FragmentInsightsCalendarBinding.inflate(inflater , container , false )
 
@@ -122,7 +115,7 @@ class InsightsCalendarFragment : BaseViewBindingFragment<FragmentInsightsCalenda
 					else -> "${data[cur].tasksTitle.size} tasks completed on ${TimeUtil.getMonth( date.month + 1 )} ${date.dayOfMonth}"
 				}
 				val message = data[cur].titlesToBulletList()
-				MaterialAlertDialogBuilder(activity).apply{
+				MaterialAlertDialogBuilder(requireActivity()).apply{
 					setTitle( title )
 					setMessage(message)
 					create()
@@ -131,7 +124,7 @@ class InsightsCalendarFragment : BaseViewBindingFragment<FragmentInsightsCalenda
 			else {
 				val title = "No tasks completed on ${TimeUtil.getMonth( date.month + 1 )} ${date.dayOfMonth}"
 				val message = NotFound.get()
-				MaterialAlertDialogBuilder(activity).apply{
+				MaterialAlertDialogBuilder(requireActivity()).apply{
 					setTitle( title )
 					setMessage(message)
 					create()

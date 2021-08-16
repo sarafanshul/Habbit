@@ -12,8 +12,7 @@ import com.projectdelta.habbit.util.constant.INDENT
  */
 fun List<Task>.unfinishedTill( X : Long ) = filter {
 		( it.skipTill < X && (it.lastDayCompleted.isEmpty() || it.lastDayCompleted.last() < X) )
-	}.sortedBy { -it.importance }
-
+	}
 
 /**
  * Returns all skipped tasks from  X -> [X , Inf).
@@ -24,8 +23,7 @@ fun List<Task>.unfinishedTill( X : Long ) = filter {
  */
 fun List<Task>.skippedTill( X : Long , Y : Long ) = filter {
 		(it.skipTill >= X || (it.isSkipAfterEnabled && it.skipAfter <= Y) )
-	}.sortedBy { -it.importance }
-
+	}
 
 /**
  * Returns all Completed tasks on X
@@ -35,8 +33,7 @@ fun List<Task>.skippedTill( X : Long , Y : Long ) = filter {
  */
 fun List<Task>.completedTill( X : Long ) = filter {
 		( !it.lastDayCompleted.isNullOrEmpty() && it.skipTill < X && it.lastDayCompleted.last() == X )
-	}.sortedBy { -it.importance }
-
+	}
 
 /**
  * Returns all unfinished tasks with notifications enabled till X -> [0 , X).
@@ -46,7 +43,7 @@ fun List<Task>.completedTill( X : Long ) = filter {
  */
 fun List<Task>.unfinishedNotifyTill( X : Long ) = filter {
 	( it.skipTill < X && it.isNotificationEnabled && (it.lastDayCompleted.isEmpty() || it.lastDayCompleted.last() < X) )
-	}.sortedBy { -it.importance }
+	}
 
 /**
  * Returns List of unfinished Tasks before [Task.skipAfter]

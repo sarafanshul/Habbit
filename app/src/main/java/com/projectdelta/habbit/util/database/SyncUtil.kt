@@ -115,7 +115,7 @@ class SyncUtil @Inject constructor(
         doc
             .document( id )
             .set(firestoreQueryObject)
-            .addOnSuccessListener { _ ->
+            .addOnSuccessListener {
                 Log.d(TAG, "DocumentSnapshot added with ID: $id")
                 mContext.darkToast("Sync completed successfully")
             }
@@ -151,7 +151,7 @@ class SyncUtil @Inject constructor(
 
     private fun addDataToLocalDB(response: FirestoreQueryObject?) {
         Log.i(TAG, "addDataToLocalDB: $response")
-        if( response != null && response.Task != null ) {
+        if(response?.Task != null) {
             val handler = CoroutineExceptionHandler { _, exception ->
                 Log.e(TAG, "addDataToLocalDB: handler", exception)
                 destroyEverything()
@@ -165,7 +165,7 @@ class SyncUtil @Inject constructor(
                 response.Day?.map { D ->  async {
                     repositoryImpl.insertDay( D )
                 } }?.forEach { it.await() }
-                Log.d(TAG,"addDataToLocalDB: adding data of size ${response?.Day?.size} , ${response?.Task?.size}")
+                Log.d(TAG,"addDataToLocalDB: adding data of size ${response.Day?.size} , ${response.Task?.size}")
             }
         }
     }
@@ -173,7 +173,8 @@ class SyncUtil @Inject constructor(
     /**
      * Testing functions to move to Test later
      */
-    private fun getTestDataLocalAndCompare( compareTo : FirestoreQueryObject){
+    @DelicateCoroutinesApi
+    private fun getTestDataLocalAndCompare(compareTo : FirestoreQueryObject){
         val x = FirestoreQueryObject()
         GlobalScope.launch(Dispatchers.IO) {
             val taskData = async { repositoryImpl.getAllTasksOffline() }

@@ -18,6 +18,8 @@ class TasksRepositoryImpl( private val tasksDao: TasksDao) : TasksRepository{
 
     override fun getAllTasks( ) : LiveData<List<Task>> = tasksDao.getAllTasks()
 
+    fun getAllTasksSorted( ) : Flow<List<Task>> = tasksDao.getAllTasksSorted()
+
     fun getAllTasksOffline() : List<Task> = tasksDao.getAllTasksOffline()
 
     override fun getTaskById(id: Long): Task = tasksDao.getTaskById( id )

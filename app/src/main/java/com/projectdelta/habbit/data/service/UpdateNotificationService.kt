@@ -144,7 +144,8 @@ class UpdateNotificationService(
 				this@UpdateNotificationService,
 				data.await()
 					.tasksBeforeSkipTime(TimeUtil.getMSfromMidnight())
-					.unfinishedNotifyTill(TimeUtil.getTodayFromEpoch()),
+					.unfinishedNotifyTill(TimeUtil.getTodayFromEpoch())
+					.sortedBy { -it.importance },
 				DEFAULT_NOTIFICATION_ID
 				)
 			}catch ( e : Exception ){

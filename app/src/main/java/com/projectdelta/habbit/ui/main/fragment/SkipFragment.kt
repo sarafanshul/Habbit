@@ -1,6 +1,6 @@
 package com.projectdelta.habbit.ui.main.fragment
 
-import android.app.Activity
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,25 +17,29 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
 import com.projectdelta.habbit.R
-import com.projectdelta.habbit.databinding.SkipFragmentBinding
-import com.projectdelta.habbit.ui.main.MainActivity
-import com.projectdelta.habbit.widget.adapter.CustomItemTouchHelperCallback
-import com.projectdelta.habbit.widget.adapter.RecyclerItemClickListenr
-import com.projectdelta.habbit.ui.main.adapter.RecyclerViewSkipAdapter
-import com.projectdelta.habbit.widget.adapter.StatesRecyclerViewAdapter
-import com.projectdelta.habbit.ui.base.BaseViewBindingFragment
-import com.projectdelta.habbit.ui.main.viewModel.HomeSharedViewModel
 import com.projectdelta.habbit.data.NotFound
+import com.projectdelta.habbit.databinding.SkipFragmentBinding
+import com.projectdelta.habbit.ui.base.BaseViewBindingFragment
+import com.projectdelta.habbit.ui.main.MainActivity
+import com.projectdelta.habbit.ui.main.adapter.RecyclerViewSkipAdapter
+import com.projectdelta.habbit.ui.main.viewModel.HomeSharedViewModel
 import com.projectdelta.habbit.util.constant.ICON_SIZE_DP
 import com.projectdelta.habbit.util.system.lang.convertDrawableToBitmap
 import com.projectdelta.habbit.util.system.lang.dpToPx
 import com.projectdelta.habbit.util.system.lang.removeItemDecorations
 import com.projectdelta.habbit.util.system.lang.skippedTill
+import com.projectdelta.habbit.widget.adapter.CustomItemTouchHelperCallback
+import com.projectdelta.habbit.widget.adapter.RecyclerItemClickListenr
+import com.projectdelta.habbit.widget.adapter.StatesRecyclerViewAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SkipFragment : BaseViewBindingFragment<SkipFragmentBinding>() {
 
+	@Suppress("unused")
 	companion object {
 		fun newInstance() = SkipFragment()
 		private const val TAG = "SkipFragment"
@@ -44,15 +49,15 @@ class SkipFragment : BaseViewBindingFragment<SkipFragmentBinding>() {
 	lateinit var adapter : RecyclerViewSkipAdapter
 	private lateinit var activity: MainActivity
 
-	override fun onAttach(activity : Activity) {
-		super.onAttach(activity)
-		this.activity = activity as MainActivity
+	override fun onAttach(context: Context) {
+		super.onAttach(context)
+		this.activity = context as MainActivity
 	}
 
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
 		savedInstanceState: Bundle?
-	): View? {
+	): View {
 		_binding = SkipFragmentBinding.inflate(inflater , container , false)
 
 		return binding.root
@@ -94,8 +99,8 @@ class SkipFragment : BaseViewBindingFragment<SkipFragmentBinding>() {
 							alpha = 0.0f
 							animate().apply {
 								alpha(1.0f)
-								setDuration(300)
-								setStartDelay(i*50L)
+								duration = 300
+								startDelay = i*50L
 								start()
 							}
 						}
@@ -109,7 +114,7 @@ class SkipFragment : BaseViewBindingFragment<SkipFragmentBinding>() {
 			binding.skipRv ,
 			object : RecyclerItemClickListenr.OnItemClickListener{
 				override fun onItemClick(view: View, position: Int) {
-						activity.launchEditActivity( adapter.getItemAt(position) )
+						(activity).launchEditActivity( adapter.getItemAt(position) )
 				}
 
 				override fun onItemLongClick(view: View?, position: Int) {
@@ -146,26 +151,31 @@ class SkipFragment : BaseViewBindingFragment<SkipFragmentBinding>() {
 			})
 		}.build())
 
-		viewModel.data.observe(viewLifecycleOwner , {data ->
-			if( data.isNullOrEmpty() ) {
-				statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
-				binding.skipRv.removeItemDecorations()
-				return@observe
+		lifecycleScope.launch {
+			viewModel.getAllTasksSorted().map { data ->
+				data.skippedTill( viewModel.getTodayFromEpoch() , viewModel.getMSFromMidnight() )
+			}.collect { data ->
+				if( data.isNullOrEmpty() ){
+					// remove decorations
+					statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
+					binding.skipRv.removeItemDecorations()
+					itemTouchHelper.attachToRecyclerView(null)
+				}
+				else{
+					// add decoration
+					statesAdapter.state = StatesRecyclerViewAdapter.STATE_NORMAL
+					binding.skipRv.addItemDecoration(divider)
+					itemTouchHelper.attachToRecyclerView(binding.skipRv)
+					// update adapter
+					adapter.set(viewModel.getTodayFromEpoch())
+					adapter.submitList(data)
+				}
 			}
-			val undoneData = data.skippedTill( viewModel.getTodayFromEpoch() , viewModel.getMSFromMidnight() )
-			if( undoneData.isNullOrEmpty() ) {
-				statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
-				binding.skipRv.removeItemDecorations()
-				itemTouchHelper.attachToRecyclerView( null )
-			}else {
-				statesAdapter.state = StatesRecyclerViewAdapter.STATE_NORMAL
-				itemTouchHelper.attachToRecyclerView( binding.skipRv )
-				binding.skipRv.addItemDecoration( divider )
-				adapter.set(
-					viewModel.getTodayFromEpoch()
-				)
-				adapter.submitList(undoneData)
-			}
-		})
+		}
+	}
+
+	override fun onDestroyView() {
+		binding.skipRv.adapter = null
+		super.onDestroyView()
 	}
 }

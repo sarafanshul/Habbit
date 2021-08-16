@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.activityViewModels
 import com.bumptech.glide.Glide
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
@@ -23,7 +22,6 @@ import com.google.firebase.ktx.Firebase
 import com.projectdelta.habbit.R
 import com.projectdelta.habbit.databinding.FragmentMenuBinding
 import com.projectdelta.habbit.ui.base.BaseViewBindingFragment
-import com.projectdelta.habbit.ui.main.viewModel.HomeSharedViewModel
 import com.projectdelta.habbit.ui.navigation.NavigationUtil
 import com.projectdelta.habbit.util.database.firebase.FirebaseUtil
 import com.projectdelta.habbit.util.system.lang.capitalized
@@ -39,7 +37,6 @@ class MenuFragment : BaseViewBindingFragment<FragmentMenuBinding>() {
 		private const val TAG = "MenuFragment"
 	}
 
-	private val viewModel: HomeSharedViewModel by activityViewModels()
 	private lateinit var auth: FirebaseAuth
 
 	@Inject
@@ -124,7 +121,7 @@ class MenuFragment : BaseViewBindingFragment<FragmentMenuBinding>() {
 	}
 
 	private fun signIn() {
-		val signInIntent = firebaseUtil.googleSignInClient.signInIntent
+		val signInIntent = firebaseUtil.googleSignInClient(requireActivity()).signInIntent
 		startForResultSignIn.launch(signInIntent)
 	}
 	private fun signOut(){

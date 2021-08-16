@@ -30,6 +30,7 @@ class EditTaskActivity : BaseViewBindingActivity<ActivityEditTaskBinding>() {
 	private val viewModel : EditTaskViewModel by viewModels()
 	private var skipTime : Long = -1
 
+	@Suppress("unused")
 	companion object{
 		private const val REPEAT_DELAY = 50L
 		private const val TAG = "EditTaskActivity"

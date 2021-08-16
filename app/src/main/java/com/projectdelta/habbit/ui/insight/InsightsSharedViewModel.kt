@@ -1,11 +1,10 @@
-package com.projectdelta.habbit.ui.insight.adapter
+package com.projectdelta.habbit.ui.insight
 
 import androidx.lifecycle.viewModelScope
-import androidx.paging.*
+import androidx.paging.cachedIn
 import com.projectdelta.habbit.data.repository.TasksRepositoryImpl
 import com.projectdelta.habbit.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 @HiltViewModel

@@ -54,8 +54,10 @@ class EditTaskViewModel @Inject constructor(
 		editTaskInteractionManager.setNewBodyState( state )
 	}
 
+	@Suppress("unused")
 	fun isToolbarCollapsed() = collapsingToolbarState.toString() == CollapsingToolbarState.STATE_COLLAPSED
 
+	@Suppress("unused")
 	fun isToolbarExpanded() = collapsingToolbarState.toString() == CollapsingToolbarState.STATE_EXPANDED
 
 	fun checkEditState() = editTaskInteractionManager.checkEditState()

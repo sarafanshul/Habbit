@@ -1,7 +1,8 @@
 package com.projectdelta.habbit.ui.insight
 
 import android.os.Bundle
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayoutMediator
 import com.projectdelta.habbit.R
 import com.projectdelta.habbit.databinding.ActivityInsightsBinding
 import com.projectdelta.habbit.ui.base.BaseViewBindingActivity
@@ -15,9 +16,19 @@ class InsightsActivity : BaseViewBindingActivity<ActivityInsightsBinding>() {
 
 	lateinit var adapter : InsightsViewPagerAdapter
 
-	companion object{
-		val tabIconsOutlined = listOf( R.drawable.ic_fact_check_black_outline_24dp , R.drawable.ic_date_range_black_outline_24dp )
-		val tabIconsFilled = listOf( R.drawable.ic_fact_check_black_filled_24dp , R.drawable.ic_date_range_black_filled_24dp )
+	private val tabIconsOutlined = listOf( R.drawable.ic_fact_check_black_outline_24dp , R.drawable.ic_date_range_black_outline_24dp )
+	private val tabIconsFilled = listOf( R.drawable.ic_fact_check_black_filled_24dp , R.drawable.ic_date_range_black_filled_24dp )
+
+	private val onPageChangeCallback = object : ViewPager2.OnPageChangeCallback(){
+		override fun onPageSelected(position: Int) {
+			super.onPageSelected(position)
+			for( i in 0 until binding.insightsTabs.tabCount ){
+				if( i == position )
+					binding.insightsTabs.getTabAt( i )!!.setIcon( tabIconsFilled[i] )
+				else
+					binding.insightsTabs.getTabAt( i )!!.setIcon( tabIconsOutlined[i] )
+			}
+		}
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,40 +43,25 @@ class InsightsActivity : BaseViewBindingActivity<ActivityInsightsBinding>() {
 	}
 
 	private fun setLayout() {
-		adapter = InsightsViewPagerAdapter( supportFragmentManager )
-		adapter.addFragment( InsightsListFragment() , "" )
-		adapter.addFragment( InsightsCalendarFragment() , "" )
+		adapter = InsightsViewPagerAdapter( this )
+		adapter.addFragment( InsightsListFragment()  )
+		adapter.addFragment( InsightsCalendarFragment()  )
 
 		binding.insightsVp.adapter = adapter
 
-		binding.insightsTabs.setupWithViewPager(binding.insightsVp)
-		setTabIcons()
+		TabLayoutMediator( binding.insightsTabs , binding.insightsVp ){ tab , position ->
+			tab.text = ""
+			if(position != 0)tab.setIcon(tabIconsOutlined[position])
+			else tab.setIcon(tabIconsFilled[position])
+		}.attach()
 
-		binding.insightsVp.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-			override fun onPageScrolled(
-				position: Int,
-				positionOffset: Float,
-				positionOffsetPixels: Int
-			) {}
-
-			override fun onPageSelected(position: Int) {
-				for( i in 0 until binding.insightsTabs.tabCount ){
-					if( i == position )
-						binding.insightsTabs.getTabAt( i )!!.setIcon( tabIconsFilled[i] )
-					else
-						binding.insightsTabs.getTabAt( i )!!.setIcon( tabIconsOutlined[i] )
-				}
-			}
-
-			override fun onPageScrollStateChanged(state: Int) {}
-		} )
+		binding.insightsVp.registerOnPageChangeCallback( onPageChangeCallback )
 
 	}
 
-	private fun setTabIcons() {
-		for (i in 0 until binding.insightsTabs.tabCount)
-			binding.insightsTabs.getTabAt(i)!!.setIcon(tabIconsOutlined[i])
-		binding.insightsTabs.getTabAt(0)!!.setIcon(tabIconsFilled[0])
+	override fun onDestroy() {
+		binding.insightsVp.unregisterOnPageChangeCallback(onPageChangeCallback)
+		super.onDestroy()
 	}
 
 }
