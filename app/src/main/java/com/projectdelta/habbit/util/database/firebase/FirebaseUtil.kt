@@ -14,27 +14,28 @@ import com.projectdelta.habbit.R
 
 class FirebaseUtil {
 
-    companion object{
+	companion object {
 
-        const val USERS = "users"
-        val SOURCE = Source.DEFAULT
+		const val USERS = "users"
+		val SOURCE = Source.DEFAULT
 
-        fun getDocumentUser() : CollectionReference {
-            return Firebase.firestore.collection(USERS)
-        }
+		fun getDocumentUser(): CollectionReference {
+			return Firebase.firestore.collection(USERS)
+		}
 
-        fun getAuth(): FirebaseAuth {
-            return Firebase.auth
-        }
+		fun getAuth(): FirebaseAuth {
+			return Firebase.auth
+		}
 
-    }
+	}
 
-    private fun gso(context: Context): GoogleSignInOptions =
-        GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(context.getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
+	private fun gso(context: Context): GoogleSignInOptions =
+		GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+			.requestIdToken(context.getString(R.string.default_web_client_id))
+			.requestEmail()
+			.build()
 
-    fun googleSignInClient(context: Context): GoogleSignInClient = GoogleSignIn.getClient(context, gso(context))
+	fun googleSignInClient(context: Context): GoogleSignInClient =
+		GoogleSignIn.getClient(context, gso(context))
 
 }

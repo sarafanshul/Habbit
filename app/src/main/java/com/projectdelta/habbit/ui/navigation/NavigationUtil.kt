@@ -13,18 +13,20 @@ object NavigationUtil {
 	/**
 	 * Starts Insights activity
 	 */
-	fun insights( context: Context ) = context.startActivity( Intent( context , InsightsActivity::class.java ) )
+	fun insights(context: Context) =
+		context.startActivity(Intent(context, InsightsActivity::class.java))
 
 	/**
 	 * Starts Settings activity
 	 */
-	fun settings( context: Context ) = context.startActivity( Intent( context , SettingsActivity::class.java ) )
+	fun settings(context: Context) =
+		context.startActivity(Intent(context, SettingsActivity::class.java))
 
 	/**
 	 * Opens about
 	 */
-	fun about( context: Context ){
-		WebViewActivity.newIntent(context , URL_PORTFOLIO , 101 , "About Habbit").also {
+	fun about(context: Context) {
+		WebViewActivity.newIntent(context, URL_PORTFOLIO, 101, "About Habbit").also {
 			context.startActivity(it)
 		}
 	}
@@ -32,8 +34,8 @@ object NavigationUtil {
 	/**
 	 * Opens help
 	 */
-	fun helpAndFeedback( context: Context ){
-		WebViewActivity.newIntent(context , HELP_AND_FEEDBACK , 101 , "About Habbit").also {
+	fun helpAndFeedback(context: Context) {
+		WebViewActivity.newIntent(context, HELP_AND_FEEDBACK, 101, "About Habbit").also {
 			context.startActivity(it)
 		}
 	}

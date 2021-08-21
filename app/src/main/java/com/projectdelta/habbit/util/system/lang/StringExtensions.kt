@@ -24,6 +24,6 @@ fun String.capitalized(): String {
 /**
  * Returns true if String is not null | empty | blank
  */
-fun String?.isOk() : Boolean {
+fun String?.isOk(): Boolean {
 	return !(this.isNullOrBlank() || this.isNullOrEmpty())
 }

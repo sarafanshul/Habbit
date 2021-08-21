@@ -5,5 +5,5 @@ package com.projectdelta.habbit.util
  */
 interface TodoCallback {
 
-    fun execute()
+	fun execute()
 }

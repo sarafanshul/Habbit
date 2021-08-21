@@ -19,10 +19,10 @@ import com.projectdelta.habbit.R
 import com.projectdelta.habbit.databinding.WebviewActivityBinding
 import com.projectdelta.habbit.ui.base.BaseViewBindingActivity
 import com.projectdelta.habbit.util.system.WebViewClientCompat
-import com.projectdelta.habbit.util.system.lang.toast
 import com.projectdelta.habbit.util.system.WebViewUtil
 import com.projectdelta.habbit.util.system.lang.getResourceColor
 import com.projectdelta.habbit.util.system.lang.openInBrowser
+import com.projectdelta.habbit.util.system.lang.toast
 import com.projectdelta.habbit.util.system.setDefaultSettings
 
 class WebViewActivity : BaseViewBindingActivity<WebviewActivityBinding>() {
@@ -33,7 +33,12 @@ class WebViewActivity : BaseViewBindingActivity<WebviewActivityBinding>() {
 		private const val TITLE_KEY = "TITLE_KEY"
 		private const val TAG = "WebViewActivity"
 
-		fun newIntent(context: Context, url: String, sourceId: Long? = null, title: String? = null): Intent {
+		fun newIntent(
+			context: Context,
+			url: String,
+			sourceId: Long? = null,
+			title: String? = null
+		): Intent {
 			return Intent(context, WebViewActivity::class.java).apply {
 				addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 				putExtra(URL_KEY, url)

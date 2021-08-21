@@ -16,6 +16,6 @@ class InsightsSharedViewModel @Inject constructor(
 
 	val getAllDaysPaged = repository.getAllDaysDataPaged().cachedIn(viewModelScope)
 
-	suspend fun getDayRange( start : Long , end : Long ) = repository.getDayRange(start, end)
+	suspend fun getDayRange(start: Long, end: Long) = repository.getDayRange(start, end)
 
 }

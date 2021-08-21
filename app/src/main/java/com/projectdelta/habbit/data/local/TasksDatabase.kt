@@ -20,35 +20,35 @@ import java.util.concurrent.Executors
 	version = 11,
 	exportSchema = true
 )
-@TypeConverters( Converters::class )
-abstract class TasksDatabase: RoomDatabase() {
+@TypeConverters(Converters::class)
+abstract class TasksDatabase : RoomDatabase() {
 
-	abstract fun tasksDao() : TasksDao
+	abstract fun tasksDao(): TasksDao
 
-	companion object{
+	companion object {
 		// For Singleton instantiation
 		@Volatile
 		private var INSTANCE: TasksDatabase? = null
 
 		fun getInstance(context: Context): TasksDatabase {
 			val tempInstance = INSTANCE
-			if( tempInstance != null )
+			if (tempInstance != null)
 				return tempInstance
 
-			synchronized(this){
+			synchronized(this) {
 				val instance = buildDatabase(context)
 				INSTANCE = instance
 				return instance
 			}
 		}
 
-		private fun buildDatabase( context: Context ) : TasksDatabase {
+		private fun buildDatabase(context: Context): TasksDatabase {
 			return Room.databaseBuilder(
-				context.applicationContext ,
-				TasksDatabase::class.java ,
+				context.applicationContext,
+				TasksDatabase::class.java,
 				DatabaseConstants.DATABASE_NAME
-			).addCallback(object :  RoomDatabase.Callback() {
-				override fun onCreate(db: SupportSQLiteDatabase){
+			).addCallback(object : RoomDatabase.Callback() {
+				override fun onCreate(db: SupportSQLiteDatabase) {
 					super.onCreate(db)
 					// pre-populate data
 					// prepopulate works on a new thread so can return Null if database is not build while required
@@ -59,7 +59,7 @@ abstract class TasksDatabase: RoomDatabase() {
 					}
 				}
 			}
-			).fallbackToDestructiveMigration() .build()
+			).fallbackToDestructiveMigration().build()
 		}
 	}
 

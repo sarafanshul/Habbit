@@ -7,19 +7,19 @@ import com.projectdelta.habbit.data.service.UpdateNotificationService
 import com.projectdelta.habbit.util.notification.Notifications.DEFAULT_UPDATE_INTERVAL
 import java.util.concurrent.TimeUnit
 
-class UpdateNotificationJob (private val context: Context, workerParams: WorkerParameters) :
+class UpdateNotificationJob(private val context: Context, workerParams: WorkerParameters) :
 	Worker(context, workerParams) {
 
 	override fun doWork(): Result {
-		Log.d("WorkManager" , "doWork Called")
-		return if( UpdateNotificationService.start(context) ){
+		Log.d("WorkManager", "doWork Called")
+		return if (UpdateNotificationService.start(context)) {
 			Result.success()
-		}else {
+		} else {
 			Result.failure()
 		}
 	}
 
-	companion object{
+	companion object {
 		private const val FLEX_INTERVAL = 5L
 		private const val TAG = "UpdateNotification"
 
@@ -30,20 +30,24 @@ class UpdateNotificationJob (private val context: Context, workerParams: WorkerP
 		 * @param context  Context of the parent activity
 		 * @param policy Type of Periodic Work policy [ExistingPeriodicWorkPolicy.REPLACE] or [ExistingPeriodicWorkPolicy.KEEP]
 		 * @param prefInterval Scheduled interval between two jobs
-		* */
-		fun setupTask( context: Context , policy : ExistingPeriodicWorkPolicy , prefInterval : Long ?= null ){
-			Log.d("WorkManager" , "Setup Task Called , Args = $policy , $prefInterval")
+		 * */
+		fun setupTask(
+			context: Context,
+			policy: ExistingPeriodicWorkPolicy,
+			prefInterval: Long? = null
+		) {
+			Log.d("WorkManager", "Setup Task Called , Args = $policy , $prefInterval")
 
 			val interval = prefInterval ?: DEFAULT_UPDATE_INTERVAL
-			if( interval > 0 ){
+			if (interval > 0) {
 				val request = PeriodicWorkRequestBuilder<UpdateNotificationJob>(
-					interval , TimeUnit.HOURS ,
-					FLEX_INTERVAL , TimeUnit.MINUTES
+					interval, TimeUnit.HOURS,
+					FLEX_INTERVAL, TimeUnit.MINUTES
 				)
-					.addTag( TAG )
+					.addTag(TAG)
 					.build()
-				WorkManager.getInstance(context).enqueueUniquePeriodicWork( TAG , policy , request )
-			}else {
+				WorkManager.getInstance(context).enqueueUniquePeriodicWork(TAG, policy, request)
+			} else {
 				WorkManager.getInstance(context).cancelAllWorkByTag(TAG)
 			}
 		}

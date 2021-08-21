@@ -15,34 +15,34 @@ import com.projectdelta.habbit.databinding.SettingsActivityBinding
 import com.projectdelta.habbit.ui.base.BaseViewBindingActivity
 import com.projectdelta.habbit.util.database.DatabaseUtil
 import com.projectdelta.habbit.util.database.SyncUtil
+import com.projectdelta.habbit.util.notification.Notifications.DEFAULT_UPDATE_INTERVAL
+import com.projectdelta.habbit.util.notification.UpdateNotificationJob
 import com.projectdelta.habbit.util.system.lang.darkToast
 import com.projectdelta.habbit.util.system.lang.isOnline
 import com.projectdelta.habbit.util.system.lang.toast
-import com.projectdelta.habbit.util.notification.Notifications.DEFAULT_UPDATE_INTERVAL
-import com.projectdelta.habbit.util.notification.UpdateNotificationJob
 import com.projectdelta.habbit.widget.CustomTextPreference
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SettingsActivity : BaseViewBindingActivity<SettingsActivityBinding>() ,
+class SettingsActivity : BaseViewBindingActivity<SettingsActivityBinding>(),
 	SharedPreferences.OnSharedPreferenceChangeListener {
 
-	companion object{
+	companion object {
 		private const val TAG = "SettingsActivity"
 	}
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
-		_binding = SettingsActivityBinding.inflate( layoutInflater )
+		_binding = SettingsActivityBinding.inflate(layoutInflater)
 
-		setContentView( binding.root )
+		setContentView(binding.root)
 
 		if (savedInstanceState == null) {
 			supportFragmentManager
 				.beginTransaction()
-				.replace(binding.settings.id , SettingsFragment() )
+				.replace(binding.settings.id, SettingsFragment())
 				.commit()
 		}
 		supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -50,16 +50,19 @@ class SettingsActivity : BaseViewBindingActivity<SettingsActivityBinding>() ,
 
 	override fun onResume() {
 		super.onResume()
-		PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this)
+		PreferenceManager.getDefaultSharedPreferences(this)
+			.registerOnSharedPreferenceChangeListener(this)
 	}
 
 	override fun onPause() {
-		PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this)
+		PreferenceManager.getDefaultSharedPreferences(this)
+			.unregisterOnSharedPreferenceChangeListener(this)
 		super.onPause()
 	}
 
 	override fun onDestroy() {
-		PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this)
+		PreferenceManager.getDefaultSharedPreferences(this)
+			.unregisterOnSharedPreferenceChangeListener(this)
 		super.onDestroy()
 	}
 
@@ -128,9 +131,11 @@ class SettingsActivity : BaseViewBindingActivity<SettingsActivityBinding>() ,
 	@AndroidEntryPoint
 	class SettingsFragment : PreferenceFragmentCompat() {
 
-		@Inject lateinit var syncUtil : SyncUtil
-		@Inject lateinit var preferencesHelper: PreferencesHelper
-		private val databaseUtil : DatabaseUtil = DatabaseUtil()
+		@Inject
+		lateinit var syncUtil: SyncUtil
+		@Inject
+		lateinit var preferencesHelper: PreferencesHelper
+		private val databaseUtil: DatabaseUtil = DatabaseUtil()
 
 		override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
 			setPreferencesFromResource(R.xml.root_preferences, rootKey)
@@ -144,14 +149,14 @@ class SettingsActivity : BaseViewBindingActivity<SettingsActivityBinding>() ,
 			}
 
 			findPreference<CustomTextPreference>(resources.getString(R.string.id_sign_out))?.setOnPreferenceClickListener { _ ->
-				if( Firebase.auth.currentUser != null )
+				if (Firebase.auth.currentUser != null)
 					MaterialAlertDialogBuilder(requireActivity()).apply {
 						setTitle("Sign out of Habbit?")
-						setPositiveButton("BYE!"){_ , _ ->
+						setPositiveButton("BYE!") { _, _ ->
 							Firebase.auth.signOut()
 							toggleCloudPreferences()
 						}
-						setNeutralButton("CANCEL"){_ , _ ->}
+						setNeutralButton("CANCEL") { _, _ -> }
 						create()
 					}.show()
 				true
@@ -196,16 +201,21 @@ class SettingsActivity : BaseViewBindingActivity<SettingsActivityBinding>() ,
 		}
 
 		private fun toggleCloudPreferences() {
-			if( Firebase.auth.currentUser == null ){
-				findPreference<CustomTextPreference>(resources.getString(R.string.id_sign_out))?.isEnabled = false
-				findPreference<CustomTextPreference>(resources.getString(R.string.id_delete_all_data_cloud))?.isEnabled = false
-				findPreference<SwitchPreferenceCompat>(resources.getString(R.string.id_sync))?.isChecked = false
+			if (Firebase.auth.currentUser == null) {
+				findPreference<CustomTextPreference>(resources.getString(R.string.id_sign_out))?.isEnabled =
+					false
+				findPreference<CustomTextPreference>(resources.getString(R.string.id_delete_all_data_cloud))?.isEnabled =
+					false
+				findPreference<SwitchPreferenceCompat>(resources.getString(R.string.id_sync))?.isChecked =
+					false
 
-			}
-			else{
-				findPreference<CustomTextPreference>(resources.getString(R.string.id_sign_out))?.isEnabled = true
-				findPreference<CustomTextPreference>(resources.getString(R.string.id_delete_all_data_cloud))?.isEnabled = true
-				findPreference<SwitchPreferenceCompat>(resources.getString(R.string.id_sync))?.isChecked = true
+			} else {
+				findPreference<CustomTextPreference>(resources.getString(R.string.id_sign_out))?.isEnabled =
+					true
+				findPreference<CustomTextPreference>(resources.getString(R.string.id_delete_all_data_cloud))?.isEnabled =
+					true
+				findPreference<SwitchPreferenceCompat>(resources.getString(R.string.id_sync))?.isChecked =
+					true
 			}
 		}
 	}

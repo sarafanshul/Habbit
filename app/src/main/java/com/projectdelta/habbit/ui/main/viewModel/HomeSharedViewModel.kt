@@ -20,7 +20,7 @@ class HomeSharedViewModel @Inject constructor(
 	private val repository: TasksRepositoryImpl
 ) : BaseViewModel() {
 
-	private var _data : LiveData<List<Task>> ?= null
+	private var _data: LiveData<List<Task>>? = null
 	val data
 		get() = _data!!
 
@@ -30,14 +30,14 @@ class HomeSharedViewModel @Inject constructor(
 
 	fun getAllTasksSorted() = repository.getAllTasksSorted()
 
-	fun notifyTaskDone(task : Task) {
+	fun notifyTaskDone(task: Task) {
 		viewModelScope.launch(Dispatchers.IO) {
 			// get fresh instance of task
 			val curTask = withContext(Dispatchers.IO) {
 				repository.getTaskById(task.id)
 			}
 			curTask.lastDayCompleted.add(getTodayFromEpoch())
-			repository.markTaskCompleted( curTask )
+			repository.markTaskCompleted(curTask)
 		}
 	}
 
@@ -51,12 +51,12 @@ class HomeSharedViewModel @Inject constructor(
 		}
 	}
 
-	fun delete( task: Task ) = viewModelScope.launch (Dispatchers.IO){
-		repository.deleteTask( task )
+	fun delete(task: Task) = viewModelScope.launch(Dispatchers.IO) {
+		repository.deleteTask(task)
 	}
 
-	fun insertTask( task: Task ) = viewModelScope.launch(Dispatchers.IO) {
-		repository.insertTask( task )
+	fun insertTask(task: Task) = viewModelScope.launch(Dispatchers.IO) {
+		repository.insertTask(task)
 	}
 
 }

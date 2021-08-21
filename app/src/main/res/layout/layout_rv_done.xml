@@ -1,81 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:maxHeight="@dimen/RV_card_height"
-    android:orientation="vertical"
     android:animateLayoutChanges="true"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:backgroundTint="?colorOnSecondary"
+    android:clickable="true"
+    android:elevation="3dp"
+    android:maxHeight="@dimen/RV_card_height"
+    app:cardCornerRadius="12dp">
 
-    <com.google.android.material.card.MaterialCardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="3dp"
-        app:cardCornerRadius="3dp"
-        android:backgroundTint="?colorOnSecondary"
-        android:clickable="true">
+        android:layout_margin="4dp"
+        android:orientation="horizontal"
+        android:padding="10dp">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:padding="10dp"
-            android:orientation="horizontal">
+            android:layout_weight="0.8"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="0dp"
+            <RatingBar
+                android:id="@+id/tasks_tw_rating"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.8"
-                android:orientation="vertical">
+                android:numStars="5"
+                android:paddingVertical="10dp"
+                android:progressTint="@color/flame_gold" />
 
-                <RatingBar
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="?android:attr/ratingBarStyleSmall"
-                    android:paddingVertical="10dp"
-                    android:numStars="5"
-                    android:progressTint="@color/flame_gold"
-                    android:id="@+id/tasks_tw_rating"/>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tasks_tw_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:textColor="?colorOnColorOnPrimary"
+                android:textSize="26sp" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="26sp"
-                    android:singleLine="true"
-                    android:ellipsize="marquee"
-                    android:textColor="?colorOnColorOnPrimary"
-                    android:gravity="center_vertical"
-                    android:id="@+id/tasks_tw_id"/>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.3"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:src="@drawable/ic_local_fire_department_black_24dp"
-                    app:tint="@color/flame_red"
-                    android:layout_weight="0.9"/>
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="0.5"
-                    android:textColor="?colorOnColorOnPrimary"
-                    android:gravity="center"
-                    android:id="@+id/tasks_tw_streak"
-                    android:textStyle="bold"/>
-
-            </LinearLayout>
 
         </LinearLayout>
 
-    </com.google.android.material.card.MaterialCardView>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"
+            android:orientation="vertical">
 
-</LinearLayout>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.9"
+                android:src="@drawable/ic_local_fire_department_black_24dp"
+                app:tint="@color/flame_red" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tasks_tw_streak"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:textColor="?colorOnColorOnPrimary"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

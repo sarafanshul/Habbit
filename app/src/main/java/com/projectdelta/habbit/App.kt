@@ -12,7 +12,7 @@ import javax.inject.Inject
 open class App : Application() {
 
 	@Inject
-	lateinit var preferencesHelper : PreferencesHelper
+	lateinit var preferencesHelper: PreferencesHelper
 
 	override fun onCreate() {
 		super.onCreate()
@@ -25,12 +25,11 @@ open class App : Application() {
 	 * Does not work remove or make it work
 	 */
 	private fun configureThemeMode() {
-		if( preferencesHelper.isThemeDark() ){
+		if (preferencesHelper.isThemeDark()) {
 			Log.d("App", "configureThemeMode: Night")
-			AppCompatDelegate.setDefaultNightMode( AppCompatDelegate.MODE_NIGHT_YES )
-		}
-		else {
-			AppCompatDelegate.setDefaultNightMode( AppCompatDelegate.MODE_NIGHT_NO )
+			AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+		} else {
+			AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 		}
 	}
 

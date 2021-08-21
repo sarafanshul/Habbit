@@ -46,7 +46,7 @@ class SkipFragment : BaseViewBindingFragment<SkipFragmentBinding>() {
 	}
 
 	private val viewModel: HomeSharedViewModel by activityViewModels()
-	lateinit var adapter : RecyclerViewSkipAdapter
+	lateinit var adapter: RecyclerViewSkipAdapter
 	private lateinit var activity: MainActivity
 
 	override fun onAttach(context: Context) {
@@ -58,7 +58,7 @@ class SkipFragment : BaseViewBindingFragment<SkipFragmentBinding>() {
 		inflater: LayoutInflater, container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View {
-		_binding = SkipFragmentBinding.inflate(inflater , container , false)
+		_binding = SkipFragmentBinding.inflate(inflater, container, false)
 
 		return binding.root
 	}
@@ -74,33 +74,34 @@ class SkipFragment : BaseViewBindingFragment<SkipFragmentBinding>() {
 
 		adapter = RecyclerViewSkipAdapter()
 
-		val emptyView : View = layoutInflater.inflate( R.layout.layout_empty_view , binding.skipRv , false )
+		val emptyView: View =
+			layoutInflater.inflate(R.layout.layout_empty_view, binding.skipRv, false)
 		emptyView.findViewById<MaterialTextView>(R.id.empty_view_tw_string).text = NotFound.get()
 
 		val statesAdapter =
-            StatesRecyclerViewAdapter(
-                adapter,
-                emptyView,
-                emptyView,
-                emptyView
-            )
+			StatesRecyclerViewAdapter(
+				adapter,
+				emptyView,
+				emptyView,
+				emptyView
+			)
 		binding.skipRv.adapter = statesAdapter
 		statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
 
-		val divider = DividerItemDecoration( binding.skipRv.context , DividerItemDecoration.VERTICAL)
+		val divider = DividerItemDecoration(binding.skipRv.context, DividerItemDecoration.VERTICAL)
 
 		// https://stackoverflow.com/a/38909958
-		binding.skipRv.viewTreeObserver.addOnPreDrawListener (
+		binding.skipRv.viewTreeObserver.addOnPreDrawListener(
 			object : ViewTreeObserver.OnPreDrawListener {
 				override fun onPreDraw(): Boolean {
 					binding.skipRv.viewTreeObserver.removeOnPreDrawListener(this)
-					for( i in 0 until binding.skipRv.childCount){
-						binding.skipRv.getChildAt( i ).apply {
+					for (i in 0 until binding.skipRv.childCount) {
+						binding.skipRv.getChildAt(i).apply {
 							alpha = 0.0f
 							animate().apply {
 								alpha(1.0f)
 								duration = 300
-								startDelay = i*50L
+								startDelay = i * 50L
 								start()
 							}
 						}
@@ -110,11 +111,11 @@ class SkipFragment : BaseViewBindingFragment<SkipFragmentBinding>() {
 			}
 		)
 
-		binding.skipRv.addOnItemTouchListener(RecyclerItemClickListenr( context?.applicationContext!! ,
-			binding.skipRv ,
-			object : RecyclerItemClickListenr.OnItemClickListener{
+		binding.skipRv.addOnItemTouchListener(RecyclerItemClickListenr(context?.applicationContext!!,
+			binding.skipRv,
+			object : RecyclerItemClickListenr.OnItemClickListener {
 				override fun onItemClick(view: View, position: Int) {
-						(activity).launchEditActivity( adapter.getItemAt(position) )
+					(activity).launchEditActivity(adapter.getItemAt(position))
 				}
 
 				override fun onItemLongClick(view: View?, position: Int) {
@@ -126,42 +127,62 @@ class SkipFragment : BaseViewBindingFragment<SkipFragmentBinding>() {
 		val itemTouchHelper = ItemTouchHelper(CustomItemTouchHelperCallback.Builder().apply {
 			flagEndHelper(ItemTouchHelper.END)
 			iconSize(ICON_SIZE_DP.dpToPx * 1.3f)
-			leftBackgroundColor( Color.parseColor("#ff6961") )
-			leftIcon( convertDrawableToBitmap( ContextCompat.getDrawable( context?.applicationContext!!, R.drawable.ic_delete_black_24dp)!! ) )
-			rightBackgroundColor(Color.parseColor( "#B33F40"))
-			rightIcon( convertDrawableToBitmap( ContextCompat.getDrawable( context?.applicationContext!!, R.drawable.ic_delete_black_24dp)!! ) )
-			onSwipeListener( object : CustomItemTouchHelperCallback.OnSwipeListener{
-				override fun onSwipeLeftToRight(vh: RecyclerView.ViewHolder?) { object : RecyclerViewSkipAdapter.OnSwipeRight{
-					override fun doWork(viewHolder: RecyclerView.ViewHolder) {
-						val x = adapter.getItemAt( viewHolder.bindingAdapterPosition )
-						viewModel.delete( x )
-						Snackbar.make(requireActivity().findViewById(R.id.main_cl) , "A task deleted!" , Snackbar.LENGTH_LONG).apply {
-							anchorView = requireActivity().findViewById(R.id.main_fab_create)
-							setActionTextColor(requireActivity().getColor(R.color.md_blue_A400))
-							setBackgroundTint(requireActivity().getColor(R.color.md_grey_900))
-							setTextColor(requireActivity().getColor(R.color.md_white_1000_54))
-							setAction("Undo"){
-								viewModel.insertTask(x)
-							}
-						}.show()
-					}
-				}.doWork(vh!!) }
+			leftBackgroundColor(Color.parseColor("#ff6961"))
+			cornerRadius(12.dpToPx.toInt())
+			leftIcon(
+				convertDrawableToBitmap(
+					ContextCompat.getDrawable(
+						context?.applicationContext!!,
+						R.drawable.ic_delete_black_24dp
+					)!!
+				)
+			)
+			rightBackgroundColor(Color.parseColor("#B33F40"))
+			rightIcon(
+				convertDrawableToBitmap(
+					ContextCompat.getDrawable(
+						context?.applicationContext!!,
+						R.drawable.ic_delete_black_24dp
+					)!!
+				)
+			)
+			onSwipeListener(object : CustomItemTouchHelperCallback.OnSwipeListener {
+				override fun onSwipeLeftToRight(vh: RecyclerView.ViewHolder?) {
+					object : RecyclerViewSkipAdapter.OnSwipeRight {
+						override fun doWork(viewHolder: RecyclerView.ViewHolder) {
+							val x = adapter.getItemAt(viewHolder.bindingAdapterPosition)
+							viewModel.delete(x)
+							Snackbar.make(
+								requireActivity().findViewById(R.id.main_cl),
+								"A task deleted!",
+								Snackbar.LENGTH_LONG
+							).apply {
+								anchorView = requireActivity().findViewById(R.id.main_fab_create)
+								setActionTextColor(requireActivity().getColor(R.color.md_blue_A400))
+								setBackgroundTint(requireActivity().getColor(R.color.md_grey_900))
+								setTextColor(requireActivity().getColor(R.color.md_white_1000_54))
+								setAction("Undo") {
+									viewModel.insertTask(x)
+								}
+							}.show()
+						}
+					}.doWork(vh!!)
+				}
 
-				override fun onSwipeRightToLeft(vh: RecyclerView.ViewHolder?) { }
+				override fun onSwipeRightToLeft(vh: RecyclerView.ViewHolder?) {}
 			})
 		}.build())
 
 		lifecycleScope.launch {
 			viewModel.getAllTasksSorted().map { data ->
-				data.skippedTill( viewModel.getTodayFromEpoch() , viewModel.getMSFromMidnight() )
+				data.skippedTill(viewModel.getTodayFromEpoch(), viewModel.getMSFromMidnight())
 			}.collect { data ->
-				if( data.isNullOrEmpty() ){
+				if (data.isNullOrEmpty()) {
 					// remove decorations
 					statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
 					binding.skipRv.removeItemDecorations()
 					itemTouchHelper.attachToRecyclerView(null)
-				}
-				else{
+				} else {
 					// add decoration
 					statesAdapter.state = StatesRecyclerViewAdapter.STATE_NORMAL
 					binding.skipRv.addItemDecoration(divider)

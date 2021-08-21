@@ -2,6 +2,7 @@ package com.projectdelta.habbit.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 /**

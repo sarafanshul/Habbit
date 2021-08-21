@@ -29,7 +29,7 @@
             android:type="sweep"
             android:centerX="0.1"
             android:centerY="0.5"
-            android:startColor="@android:color/holo_green_dark"
+            android:startColor="@android:color/black"
             android:centerColor="@android:color/transparent"
             android:endColor="@android:color/transparent"/>
     </shape></rotate></item>
@@ -39,7 +39,7 @@
             android:type="sweep"
             android:centerX="0.6"
             android:centerY="0.7"
-            android:startColor="@android:color/holo_orange_dark"
+            android:startColor="@android:color/holo_red_light"
             android:centerColor="@android:color/transparent"
             android:endColor="@android:color/transparent"/>
     </shape></rotate></item>

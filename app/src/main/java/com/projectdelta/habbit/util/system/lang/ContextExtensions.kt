@@ -45,7 +45,11 @@ import kotlin.math.roundToInt
  * @param resource the text resource.
  * @param duration the duration of the toast. Defaults to short.
  */
-fun Context.toast(@StringRes resource: Int, duration: Int = Toast.LENGTH_SHORT, block: (Toast) -> Unit = {}): Toast {
+fun Context.toast(
+	@StringRes resource: Int,
+	duration: Int = Toast.LENGTH_SHORT,
+	block: (Toast) -> Unit = {}
+): Toast {
 	return toast(getString(resource), duration, block)
 }
 
@@ -55,7 +59,11 @@ fun Context.toast(@StringRes resource: Int, duration: Int = Toast.LENGTH_SHORT, 
  * @param text the text to display.
  * @param duration the duration of the toast. Defaults to short.
  */
-fun Context.toast(text: String?, duration: Int = Toast.LENGTH_SHORT, block: (Toast) -> Unit = {}): Toast {
+fun Context.toast(
+	text: String?,
+	duration: Int = Toast.LENGTH_SHORT,
+	block: (Toast) -> Unit = {}
+): Toast {
 	return Toast.makeText(this, text.orEmpty(), duration).also {
 		block(it)
 		it.show()
@@ -69,7 +77,11 @@ fun Context.toast(text: String?, duration: Int = Toast.LENGTH_SHORT, block: (Toa
  * @param duration the duration of the toast. Defaults to short.
  */
 @SuppressLint("ResourceAsColor")
-fun Context.darkToast(text: String?, duration: Int = Toast.LENGTH_SHORT, block: (Toast) -> Unit = {}): Toast {
+fun Context.darkToast(
+	text: String?,
+	duration: Int = Toast.LENGTH_SHORT,
+	block: (Toast) -> Unit = {}
+): Toast {
 	return Toast.makeText(this, text.orEmpty(), duration).apply {
 		view?.background?.setColorFilter(Color.DKGRAY, PorterDuff.Mode.SRC_IN)
 		view?.findViewById<TextView>(android.R.id.message)?.setTextColor(Color.WHITE)
@@ -85,10 +97,11 @@ fun Context.darkToast(text: String?, duration: Int = Toast.LENGTH_SHORT, block: 
  * @param text the text to display.
  * @param duration the duration of the toast. Defaults to short.
  */
-fun Context.customToast(text: String?,
+fun Context.customToast(
+	text: String?,
 	duration: Int = Toast.LENGTH_SHORT,
-	background : Int = Color.GREEN,
-	textColor : Int = Color.RED,
+	background: Int = Color.GREEN,
+	textColor: Int = Color.RED,
 	block: (Toast) -> Unit = {}
 ): Toast {
 	return Toast.makeText(this, text.orEmpty(), duration).apply {
@@ -107,7 +120,10 @@ fun Context.customToast(text: String?,
  * @param block the function that will execute inside the builder.
  * @return a notification to be displayed or updated.
  */
-fun Context.notificationBuilder(channelId: String, block: (NotificationCompat.Builder.() -> Unit)? = null): NotificationCompat.Builder {
+fun Context.notificationBuilder(
+	channelId: String,
+	block: (NotificationCompat.Builder.() -> Unit)? = null
+): NotificationCompat.Builder {
 	val builder = NotificationCompat.Builder(this, channelId)
 	if (block != null) {
 		builder.block()
@@ -122,7 +138,10 @@ fun Context.notificationBuilder(channelId: String, block: (NotificationCompat.Bu
  * @param block the function that will execute inside the builder.
  * @return a notification to be displayed or updated.
  */
-fun Context.notification(channelId: String, block: (NotificationCompat.Builder.() -> Unit)?): Notification {
+fun Context.notification(
+	channelId: String,
+	block: (NotificationCompat.Builder.() -> Unit)?
+): Notification {
 	val builder = notificationBuilder(channelId, block)
 	return builder.build()
 }
@@ -133,16 +152,23 @@ fun Context.notification(channelId: String, block: (NotificationCompat.Builder.(
  * @param permission the permission to check.
  * @return true if it has permissions.
  */
-fun Context.hasPermission(permission: String) = ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
+fun Context.hasPermission(permission: String) =
+	ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
 
 /**
- * Converts to dp.
+ * Converts px to dp.
  */
 val Int.pxToDp: Int
 	get() = (this / Resources.getSystem().displayMetrics.density).toInt()
 
 /**
- * Converts to px.
+ * Converts Int to dp
+ */
+val Int.dp: Int
+	get() = (this * Resources.getSystem().displayMetrics.density + 0.5f).toInt()
+
+/**
+ * Converts dp to px.
  */
 val Int.dpToPx: Float
 	get() = (this * Resources.getSystem().displayMetrics.density)
@@ -239,7 +265,9 @@ fun Context.isOnline(): Boolean {
 		if (n != null) {
 			val nc = cm.getNetworkCapabilities(n)
 			//It will check for both wifi and cellular network
-			return nc!!.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+			return nc!!.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || nc.hasTransport(
+				NetworkCapabilities.TRANSPORT_WIFI
+			)
 		}
 		return false
 	} else {
@@ -253,11 +281,11 @@ fun Context.isOnline(): Boolean {
  */
 
 fun Context.getColorFromAttr(
-	@AttrRes attrColor : Int ,
+	@AttrRes attrColor: Int,
 	typedValue: TypedValue = TypedValue(),
 	resolveRefs: Boolean = true
-) : Int{
-	theme.resolveAttribute(attrColor , typedValue , resolveRefs)
+): Int {
+	theme.resolveAttribute(attrColor, typedValue, resolveRefs)
 	return typedValue.resourceId
 }
 

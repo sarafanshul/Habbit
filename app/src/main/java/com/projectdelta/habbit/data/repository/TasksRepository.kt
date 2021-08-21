@@ -7,26 +7,26 @@ import kotlinx.coroutines.flow.Flow
 
 interface TasksRepository {
 
-	fun insertTask(task : Task )
+	fun insertTask(task: Task)
 
-	fun insertDay( day: Day )
+	fun insertDay(day: Day)
 
-	fun getAllTasks( ): LiveData<List<Task>>
+	fun getAllTasks(): LiveData<List<Task>>
 
 	fun getAllDays(): Flow<List<Day>>
 
 	fun getTaskById(id: Long): Task
 
-	suspend fun getTask( taskName : String ): List<Task>
+	suspend fun getTask(taskName: String): List<Task>
 
-	suspend fun getDay(id : Long): List<Day>
+	suspend fun getDay(id: Long): List<Day>
 
-	suspend fun getDayRange( start : Long , end : Long ): List<Day>
+	suspend fun getDayRange(start: Long, end: Long): List<Day>
 
-	fun updateTask( task : Task )
+	fun updateTask(task: Task)
 
-	fun updateDay( day : Day )
+	fun updateDay(day: Day)
 
-	fun deleteTask( task : Task )
+	fun deleteTask(task: Task)
 
 }

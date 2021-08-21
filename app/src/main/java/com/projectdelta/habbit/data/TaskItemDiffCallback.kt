@@ -4,9 +4,9 @@ import androidx.recyclerview.widget.DiffUtil
 import com.projectdelta.habbit.data.model.entities.Task
 
 class TaskItemDiffCallback(
-	var oldTaskList : List<Task>,
-	var newTaskList : List<Task>
-): DiffUtil.Callback(){
+	var oldTaskList: List<Task>,
+	var newTaskList: List<Task>
+) : DiffUtil.Callback() {
 
 	override fun getOldListSize(): Int {
 		return oldTaskList.size
@@ -20,7 +20,7 @@ class TaskItemDiffCallback(
 	 * This method will be called to check whether old and new items are the same.
 	 */
 	override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-		return oldTaskList[oldItemPosition].equals( newTaskList[newItemPosition] )
+		return oldTaskList[oldItemPosition].equals(newTaskList[newItemPosition])
 	}
 
 	/**

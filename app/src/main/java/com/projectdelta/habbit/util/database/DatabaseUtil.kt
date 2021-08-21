@@ -8,43 +8,43 @@ import com.projectdelta.habbit.util.database.firebase.FirebaseUtil.Companion.get
 import com.projectdelta.habbit.util.system.lang.darkToast
 import kotlinx.coroutines.*
 
-class DatabaseUtil () {
+class DatabaseUtil {
 
-    companion object{
-        private const val TAG = "DatabaseUtil"
-    }
+	companion object {
+		private const val TAG = "DatabaseUtil"
+	}
 
-    private var updateJob: Job? = null
+	private var updateJob: Job? = null
 
-    fun nukeLocal( context: Context ){
-        val handler = CoroutineExceptionHandler { _, exception ->
-            Log.e(TAG, "deleteAllData: handler", exception)
-            destroyEverything()
-        }
-        updateJob = CoroutineScope(SupervisorJob() + Dispatchers.IO).launch(handler){
-            TasksDatabase.getInstance(context).clearAllTables()
-        }
-        context.darkToast( "Success!" )
-    }
+	fun nukeLocal(context: Context) {
+		val handler = CoroutineExceptionHandler { _, exception ->
+			Log.e(TAG, "deleteAllData: handler", exception)
+			destroyEverything()
+		}
+		updateJob = CoroutineScope(SupervisorJob() + Dispatchers.IO).launch(handler) {
+			TasksDatabase.getInstance(context).clearAllTables()
+		}
+		context.darkToast("Success!")
+	}
 
-    fun nukeCloud( context: Context ){
-        val user = getAuth().currentUser
-        val doc = getDocumentUser()
-        if( user != null ){
-            doc.document(user.uid)
-                .delete()
-                .addOnSuccessListener {
-                    context.darkToast( "Success!" )
-                    Log.d(TAG, "DocumentSnapshot successfully deleted!")
-                }
-                .addOnFailureListener { e ->
-                    context.darkToast( "Some error occurred." )
-                    Log.w(TAG, "Error deleting document", e)
-                }
-        }
-    }
+	fun nukeCloud(context: Context) {
+		val user = getAuth().currentUser
+		val doc = getDocumentUser()
+		if (user != null) {
+			doc.document(user.uid)
+				.delete()
+				.addOnSuccessListener {
+					context.darkToast("Success!")
+					Log.d(TAG, "DocumentSnapshot successfully deleted!")
+				}
+				.addOnFailureListener { e ->
+					context.darkToast("Some error occurred.")
+					Log.w(TAG, "Error deleting document", e)
+				}
+		}
+	}
 
-    private fun destroyEverything() {
+	private fun destroyEverything() {
 
-    }
+	}
 }

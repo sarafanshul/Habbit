@@ -24,7 +24,6 @@ import com.projectdelta.habbit.ui.base.BaseViewBindingFragment
 import com.projectdelta.habbit.ui.main.MainActivity
 import com.projectdelta.habbit.ui.main.adapter.RecyclerViewTodoAdapter
 import com.projectdelta.habbit.ui.main.viewModel.HomeSharedViewModel
-import com.projectdelta.habbit.util.*
 import com.projectdelta.habbit.util.constant.ICON_SIZE_DP
 import com.projectdelta.habbit.util.system.lang.*
 import com.projectdelta.habbit.widget.adapter.CustomItemTouchHelperCallback
@@ -32,7 +31,6 @@ import com.projectdelta.habbit.widget.adapter.RecyclerItemClickListenr
 import com.projectdelta.habbit.widget.adapter.StatesRecyclerViewAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -45,7 +43,7 @@ class TodoFragment : BaseViewBindingFragment<TodoFragmentBinding>() {
 	}
 
 	private val viewModel: HomeSharedViewModel by activityViewModels()
-	lateinit var adapter : RecyclerViewTodoAdapter
+	lateinit var adapter: RecyclerViewTodoAdapter
 
 	private lateinit var activity: MainActivity
 
@@ -58,7 +56,7 @@ class TodoFragment : BaseViewBindingFragment<TodoFragmentBinding>() {
 		inflater: LayoutInflater, container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View {
-		_binding = TodoFragmentBinding.inflate(inflater , container , false)
+		_binding = TodoFragmentBinding.inflate(inflater, container, false)
 
 		Log.d(TAG, "onCreateView: $viewModel")
 
@@ -135,6 +133,7 @@ class TodoFragment : BaseViewBindingFragment<TodoFragmentBinding>() {
 			flagEndHelper(ItemTouchHelper.END)
 			iconSize(ICON_SIZE_DP.dpToPx * 1.3f)
 			leftBackgroundColor(Color.parseColor("#59b2ff"))
+			cornerRadius(12.dpToPx.toInt())
 			leftIcon(
 				convertDrawableToBitmap(
 					ContextCompat.getDrawable(
@@ -166,6 +165,7 @@ class TodoFragment : BaseViewBindingFragment<TodoFragmentBinding>() {
 						RecyclerViewTodoAdapter.OnSwipeLeft {
 						override fun doWork(viewHolder: RecyclerView.ViewHolder) {
 							viewModel.notifyTaskDone(adapter.getItemAt(viewHolder.bindingAdapterPosition))
+							activity.showConfetti()
 						}
 					}.doWork(vh!!)
 				}
@@ -178,13 +178,12 @@ class TodoFragment : BaseViewBindingFragment<TodoFragmentBinding>() {
 					.unfinishedTill(viewModel.getTodayFromEpoch())
 					.tasksBeforeSkipTime(viewModel.getMSFromMidnight())
 			}.collect { data ->
-				if( data.isNullOrEmpty() ){
+				if (data.isNullOrEmpty()) {
 					// remove decorations
 					statesAdapter.state = StatesRecyclerViewAdapter.STATE_EMPTY
 					binding.todoRv.removeItemDecorations()
 					itemTouchHelper.attachToRecyclerView(null)
-				}
-				else{
+				} else {
 					// add decoration
 					statesAdapter.state = StatesRecyclerViewAdapter.STATE_NORMAL
 					binding.todoRv.addItemDecoration(divider)

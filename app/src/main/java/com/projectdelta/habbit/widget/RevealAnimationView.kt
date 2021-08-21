@@ -10,64 +10,74 @@ import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 
 class RevealAnimationView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) :
-    View(context, attrs) {
+	View(context, attrs) {
 
-    /**
-     * Hides the animation view with a animation
-     *
-     * @param centerX x starting point
-     * @param centerY y starting point
-     * @param initialRadius size of radius of animation
-     */
-    fun hideRevealEffect(centerX: Int, centerY: Int, initialRadius: Int , animationDuration : Long = 250 ) {
-        // Make the view visible.
-        this.isVisible = true
+	/**
+	 * Hides the animation view with a animation
+	 *
+	 * @param centerX x starting point
+	 * @param centerY y starting point
+	 * @param initialRadius size of radius of animation
+	 */
+	fun hideRevealEffect(
+		centerX: Int,
+		centerY: Int,
+		initialRadius: Int,
+		animationDuration: Long = 250
+	) {
+		// Make the view visible.
+		this.isVisible = true
 
-        // Create the animation (the final radius is zero).
-        val anim = ViewAnimationUtils.createCircularReveal(
-            this,
-            centerX,
-            centerY,
-            initialRadius.toFloat(),
-            0f
-        )
+		// Create the animation (the final radius is zero).
+		val anim = ViewAnimationUtils.createCircularReveal(
+			this,
+			centerX,
+			centerY,
+			initialRadius.toFloat(),
+			0f
+		)
 
-        // Set duration of animation.
-        anim.duration = animationDuration
+		// Set duration of animation.
+		anim.duration = animationDuration
 
-        // make the view invisible when the animation is done
-        anim.doOnEnd {
-            this@RevealAnimationView.isInvisible = true
-        }
+		// make the view invisible when the animation is done
+		anim.doOnEnd {
+			this@RevealAnimationView.isInvisible = true
+		}
 
-        anim.start()
-    }
+		anim.start()
+	}
 
-    /**
-     * Fills the animation view with a animation
-     *
-     * @param centerX x starting point
-     * @param centerY y starting point
-     * @param listener animation listener
-     */
-    fun showRevealEffect(centerX: Int, centerY: Int, listener: Animator.AnimatorListener , animationDuration: Long = 250) {
-        this.isVisible = true
+	/**
+	 * Fills the animation view with a animation
+	 *
+	 * @param centerX x starting point
+	 * @param centerY y starting point
+	 * @param listener animation listener
+	 */
+	fun showRevealEffect(
+		centerX: Int,
+		centerY: Int,
+		listener: Animator.AnimatorListener,
+		animationDuration: Long = 250
+	) {
+		this.isVisible = true
 
-        val height = this.height
+		val height = this.height
 
-        // Create animation
-        val anim = ViewAnimationUtils.createCircularReveal(
-            this,
-            centerX,
-            centerY,
-            0f,
-            height.toFloat()
-        )
+		// Create animation
+		val anim = ViewAnimationUtils.createCircularReveal(
+			this,
+			centerX,
+			centerY,
+			0f,
+			height.toFloat()
+		)
 
-        // Set duration of animation
-        anim.duration = animationDuration
+		// Set duration of animation
+		anim.duration = animationDuration
 
-        anim.addListener(listener)
-        anim.start()
-    }
+		anim.addListener(listener)
+		anim.start()
+	}
 }

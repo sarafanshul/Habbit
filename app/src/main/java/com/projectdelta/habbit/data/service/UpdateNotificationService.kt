@@ -9,24 +9,23 @@ import android.util.Log
 import androidx.core.content.ContextCompat
 import com.projectdelta.habbit.data.local.TasksDatabase
 import com.projectdelta.habbit.util.*
-import com.projectdelta.habbit.util.system.lang.*
 import com.projectdelta.habbit.util.notification.Notifications
 import com.projectdelta.habbit.util.notification.UpdateNotificationUtil
+import com.projectdelta.habbit.util.system.lang.*
 import kotlinx.coroutines.*
 
 
-class UpdateNotificationService(
-): Service() {
+class UpdateNotificationService : Service() {
 
 	private lateinit var wakeLock: PowerManager.WakeLock
 	private lateinit var ioScope: CoroutineScope
 
-	private var updateJob : Job?= null
+	private var updateJob: Job? = null
 
-	companion object{
+	companion object {
 
-		private var instance : UpdateNotificationService? = null
-		private const val DEFAULT_NOTIFICATION_ID : Int = 101
+		private var instance: UpdateNotificationService? = null
+		private const val DEFAULT_NOTIFICATION_ID: Int = 101
 
 		/**
 		 * Returns the status of the service.
@@ -54,8 +53,8 @@ class UpdateNotificationService(
 		 * @param context the application context.
 		 * @return true if service newly started, false otherwise
 		 */
-		fun start(context: Context ): Boolean {
-			Log.d("UpdateNotificationService" , "Service Started")
+		fun start(context: Context): Boolean {
+			Log.d("UpdateNotificationService", "Service Started")
 			return if (!isRunning(context)) {
 				val intent = Intent(context, UpdateNotificationService::class.java)
 				ContextCompat.startForegroundService(context, intent)
@@ -76,7 +75,10 @@ class UpdateNotificationService(
 		ioScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 		wakeLock = acquireWakeLock(javaClass.name)
 
-		startForeground(Notifications.ID_UPDATE_PROGRESS , UpdateNotificationUtil.foregroundUpdateNotification(this).build())
+		startForeground(
+			Notifications.ID_UPDATE_PROGRESS,
+			UpdateNotificationUtil.foregroundUpdateNotification(this).build()
+		)
 	}
 
 	/**
@@ -84,9 +86,9 @@ class UpdateNotificationService(
 	 * lock.
 	 */
 	override fun onDestroy() {
-		Log.d("UpdateNotificationService" , "onDestroy Called")
+		Log.d("UpdateNotificationService", "onDestroy Called")
 		updateJob?.cancel()
-		ioScope?.cancel()
+		ioScope.cancel()
 		if (wakeLock.isHeld) {
 			wakeLock.release()
 		}
@@ -102,9 +104,9 @@ class UpdateNotificationService(
 	}
 
 	override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-		Log.d("UpdateNotificationService" , "onStartCommand 1")
+		Log.d("UpdateNotificationService", "onStartCommand 1")
 		if (intent == null) return START_NOT_STICKY
-		Log.d("UpdateNotificationService" , "onStartCommand 2")
+		Log.d("UpdateNotificationService", "onStartCommand 2")
 		instance = this
 
 		// Unsubscribe from any previous subscription if needed
@@ -112,12 +114,12 @@ class UpdateNotificationService(
 
 		// Destroy service when completed or in case of an error.
 		val handler = CoroutineExceptionHandler { _, exception ->
-			Log.e("CoroutineExceptionHandler Error" ,exception.message!!)
+			Log.e("CoroutineExceptionHandler Error", exception.message!!)
 			stopSelf(startId)
 		}
 
 		updateJob = ioScope.launch(handler) {
-			updateTaskList( this@UpdateNotificationService )
+			updateTaskList(this@UpdateNotificationService)
 		}
 
 		updateJob?.invokeOnCompletion { stopSelf(startId) }
@@ -128,7 +130,7 @@ class UpdateNotificationService(
 	/**
 	 * Creates notification in foreground service with given constraints
 	 */
-	private suspend fun updateTaskList( mContext: Context ) {
+	private suspend fun updateTaskList(mContext: Context) {
 
 		val db = TasksDatabase.getInstance(mContext).tasksDao()
 
@@ -140,16 +142,16 @@ class UpdateNotificationService(
 		GlobalScope.launch {
 			val data = async { db.getAllTasksOffline() }
 			try {
-			UpdateNotificationUtil.showUpdateNotification(
-				this@UpdateNotificationService,
-				data.await()
-					.tasksBeforeSkipTime(TimeUtil.getMSfromMidnight())
-					.unfinishedNotifyTill(TimeUtil.getTodayFromEpoch())
-					.sortedBy { -it.importance },
-				DEFAULT_NOTIFICATION_ID
+				UpdateNotificationUtil.showUpdateNotification(
+					this@UpdateNotificationService,
+					data.await()
+						.tasksBeforeSkipTime(TimeUtil.getMSfromMidnight())
+						.unfinishedNotifyTill(TimeUtil.getTodayFromEpoch())
+						.sortedBy { -it.importance },
+					DEFAULT_NOTIFICATION_ID
 				)
-			}catch ( e : Exception ){
-				Log.e("Exception Sending Notification" , e.message!! )
+			} catch (e: Exception) {
+				Log.e("Exception Sending Notification", e.message!!)
 			}
 		}
 	}

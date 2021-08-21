@@ -8,27 +8,27 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceViewHolder
 import com.projectdelta.habbit.R
 
-class CustomTextPreference: Preference {
+class CustomTextPreference : Preference {
 
-    constructor(context: Context) : super(context)
+	constructor(context: Context) : super(context)
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+	constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
-    constructor(
-        context: Context, attrs: AttributeSet,
-        defStyle: Int
-    ) : super(context, attrs, defStyle)
+	constructor(
+		context: Context, attrs: AttributeSet,
+		defStyle: Int
+	) : super(context, attrs, defStyle)
 
-    override fun onBindViewHolder(holder: PreferenceViewHolder?) {
-        super.onBindViewHolder(holder)
+	override fun onBindViewHolder(holder: PreferenceViewHolder?) {
+		super.onBindViewHolder(holder)
 
-        context?.let {
-            (holder?.findViewById(android.R.id.title) as? TextView)?.setTextColor(
-                ContextCompat.getColor(
-                    it,
-                    R.color.danger
-                )
-            )
-        }
-    }
+		context?.let {
+			(holder?.findViewById(android.R.id.title) as? TextView)?.setTextColor(
+				ContextCompat.getColor(
+					it,
+					R.color.danger
+				)
+			)
+		}
+	}
 }

@@ -16,7 +16,7 @@ object DrawableModule {
 	@Singleton
 	@Provides
 	@Named("COLORS_ARRAY")
-	fun provideColorArray( application: Application ) : IntArray{
+	fun provideColorArray(application: Application): IntArray {
 		return application.resources.getIntArray(R.array.calendar_color)
 	}
 }

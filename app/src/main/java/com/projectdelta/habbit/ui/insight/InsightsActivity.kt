@@ -14,19 +14,25 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class InsightsActivity : BaseViewBindingActivity<ActivityInsightsBinding>() {
 
-	lateinit var adapter : InsightsViewPagerAdapter
+	lateinit var adapter: InsightsViewPagerAdapter
 
-	private val tabIconsOutlined = listOf( R.drawable.ic_fact_check_black_outline_24dp , R.drawable.ic_date_range_black_outline_24dp )
-	private val tabIconsFilled = listOf( R.drawable.ic_fact_check_black_filled_24dp , R.drawable.ic_date_range_black_filled_24dp )
+	private val tabIconsOutlined = listOf(
+		R.drawable.ic_fact_check_black_outline_24dp,
+		R.drawable.ic_date_range_black_outline_24dp
+	)
+	private val tabIconsFilled = listOf(
+		R.drawable.ic_fact_check_black_filled_24dp,
+		R.drawable.ic_date_range_black_filled_24dp
+	)
 
-	private val onPageChangeCallback = object : ViewPager2.OnPageChangeCallback(){
+	private val onPageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
 		override fun onPageSelected(position: Int) {
 			super.onPageSelected(position)
-			for( i in 0 until binding.insightsTabs.tabCount ){
-				if( i == position )
-					binding.insightsTabs.getTabAt( i )!!.setIcon( tabIconsFilled[i] )
+			for (i in 0 until binding.insightsTabs.tabCount) {
+				if (i == position)
+					binding.insightsTabs.getTabAt(i)!!.setIcon(tabIconsFilled[i])
 				else
-					binding.insightsTabs.getTabAt( i )!!.setIcon( tabIconsOutlined[i] )
+					binding.insightsTabs.getTabAt(i)!!.setIcon(tabIconsOutlined[i])
 			}
 		}
 	}
@@ -34,28 +40,28 @@ class InsightsActivity : BaseViewBindingActivity<ActivityInsightsBinding>() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 
-		_binding = ActivityInsightsBinding.inflate( layoutInflater )
+		_binding = ActivityInsightsBinding.inflate(layoutInflater)
 
-		setContentView( binding.root )
+		setContentView(binding.root)
 
 		setLayout()
 
 	}
 
 	private fun setLayout() {
-		adapter = InsightsViewPagerAdapter( this )
-		adapter.addFragment( InsightsListFragment()  )
-		adapter.addFragment( InsightsCalendarFragment()  )
+		adapter = InsightsViewPagerAdapter(this)
+		adapter.addFragment(InsightsListFragment())
+		adapter.addFragment(InsightsCalendarFragment())
 
 		binding.insightsVp.adapter = adapter
 
-		TabLayoutMediator( binding.insightsTabs , binding.insightsVp ){ tab , position ->
+		TabLayoutMediator(binding.insightsTabs, binding.insightsVp) { tab, position ->
 			tab.text = ""
-			if(position != 0)tab.setIcon(tabIconsOutlined[position])
+			if (position != 0) tab.setIcon(tabIconsOutlined[position])
 			else tab.setIcon(tabIconsFilled[position])
 		}.attach()
 
-		binding.insightsVp.registerOnPageChangeCallback( onPageChangeCallback )
+		binding.insightsVp.registerOnPageChangeCallback(onPageChangeCallback)
 
 	}
 

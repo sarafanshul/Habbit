@@ -15,7 +15,7 @@ object DaoModule {
 
 	@Singleton
 	@Provides
-	fun provideTaskDao( application: Application ) : TasksDao {
-		return TasksDatabase.getInstance( application ).tasksDao()
+	fun provideTaskDao(application: Application): TasksDao {
+		return TasksDatabase.getInstance(application).tasksDao()
 	}
 }

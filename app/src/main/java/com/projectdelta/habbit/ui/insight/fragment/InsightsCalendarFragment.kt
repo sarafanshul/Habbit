@@ -8,6 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import com.afollestad.materialdialogs.LayoutMode
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.bottomsheets.BottomSheet
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.projectdelta.habbit.R
 import com.projectdelta.habbit.data.NotFound
@@ -31,24 +34,24 @@ import javax.inject.Named
 @AndroidEntryPoint
 class InsightsCalendarFragment : BaseViewBindingFragment<FragmentInsightsCalendarBinding>() {
 
-	companion object{
+	companion object {
 		fun newInstance() = InsightsCalendarFragment()
 		private const val TAG = "InsightsCalendarFragment"
 		private const val MAX_CALENDAR_DOTS = 7
 	}
 
-	private val viewModel : InsightsSharedViewModel by activityViewModels()
+	private val viewModel: InsightsSharedViewModel by activityViewModels()
 
 	@SuppressLint("FieldSiteTargetOnQualifierAnnotation")
 	@field:[Inject Named("COLORS_ARRAY")]
-	lateinit var COLORS : IntArray
+	lateinit var COLORS: IntArray
 
 	override fun onCreateView(
 		inflater: LayoutInflater, container: ViewGroup?,
 		savedInstanceState: Bundle?
 	): View {
 
-		_binding = FragmentInsightsCalendarBinding.inflate(inflater , container , false )
+		_binding = FragmentInsightsCalendarBinding.inflate(inflater, container, false)
 
 		return binding.root
 	}
@@ -61,13 +64,13 @@ class InsightsCalendarFragment : BaseViewBindingFragment<FragmentInsightsCalenda
 
 	private fun setLayout() {
 		val calendar = Calendar.getInstance()
-		val initialDate = CalendarDate( calendar.time )
+		val initialDate = CalendarDate(calendar.time)
 
-		calendar.add(Calendar.YEAR,  - 1)
-		val minDate = CalendarDate( calendar.time )
+		calendar.add(Calendar.YEAR, -1)
+		val minDate = CalendarDate(calendar.time)
 
-		calendar.add(Calendar.YEAR , 2)
-		val maxDate = CalendarDate( calendar.time )
+		calendar.add(Calendar.YEAR, 2)
+		val maxDate = CalendarDate(calendar.time)
 
 
 		binding.insightsCalV.setupCalendar(
@@ -98,34 +101,39 @@ class InsightsCalendarFragment : BaseViewBindingFragment<FragmentInsightsCalenda
 					updateCalendar(data.first)
 				}
 			}
-		}catch (e : Exception){
-			Log.e(TAG, "setLayout: Error occurred while parsing Flow",e )
+		} catch (e: Exception) {
+			Log.e(TAG, "setLayout: Error occurred while parsing Flow", e)
 			requireActivity().darkToast("Error occurred! , Please try again")
 		}
 	}
 
 	private fun updateCalendar(data: List<Day>) {
-		if( data.isNullOrEmpty() ) return
+		if (data.isNullOrEmpty()) return
 
 		binding.insightsCalV.onDateClickListener = { date ->
-			val cur = data.binarySearchBy( TimeUtil.millisecondsToDays(date.timeInMillis) + 1 ){ it.id }
-			if( cur >= 0 ){
-				val title = when( data[cur].tasksTitle.size ){
-					1 -> "${data[cur].tasksTitle.size} task completed on ${TimeUtil.getMonth( date.month + 1 )} ${date.dayOfMonth}"
-					else -> "${data[cur].tasksTitle.size} tasks completed on ${TimeUtil.getMonth( date.month + 1 )} ${date.dayOfMonth}"
+			val cur =
+				data.binarySearchBy(TimeUtil.millisecondsToDays(date.timeInMillis) + 1) { it.id }
+			if (cur >= 0) {
+				val title = when (data[cur].tasksTitle.size) {
+					1 -> "${data[cur].tasksTitle.size} task completed on ${TimeUtil.getMonth(date.month + 1)} ${date.dayOfMonth}"
+					else -> "${data[cur].tasksTitle.size} tasks completed on ${
+						TimeUtil.getMonth(
+							date.month + 1
+						)
+					} ${date.dayOfMonth}"
 				}
 				val message = data[cur].titlesToBulletList()
-				MaterialAlertDialogBuilder(requireActivity()).apply{
-					setTitle( title )
-					setMessage(message)
-					create()
-				}.show()
-			}
-			else {
-				val title = "No tasks completed on ${TimeUtil.getMonth( date.month + 1 )} ${date.dayOfMonth}"
+				MaterialDialog(requireActivity() , BottomSheet(LayoutMode.WRAP_CONTENT)).show {
+					title(text = title)
+					message(text = message)
+					cornerRadius(16f)
+				}
+			} else {
+				val title =
+					"No tasks completed on ${TimeUtil.getMonth(date.month + 1)} ${date.dayOfMonth}"
 				val message = NotFound.get()
-				MaterialAlertDialogBuilder(requireActivity()).apply{
-					setTitle( title )
+				MaterialAlertDialogBuilder(requireActivity()).apply {
+					setTitle(title)
 					setMessage(message)
 					create()
 				}.show()

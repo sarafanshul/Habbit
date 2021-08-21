@@ -10,13 +10,13 @@ import com.projectdelta.habbit.databinding.LayoutRvListBinding
 import com.projectdelta.habbit.util.system.lang.TimeUtil
 import com.projectdelta.habbit.util.system.lang.titlesToBulletList
 
-class RecyclerViewListAdapter:
-	PagingDataAdapter< Day , RecyclerViewListAdapter.LayoutViewHolder> ( DIFF_CALLBACK ){
+class RecyclerViewListAdapter :
+	PagingDataAdapter<Day, RecyclerViewListAdapter.LayoutViewHolder>(DIFF_CALLBACK) {
 
-	companion object{
-		val DIFF_CALLBACK : DiffUtil.ItemCallback<Day> = object : DiffUtil.ItemCallback<Day>(){
+	companion object {
+		val DIFF_CALLBACK: DiffUtil.ItemCallback<Day> = object : DiffUtil.ItemCallback<Day>() {
 			override fun areItemsTheSame(oldItem: Day, newItem: Day): Boolean {
-				return oldItem.equals( newItem )
+				return oldItem.equals(newItem)
 			}
 
 			override fun areContentsTheSame(oldItem: Day, newItem: Day): Boolean {
@@ -26,19 +26,22 @@ class RecyclerViewListAdapter:
 		}
 	}
 
-	inner class LayoutViewHolder( private val binding: LayoutRvListBinding) : RecyclerView.ViewHolder(binding.root){
+	inner class LayoutViewHolder(private val binding: LayoutRvListBinding) :
+		RecyclerView.ViewHolder(binding.root) {
 
-		fun bind( D : Day ){
-			with(binding){
-				tvDate.text = TimeUtil.getPastDateFromOffset((TimeUtil.getTodayFromEpoch() - D.id).toInt())
-				tvData.text = D.titlesToBulletList(maxLength = 40 ,maxLine = 5)
+		fun bind(D: Day) {
+			with(binding) {
+				tvDate.text =
+					TimeUtil.getPastDateFromOffset((TimeUtil.getTodayFromEpoch() - D.id).toInt())
+				tvData.text = D.titlesToBulletList(maxLength = 25, maxLine = 5)
 			}
 		}
 	}
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LayoutViewHolder {
-		val binding = LayoutRvListBinding.inflate( LayoutInflater.from(parent.context) , parent , false )
-		return LayoutViewHolder( binding )
+		val binding =
+			LayoutRvListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+		return LayoutViewHolder(binding)
 	}
 
 	override fun onBindViewHolder(holder: LayoutViewHolder, position: Int) {

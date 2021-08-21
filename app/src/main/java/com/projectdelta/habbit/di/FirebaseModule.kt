@@ -14,19 +14,19 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object FirebaseModule {
 
-    @Singleton
-    @Provides
-    fun provideGoogleSignInOption( application: Application ) : GoogleSignInOptions {
-        return GoogleSignInOptions.Builder( GoogleSignInOptions.DEFAULT_SIGN_IN ).apply {
-            requestIdToken( application.getString(R.string.default_web_client_id) )
-            requestEmail()
-        }.build()
-    }
+	@Singleton
+	@Provides
+	fun provideGoogleSignInOption(application: Application): GoogleSignInOptions {
+		return GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).apply {
+			requestIdToken(application.getString(R.string.default_web_client_id))
+			requestEmail()
+		}.build()
+	}
 
-    @Singleton
-    @Provides
-    fun provideFirebaseUtil() : FirebaseUtil {
-        return FirebaseUtil()
-    }
+	@Singleton
+	@Provides
+	fun provideFirebaseUtil(): FirebaseUtil {
+		return FirebaseUtil()
+	}
 
 }

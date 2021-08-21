@@ -8,15 +8,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.projectdelta.habbit.data.model.entities.Task
 import com.projectdelta.habbit.databinding.LayoutRvSkipBinding
 
-class RecyclerViewSkipAdapter():
-	ListAdapter< Task , RecyclerViewSkipAdapter.LayoutViewHolder>( DIFF_CALLBACK ) {
+class RecyclerViewSkipAdapter :
+	ListAdapter<Task, RecyclerViewSkipAdapter.LayoutViewHolder>(DIFF_CALLBACK) {
 
 	private var today = 0L
 
-	companion object{
-		val DIFF_CALLBACK : DiffUtil.ItemCallback<Task> = object :DiffUtil.ItemCallback<Task>(){
+	companion object {
+		val DIFF_CALLBACK: DiffUtil.ItemCallback<Task> = object : DiffUtil.ItemCallback<Task>() {
 			override fun areItemsTheSame(oldItem: Task, newItem: Task): Boolean {
-				return oldItem.equals( newItem )
+				return oldItem.equals(newItem)
 			}
 
 			override fun areContentsTheSame(oldItem: Task, newItem: Task): Boolean {
@@ -49,25 +49,25 @@ class RecyclerViewSkipAdapter():
 
 	override fun onBindViewHolder(holder: LayoutViewHolder, position: Int) {
 
-		var streakString = when(val streak = getItem(position).skipTill - today){
+		var streakString = when (val streak = getItem(position).skipTill - today) {
 			0L -> "Skipped today"
 			1L -> "$streak day"
 			else -> "$streak days"
 		}
-		if( getItem(position).isSkipAfterEnabled )
+		if (getItem(position).isSkipAfterEnabled)
 			streakString = "Missed today"
 
 		holder.bind(getItem(position), streakString)
 	}
 
-	fun set( _today: Long) {
+	fun set(_today: Long) {
 		today = _today
 	}
 
-	interface OnSwipeRight{
+	interface OnSwipeRight {
 		fun doWork(viewHolder: RecyclerView.ViewHolder): Unit
 	}
 
-	fun getItemAt(position: Int ) : Task = getItem(position)
+	fun getItemAt(position: Int): Task = getItem(position)
 
 }

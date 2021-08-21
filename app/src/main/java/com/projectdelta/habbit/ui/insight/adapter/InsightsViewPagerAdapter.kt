@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
-class InsightsViewPagerAdapter (fragmentActivity: FragmentActivity) :
+class InsightsViewPagerAdapter(fragmentActivity: FragmentActivity) :
 	FragmentStateAdapter(fragmentActivity) {
 
 	private val mFragmentList = ArrayList<Fragment>()

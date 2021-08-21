@@ -74,6 +74,12 @@
             android:layout_gravity="center|bottom"
             android:background="?colorPrimary"/>
 
+        <nl.dionsegijn.konfetti.KonfettiView
+            android:id="@+id/main_confetti"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:elevation="8dp"/>
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

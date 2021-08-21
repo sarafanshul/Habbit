@@ -28,5 +28,8 @@ fun convertDrawableToBitmap(drawable: Drawable): Bitmap {
  *
  */
 fun ImageView.setTint(@ColorRes colorId: Int) {
-	ImageViewCompat.setImageTintList(this, ColorStateList.valueOf( ContextCompat.getColor(context, colorId) ) )
+	ImageViewCompat.setImageTintList(
+		this,
+		ColorStateList.valueOf(ContextCompat.getColor(context, colorId))
+	)
 }

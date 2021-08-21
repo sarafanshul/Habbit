@@ -7,15 +7,15 @@ import com.projectdelta.habbit.data.model.entities.Task
 import java.io.Serializable
 
 @Keep
-data class FirestoreQueryObject (
+data class FirestoreQueryObject(
 
-    @SerializedName("Day")
-    var Day : List<Day>? = null ,
+	@SerializedName("Day")
+	var Day: List<Day>? = null,
 
-    @SerializedName("Task")
-    var Task : List<Task>? = null ,
+	@SerializedName("Task")
+	var Task: List<Task>? = null,
 
-    @SerializedName("uid")
-    var uid : String? = null ,
+	@SerializedName("uid")
+	var uid: String? = null,
 
-):Serializable
+	) : Serializable

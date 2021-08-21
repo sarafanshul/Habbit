@@ -52,30 +52,30 @@ class Converters {
 	}
 
 	@TypeConverter
-	fun fromLongList( value : List<Long> ) : String {
+	fun fromLongList(value: List<Long>): String {
 		val gson = Gson()
 		val type = object : TypeToken<List<Long>>() {}.type
 		return gson.toJson(value, type)
 	}
 
 	@TypeConverter
-	fun toLongList(value: String): List<Long>{
+	fun toLongList(value: String): List<Long> {
 		val gson = Gson()
 		val type = object : TypeToken<List<Long>>() {}.type
 		return gson.fromJson(value, type)
 	}
 
 	@TypeConverter
-	fun fromPairList( value : List<Pair< String , Long>> ) : String {
+	fun fromPairList(value: List<Pair<String, Long>>): String {
 		val gson = Gson()
-		val type = object : TypeToken< List< Pair<String , Long> > >() {}.type
+		val type = object : TypeToken<List<Pair<String, Long>>>() {}.type
 		return gson.toJson(value, type)
 	}
 
 	@TypeConverter
-	fun toPairList(value: String): List<Pair< String , Long>>{
+	fun toPairList(value: String): List<Pair<String, Long>> {
 		val gson = Gson()
-		val type = object : TypeToken< List< Pair<String , Long> > >() {}.type
+		val type = object : TypeToken<List<Pair<String, Long>>>() {}.type
 		return gson.fromJson(value, type)
 	}
 

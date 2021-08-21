@@ -11,12 +11,12 @@ import com.projectdelta.habbit.R
 import com.projectdelta.habbit.data.model.entities.Task
 import com.projectdelta.habbit.data.receiver.NotificationReceiver
 import com.projectdelta.habbit.ui.main.MainActivity
-import com.projectdelta.habbit.util.system.lang.chop
-import com.projectdelta.habbit.util.system.lang.hash
 import com.projectdelta.habbit.util.notification.Notifications.CHANNEL_UPDATE
 import com.projectdelta.habbit.util.notification.Notifications.GROUP_KEY
 import com.projectdelta.habbit.util.notification.Notifications.ID_UPDATES
 import com.projectdelta.habbit.util.notification.Notifications.NOTIF_TITLE_MAX_LEN
+import com.projectdelta.habbit.util.system.lang.chop
+import com.projectdelta.habbit.util.system.lang.hash
 
 object UpdateNotificationUtil {
 
@@ -25,8 +25,8 @@ object UpdateNotificationUtil {
 	 * @param mContext parent context
 	 * @return Notification.builder object
 	 */
-	fun foregroundUpdateNotification( mContext: Context ) : NotificationCompat.Builder{
-		return NotificationCompat.Builder(mContext , CHANNEL_UPDATE).apply {
+	fun foregroundUpdateNotification(mContext: Context): NotificationCompat.Builder {
+		return NotificationCompat.Builder(mContext, CHANNEL_UPDATE).apply {
 			setContentTitle(mContext.getString(R.string.app_name))
 			setSmallIcon(getIcon())
 			setOngoing(true)
@@ -39,17 +39,17 @@ object UpdateNotificationUtil {
 	 * @param mContext parent context
 	 * @param data list of tasks to show notifications of
 	 */
-	fun showUpdateNotification(mContext: Context, data : List<Task>, NOTIFICATION_ID : Int ){
-		if(data.isEmpty()) return  // don't fire for empty tasks
+	fun showUpdateNotification(mContext: Context, data: List<Task>, NOTIFICATION_ID: Int) {
+		if (data.isEmpty()) return  // don't fire for empty tasks
 
 		with(NotificationManagerCompat.from(mContext)) {
 			notify(
-				ID_UPDATES ,
-				NotificationCompat.Builder( mContext , CHANNEL_UPDATE ).apply {
-					setContentTitle( "Incomplete tasks" )
+				ID_UPDATES,
+				NotificationCompat.Builder(mContext, CHANNEL_UPDATE).apply {
+					setContentTitle("Incomplete tasks")
 					setContentText("${data.size} pending tasks for today!")
 					setSmallIcon(getIcon())
-					setLargeIcon(BitmapFactory.decodeResource( mContext.resources , getIcon() ))
+					setLargeIcon(BitmapFactory.decodeResource(mContext.resources, getIcon()))
 					setStyle(
 						NotificationCompat.BigTextStyle().bigText(
 							data.joinToString("\n") {
@@ -58,15 +58,15 @@ object UpdateNotificationUtil {
 						)
 					)
 					setGroupSummary(true)
-					setContentIntent( getNotificationIntent( mContext ) )
-					setGroup( GROUP_KEY )
+					setContentIntent(getNotificationIntent(mContext))
+					setGroup(GROUP_KEY)
 					setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
 					priority = NotificationCompat.PRIORITY_HIGH
 					setAutoCancel(true)
 				}.build()
 			)
 			data.forEach {
-				notify( it.hash() , createNewDataNotification(mContext ,it) )
+				notify(it.hash(), createNewDataNotification(mContext, it))
 			}
 		}
 	}
@@ -77,18 +77,20 @@ object UpdateNotificationUtil {
 	 * @param task task to show notification of
 	 * @return Notification object
 	 * */
-	private fun createNewDataNotification(mContext: Context ,task: Task): Notification {
-		return NotificationCompat.Builder( mContext , CHANNEL_UPDATE ).apply {
-			setContentTitle( task.taskName )
-			setContentText( task.summary )
+	private fun createNewDataNotification(mContext: Context, task: Task): Notification {
+		return NotificationCompat.Builder(mContext, CHANNEL_UPDATE).apply {
+			setContentTitle(task.taskName)
+			setContentText(task.summary)
 
-			setStyle( NotificationCompat.BigTextStyle().bigText( task.summary.chop(NOTIF_TITLE_MAX_LEN) ) )
+			setStyle(
+				NotificationCompat.BigTextStyle().bigText(task.summary.chop(NOTIF_TITLE_MAX_LEN))
+			)
 
-			setSmallIcon( getIcon() )
-			setLargeIcon(BitmapFactory.decodeResource( mContext.resources , getIcon() ))
-			setGroup( GROUP_KEY )
+			setSmallIcon(getIcon())
+			setLargeIcon(BitmapFactory.decodeResource(mContext.resources, getIcon()))
+			setGroup(GROUP_KEY)
 			setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
-			setContentIntent( getNotificationIntent( mContext ) )
+			setContentIntent(getNotificationIntent(mContext))
 			priority = NotificationCompat.PRIORITY_HIGH
 			setAutoCancel(true)
 			addAction(
@@ -115,7 +117,7 @@ object UpdateNotificationUtil {
 		return R.drawable.ic_kanji_gold_notification_new
 	}
 
-	private fun getNotificationIntent(mContext : Context): PendingIntent {
+	private fun getNotificationIntent(mContext: Context): PendingIntent {
 		val intent = Intent(mContext, MainActivity::class.java).apply {
 			flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
 		}

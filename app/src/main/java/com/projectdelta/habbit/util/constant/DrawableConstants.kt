@@ -1,6 +1,6 @@
 package com.projectdelta.habbit.util.constant
 
-const val ICON_SIZE_DP : Int = 24
+const val ICON_SIZE_DP: Int = 24
 
 // threshold for when contents of collapsing toolbar is hidden
 const val COLLAPSING_TOOLBAR_VISIBILITY_THRESHOLD = -75

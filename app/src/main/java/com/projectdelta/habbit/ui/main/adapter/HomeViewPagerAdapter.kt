@@ -10,7 +10,7 @@ class HomeViewPagerAdapter(fragmentActivity: FragmentActivity) :
 	private val mFragmentList = ArrayList<Fragment>()
 	private val mFragmentTitleList = ArrayList<String>()
 
-	override fun getItemCount(): Int  = mFragmentList.size
+	override fun getItemCount(): Int = mFragmentList.size
 
 	override fun createFragment(position: Int): Fragment = mFragmentList[position]
 
@@ -18,5 +18,10 @@ class HomeViewPagerAdapter(fragmentActivity: FragmentActivity) :
 		mFragmentList.add(F)
 		mFragmentTitleList.add(T)
 		notifyDataSetChanged()
+	}
+
+	fun destroy(){
+		mFragmentList.clear()
+		mFragmentTitleList.clear()
 	}
 }

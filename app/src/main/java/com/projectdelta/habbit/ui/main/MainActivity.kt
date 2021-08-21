@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -38,17 +39,24 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import nl.dionsegijn.konfetti.models.Shape
+import nl.dionsegijn.konfetti.models.Size
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
+import javax.inject.Named
 
 @AndroidEntryPoint
-class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
+class MainActivity : BaseViewBindingActivity<ActivityMainBinding>() {
 
 	private val viewModel: MainViewModel by viewModels()
-	lateinit var adapter : HomeViewPagerAdapter
+	lateinit var adapter: HomeViewPagerAdapter
 	private lateinit var auth: FirebaseAuth
 
-	companion object{
+	@field:[Inject Named("COLORS_ARRAY")]
+	lateinit var COLORS: IntArray
+
+	companion object {
 		fun getInstance() = this
 		private const val TAG = "MainActivity"
 	}
@@ -57,28 +65,28 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 	 * Activity specific lambda for [onActivityResult] since it is now deprecated .
 	 * [For more](https://stackoverflow.com/questions/62671106/onactivityresult-method-is-deprecated-what-is-the-alternative)
 	 * */
-	private val startForResultTask = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-			result: ActivityResult ->
-		if (result.resultCode == Activity.RESULT_OK) {
-			Snackbar.make(binding.root , "Changes saved" , Snackbar.LENGTH_SHORT).apply {
-				anchorView = binding.mainFabCreate
-				setActionTextColor(getColor(R.color.md_blue_A400))
-				setBackgroundTint(getColor(R.color.md_grey_900))
-				setTextColor(getColor(R.color.md_white_1000_54))
-			}.show()
+	private val startForResultTask =
+		registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+			if (result.resultCode == Activity.RESULT_OK) {
+				Snackbar.make(binding.root, "Changes saved", Snackbar.LENGTH_SHORT).apply {
+					anchorView = binding.mainFabCreate
+					setActionTextColor(getColor(R.color.md_blue_A400))
+					setBackgroundTint(getColor(R.color.md_grey_900))
+					setTextColor(getColor(R.color.md_white_1000_54))
+				}.show()
+			}
 		}
-	}
 
 	/**
 	 * Callback for [ViewPager2.registerOnPageChangeCallback] , for syncing with bottom-AppBar
 	 *
 	 * **Unregister after use**
 	 */
-	private val onPageChangeCallback = object : ViewPager2.OnPageChangeCallback(){
+	private val onPageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
 		override fun onPageSelected(position: Int) {
 			super.onPageSelected(position)
-			binding.mainBottomAppBar.menu.let{
-				when(position){
+			binding.mainBottomAppBar.menu.let {
+				when (position) {
 					0 -> it.findItem(R.id.todo).isChecked = true
 					1 -> it.findItem(R.id.skip).isChecked = true
 					2 -> it.findItem(R.id.done).isChecked = true
@@ -96,7 +104,7 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 		_binding = ActivityMainBinding.inflate(layoutInflater)
 		auth = Firebase.auth
 
-		setContentView( binding.root )
+		setContentView(binding.root)
 
 		getUserPermissions()
 
@@ -112,16 +120,16 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 	}
 
 	@SuppressLint("SimpleDateFormat")
-	private fun setLayout(){
+	private fun setLayout() {
 
-		binding.mainToolbar.title = SimpleDateFormat("EEEE").format( Date() )
+		binding.mainToolbar.title = SimpleDateFormat("EEEE").format(Date())
 		binding.mainToolbar.subtitle = TimeUtil.getPastDateFromOffset(0)
 
 		adapter = HomeViewPagerAdapter(this)
-		adapter.addFragment( TodoFragment() , "TODO" )
-		adapter.addFragment( SkipFragment() , "SKIPPED" )
-		adapter.addFragment( DoneFragment() , "DONE" )
-		adapter.addFragment( MenuFragment() , "MENU" )
+		adapter.addFragment(TodoFragment(), "TODO")
+		adapter.addFragment(SkipFragment(), "SKIPPED")
+		adapter.addFragment(DoneFragment(), "DONE")
+		adapter.addFragment(MenuFragment(), "MENU")
 		binding.mainVp.adapter = adapter
 
 		syncNavigationWithViewPager()
@@ -133,7 +141,7 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 					.tasksBeforeSkipTime(viewModel.getMSFromMidnight())
 					.size
 			}.collect { undone ->
-				if( undone > 0 )
+				if (undone > 0)
 					binding.mainBottomAppBar.getOrCreateBadge(R.id.todo).number = undone
 				else
 					binding.mainBottomAppBar.removeBadge(R.id.todo)
@@ -142,9 +150,22 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 
 		binding.mainFabCreate.setOnClickListener {
 			animateAndDoStuff {
-				launchEditActivity( Task( viewModel.getMSfromEpoch() , "" , mutableListOf() , 0f ) , false )
+				launchEditActivity(Task(viewModel.getMSfromEpoch(), "", mutableListOf(), 0f), false)
 			}
 		}
+	}
+
+	fun showConfetti(){
+		binding.mainConfetti.build()
+			.addColors(*COLORS)
+			.setDirection(0.0, 359.0)
+			.setSpeed(1f, 5f)
+			.setFadeOutEnabled(true)
+			.setTimeToLive(1000L)
+			.addShapes(Shape.Square, Shape.Circle)
+			.addSizes(Size(12))
+			.setPosition(-50f, binding.mainConfetti.width + 50f, -50f, -50f)
+			.streamFor(200, 3000L)
 	}
 
 	private fun syncNavigationWithViewPager() {
@@ -154,7 +175,7 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 		binding.mainVp.registerOnPageChangeCallback(onPageChangeCallback)
 
 		binding.mainBottomAppBar.setOnNavigationItemSelectedListener {
-			when( it.itemId ){
+			when (it.itemId) {
 				R.id.todo -> binding.mainVp.currentItem = 0
 				R.id.skip -> binding.mainVp.currentItem = 1
 				R.id.done -> binding.mainVp.currentItem = 2
@@ -165,11 +186,11 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 		}
 	}
 
-	private fun animateAndDoStuff( stuff : () -> Unit ){
+	private fun animateAndDoStuff(stuff: () -> Unit) {
 		binding.mainFabCreate.getCoordinates().let { coordinates ->
 			binding.mainCircle.showRevealEffect(
-				coordinates.x ,
-				coordinates.y ,
+				coordinates.x,
+				coordinates.y,
 				object : AnimatorListenerAdapter() {
 					override fun onAnimationStart(animation: Animator?) {
 						stuff()
@@ -179,13 +200,13 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 		}
 	}
 
-	fun launchEditActivity(task: Task , anim : Boolean = true) {
-		Intent( this , EditTaskActivity::class.java ).apply {
-			putExtra( "TASK" , task )
-			if( !anim )
-				addFlags( Intent.FLAG_ACTIVITY_NO_ANIMATION )
-		}.also{
-			startForResultTask.launch( it )
+	fun launchEditActivity(task: Task, anim: Boolean = true) {
+		Intent(this, EditTaskActivity::class.java).apply {
+			putExtra("TASK", task)
+			if (!anim)
+				addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+		}.also {
+			startForResultTask.launch(it)
 		}
 	}
 
@@ -193,17 +214,17 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 	 * If notifications enabled and "somehow ended" by system restart job
 	 */
 	private fun checkNotificationPreferences() {
-		val interval = when( preferences.getNotificationInterval() ){
+		val interval = when (preferences.getNotificationInterval()) {
 			"1 Hour" -> 1L
 			"3 Hours" -> 3L
 			"6 Hours" -> 6L
 			"12 Hours" -> 12L
-			else ->  DEFAULT_UPDATE_INTERVAL
+			else -> DEFAULT_UPDATE_INTERVAL
 		}
-		if( preferences.isNotificationEnabled() )
-			UpdateNotificationJob.setupTask( this , ExistingPeriodicWorkPolicy.KEEP , interval )
+		if (preferences.isNotificationEnabled())
+			UpdateNotificationJob.setupTask(this, ExistingPeriodicWorkPolicy.KEEP, interval)
 		else
-			UpdateNotificationJob.setupTask( this , ExistingPeriodicWorkPolicy.REPLACE , 0 )
+			UpdateNotificationJob.setupTask(this, ExistingPeriodicWorkPolicy.REPLACE, 0)
 	}
 
 	/**
@@ -216,17 +237,17 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 
 	@SuppressLint("ObsoleteSdkInt")
 	private fun getUserPermissions() {
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-			if ( (! this.powerManager.isIgnoringBatteryOptimizations( packageName ))
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			if ((!this.powerManager.isIgnoringBatteryOptimizations(packageName))
 				&& preferences.isNotificationEnabled()
 			) {
 				MaterialAlertDialogBuilder(this).apply {
 					setTitle("Enable app features")
 					setMessage("For using notification feature you need to turn off battery optimizations for this app , if you are using a Chinese ROM you need to enable Autostart feature too!")
-					setPositiveButton("GO"){_ , _ ->
-						startActivity( Intent( Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS ) )
+					setPositiveButton("GO") { _, _ ->
+						startActivity(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS))
 					}
-					setNeutralButton("CANCEL"){_,_->}
+					setNeutralButton("CANCEL") { _, _ -> }
 				}
 			}
 		}
@@ -234,11 +255,11 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 
 	override fun onRestart() {
 		super.onRestart()
-		if( binding.mainCircle.isVisible )
+		if (binding.mainCircle.isVisible)
 			binding.mainFabCreate.getCoordinates().let { coordinates ->
 				binding.mainCircle.hideRevealEffect(
-					coordinates.x ,
-					coordinates.y ,
+					coordinates.x,
+					coordinates.y,
 					1929
 				)
 			}
@@ -246,7 +267,8 @@ class MainActivity : BaseViewBindingActivity<ActivityMainBinding>(){
 
 	override fun onDestroy() {
 		binding.mainVp.unregisterOnPageChangeCallback(onPageChangeCallback)
-		binding.mainVp.adapter
+		adapter.destroy()
+		binding.mainVp.adapter = null
 		super.onDestroy()
 	}
 

@@ -25,6 +25,8 @@ public class CustomItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     private final float iconSize;
 
+    private final int cornerRadius;
+
     private final int flag_start;
     private final int flag_end;
 
@@ -43,11 +45,13 @@ public class CustomItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
         this.iconSize = b.iconSize;
 
+        this.cornerRadius = b.cornerRadius;
+
     }
 
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        return makeMovementFlags(0, flag_start| flag_end);
+        return makeMovementFlags(0, flag_start | flag_end);
     }
 
     @Override
@@ -86,15 +90,15 @@ public class CustomItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
                 if (dX > 0) {
                     paint.setColor(leftBackgroundColor);
-                    RectF background = new RectF(left, top, dX, bottom);
+                    RectF background = new RectF(left, top, dX + cornerRadius, bottom);
                     c.drawRect(background, paint);
 
                     float iconLeft = left + margin;
                     RectF iconRect = new RectF(iconLeft, centerY - iconSize / 2, iconLeft + iconSize, centerY + iconSize / 2);
                     c.drawBitmap(leftIcon, null, iconRect, paint);
-                } else {
+                } else if (dX < 0) {
                     paint.setColor(rightBackgroundColor);
-                    RectF background = new RectF(right + dX, top, right, bottom);
+                    RectF background = new RectF(right + dX - cornerRadius, top, right, bottom);
                     c.drawRect(background, paint);
 
                     float iconRight = right - margin;
@@ -117,6 +121,7 @@ public class CustomItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     /**
      * Builder for CustomItemTouchHelper
+     *
      * @apiNote Use flagEndHelper & flagEndHelper for specifying direction
      * @implNote Right Swipe = ItemTouchHelper.END && Left Swipe = ItemTouchHelper.START
      */
@@ -129,10 +134,11 @@ public class CustomItemTouchHelperCallback extends ItemTouchHelper.Callback {
         private int rightBackgroundColor;
         private Bitmap rightIcon;
 
-
         private int flag_start = 0;
         private int flag_end = 0;
         private float iconSize;
+
+        private int cornerRadius = 0;
 
         public Builder leftBackgroundColor(int leftBackgroundColor) {
             this.leftBackgroundColor = leftBackgroundColor;
@@ -159,17 +165,22 @@ public class CustomItemTouchHelperCallback extends ItemTouchHelper.Callback {
             return this;
         }
 
+        public Builder cornerRadius(int cornerRadius) {
+            this.cornerRadius = cornerRadius;
+            return this;
+        }
+
         public Builder onSwipeListener(OnSwipeListener onSwipeLister) {
             this.onSwipeListener = onSwipeLister;
             return this;
         }
 
-        public Builder flagEndHelper( int x ){
+        public Builder flagEndHelper(int x) {
             this.flag_end = x;
             return this;
         }
 
-        public Builder flagStartHelper( int x ){
+        public Builder flagStartHelper(int x) {
             this.flag_start = x;
             return this;
         }
