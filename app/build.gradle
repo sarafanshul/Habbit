@@ -47,6 +47,23 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    signingConfigs {
+        release {
+            def tmpFilePath = System.getProperty("user.home") + "/work/_temp/keystore/"
+            def allFilesFromDir = new File(tmpFilePath).listFiles()
+
+            if (allFilesFromDir != null) {
+                def keystoreFile = allFilesFromDir.first()
+                keystoreFile.renameTo("keystore/your_keystore.jks")
+            }
+
+            storeFile = file("keystore/your_keystore.jks")
+            storePassword System.getenv("SIGNING_STORE_PASSWORD")
+            keyAlias System.getenv("SIGNING_KEY_ALIAS")
+            keyPassword System.getenv("SIGNING_KEY_PASSWORD")
+        }
+    }
 }
 
 dependencies {
@@ -127,21 +144,4 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:bottomsheets:3.3.0'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
-}
-
-signingConfigs {
-    release {
-        def tmpFilePath = System.getProperty("user.home") + "/work/_temp/keystore/"
-        def allFilesFromDir = new File(tmpFilePath).listFiles()
-
-        if (allFilesFromDir != null) {
-            def keystoreFile = allFilesFromDir.first()
-            keystoreFile.renameTo("keystore/your_keystore.jks")
-        }
-
-        storeFile = file("keystore/your_keystore.jks")
-        storePassword System.getenv("SIGNING_STORE_PASSWORD")
-        keyAlias System.getenv("SIGNING_KEY_ALIAS")
-        keyPassword System.getenv("SIGNING_KEY_PASSWORD")
-    }
 }
