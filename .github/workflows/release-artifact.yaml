@@ -19,8 +19,10 @@ jobs:
           java-version: 1.8
       - name: Make gradlew executable
         run: chmod +x ./gradlew
-      - name: build prod
-        run: ./gradlew app:bundleRelease
+      - name: Make Local files
+        run: echo API_KEY="test" > ./local.properties
+      - name: build prod 
+        run: ./gradlew app:bundleRelease --stacktrace
         env:
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
