@@ -63,4 +63,4 @@ fun Task.hash() = (this.id % ((1L shl 31) - 1)).toInt()
 fun Task.toDateBulletList(delimiter: String = "\n", maxLine: Int = 20) =
 	lastDayCompleted.asReversed().joinToString(delimiter) {
 		"$INDENT${Html.fromHtml(bullet)}  ${TimeUtil.getDayFromEpochToDateString(it)}"
-	} + if (lastDayCompleted.size > maxLine) "${INDENT}and ${lastDayCompleted - maxLine} more!" else ""
+	} + if (lastDayCompleted.size > maxLine) "${INDENT}and ${lastDayCompleted.size - maxLine} more!" else ""
