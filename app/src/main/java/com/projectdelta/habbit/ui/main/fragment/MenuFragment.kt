@@ -157,7 +157,7 @@ class MenuFragment : BaseViewBindingFragment<FragmentMenuBinding>() {
 			binding.userImage.setImageDrawable(
 				ContextCompat.getDrawable(
 					requireActivity(),
-					R.drawable.ic_guest_user
+					R.drawable.ic_kanji_gold_new_dark
 				)
 			)
 			binding.menuTvLogInOut.text = "Login"
